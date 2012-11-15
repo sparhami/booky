@@ -1,0 +1,74 @@
+<!ENTITY com.sppad.booky.ToolbarButton.label "Booky">
+<!ENTITY com.sppad.booky.ToolbarButton.tooltiptext "BookyToolbarItem">
+
+
+
+<!ENTITY tabgroup.new_tab.label "New Tab">
+<!ENTITY tabgroup.new_tab.accesskey "N">
+<!ENTITY tabgroup.reload_tab.label "Reload Tab(s)">
+<!ENTITY tabgroup.reload_tab.accesskey "R">
+<!ENTITY tabgroup.close_tab.label "Close Tab(s)">
+<!ENTITY tabgroup.close_tab.accesskey "C">
+<!ENTITY tabgroup.bookmark_menu.label "Bookmarks">
+<!ENTITY tabgroup.bookmark_tab.label "Bookmark Tab(s)">
+<!ENTITY tabgroup.bookmark_tab.accesskey "B">
+
+<!ENTITY tabdock.open_new_tab.label "Open a new tab">
+<!ENTITY tabdock.close_current_tab.label "Close tab">
+
+
+<!-- General Preferences -->
+
+<!ENTITY preference.mode.title "Mode">
+	<!ENTITY preference.mode.normal "Normal">
+	<!ENTITY preference.mode.integrated "Integrated">
+	<!ENTITY preference.mode.dock "Dock">
+
+<!ENTITY preference.location.title "Location">
+	<!ENTITY preference.location.top "Top">
+	<!ENTITY preference.location.bottom "Bottom">
+	<!ENTITY preference.location.left "Left">
+	<!ENTITY preference.location.right "Right">
+
+
+<!ENTITY preference.alignment.title "Alignment">
+	<!ENTITY preference.alignment.start "Start">
+	<!ENTITY preference.alignment.center "Center">
+	<!ENTITY preference.alignment.end "End">
+
+
+<!ENTITY preference.firefox.title "Firefox Settings">
+	<!ENTITY preference.firefox.show_default_tabs "Show Default Tab Browser">
+	<!ENTITY preference.firefox.manageTabPinning "Pin tabs in bookmark groups">
+	
+<!-- Tab Preview Preferences -->	
+	
+<!ENTITY preference.previews.location.title "Location">
+	<!ENTITY preference.previews.location.follow "Same as tabs">
+	<!ENTITY preference.previews.location.top "Top">
+	<!ENTITY preference.previews.location.bottom "Bottom">
+	<!ENTITY preference.previews.location.left "Left">
+	<!ENTITY preference.previews.location.right "Right">
+	
+<!ENTITY preference.previews.tabCount.title "Tabs to Preview">
+
+<!-- Tab Dock Preferences -->
+
+<!ENTITY preference.dock.dockmode.title "Dock Mode">
+	<!ENTITY preference.dock.behavior.title "Behavior">
+	<!ENTITY preference.dock.enabled "Enable Dock">
+	<!ENTITY preference.dock.autohide "Enable Autohide">
+	
+	<!ENTITY preference.dock.style.title "Style">
+	<!ENTITY preference.dock.style.bar "Bar">
+	<!ENTITY preference.dock.style.centered "Centered">
+	
+	<!ENTITY preference.dock.appearance.title "Appearance">
+	<!ENTITY preference.dock.appearance.light "Light">
+	<!ENTITY preference.dock.appearance.dark "Dark">
+	<!ENTITY preference.dock.appearance.transparent "Transparent">
+	
+<!-- Tab Style Preferences -->
+
+<!ENTITY preference.style.greyoutInactiveIcons.label "Icon colors">
+	<!ENTITY preference.style.greyoutInactiveIcons "Grey out inactive groups">

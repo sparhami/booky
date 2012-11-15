@@ -1,0 +1,14 @@
+@import url("chrome://global/skin/");
+
+@import url("bindings.css");
+@import url("launcher/launcher.css");
+
+@import url("chrome://booky/skin/booky.css");
+
+#com_sppad_booky_container:not([bookmarkCount="0"]) .noBookmarksDragArea {
+	display: none;
+}
+
+#TabsToolbar tab[com_sppad_booky_hasLauncher="true"] {
+	display: none !important;
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://booky/locale/booky.dtd">
+
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<binding id="launcher">
+		<content draggable="true" ondragstart="" ondragend="">
+			<xul:toolbarbutton class="launcher" anonid="toolbarbutton"
+				image="chrome://mozapps/skin/places/defaultFavicon.png" container="true"
+				xbl:inherits="image,type" onclick="" onmouseenter="" onmouseleave=""
+				style="-moz-user-focus: normal;" oncontextmenu="return false;">
+
+				<xul:stack validate="always">
+					<xul:image class="toolbarbutton-icon tabgroup-icon" xbl:inherits="validate,src=image,label,type" />
+					<xul:image class="tabgroup-connector" />
+				</xul:stack>
+
+				<xul:label xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+					class="toolbarbutton-text" crop="right" flex="1"
+					xbl:inherits="value=label,accesskey,crop,dragover-top" xmlns:xbl="http://www.mozilla.org/xbl" />
+
+				<xul:hbox anonid="tabgroup-countindicators" class="tabgroup-countindicators">
+					<xul:box class="tabgroup-countindicator-two" />
+					<xul:box class="tabgroup-countindicator-one" />
+				</xul:hbox>
+			</xul:toolbarbutton>
+
+			<xul:menupopup class="leftClickPopupMenu" anonid="leftClickPopupMenu"
+				onpopupshowing="" onpopuphidden="" />
+
+			<xul:menupopup anonid="rightClickPopupMenu" onpopupshowing=""
+				onpopuphidden="">
+				<xul:menu label="&tabgroup.bookmark_menu.label;" class="tabgroup-menu-bookmarkMenu">
+					<xul:menupopup anonid="bookmarksMenuPopup" onpopuphidden="" />
+				</xul:menu>
+				<xul:menuitem anonid="tabgroup-menu-refreshTabMenuItem" class="tabgroup-menu-refreshTabMenuItem"
+					label="&tabgroup.reload_tab.label;" accesskey="&tabgroup.reload_tab.accesskey;"
+					oncommand="" disabled="true"></xul:menuitem>
+				<xul:menuseparator />
+				<xul:menuitem anonid="tabgroup-menu-newTabMenuItem" class="tabgroup-menu-newTabMenuItem"
+					label="&tabgroup.new_tab.label;" accesskey="&tabgroup.new_tab.accesskey;"
+					oncommand=""></xul:menuitem>
+				<xul:menuitem anonid="tabgroup-menu-bookmarkTabMenuItem" class="tabgroup-menu-bookmarkTabMenuItem"
+					label="&tabgroup.bookmark_tab.label;" accesskey="&tabgroup.bookmark_tab.accesskey;"
+					oncommand=""></xul:menuitem>
+				<xul:menuseparator />
+				<xul:menuitem anonid="tabgroup-menu-closeTabMenuItem" class="tabgroup-menu-closeTabMenuItem"
+					label="&tabgroup.close_tab.label;" accesskey="&tabgroup.close_tab.accesskey;"
+					oncommand="" disabled="true"></xul:menuitem>
+			</xul:menupopup>
+		</content>
+
+		<implementation>
+
+		</implementation>
+	</binding>
+</bindings>

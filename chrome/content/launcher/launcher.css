@@ -1,0 +1,42 @@
+@import url("chrome://booky/skin/launcher/launcher.css");
+
+launcher .tabgroup-connector {
+	list-style-image: url("chrome://browser/skin/tabbrowser/loading.png") !important;
+}
+
+launcher.tabgroup-connector,
+launcher .tabgroup-icon {
+	width: 16px;
+	height: 16px;
+}
+
+launcher[busy="false"] .tabgroup-connector,
+launcher[busy="true"] .tabgroup-icon {
+	display: none;
+}
+
+launcher[hasSingle="false"]:not(:hover) .tabgroup-icon {
+	filter: url("chrome://booky/content/filters.svg#grayscale");
+	opacity: .45;
+}
+
+launcher .tabgroup-countindicator-two, 
+launcher .tabgroup-countindicator-one {
+	outline: solid 2px;
+}
+
+launcher[hasSingle="false"] .tabgroup-countindicator-one,
+launcher[hasMultiple="false"] .tabgroup-countindicator-two {
+	display: none;
+}
+
+launcher .tabdock-item > label {
+	display: none;
+}
+
+launcher .launcher {
+	-moz-box-orient: vertical;
+}
+
+
+

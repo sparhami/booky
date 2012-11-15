@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://booky/locale/booky.dtd">
+
+<?xml-stylesheet type="text/css" href="chrome://global/skin/"?>
+<?xml-stylesheet type="text/css" href="chrome://booky/content/booky.css"?>
+<?xml-stylesheet type="text/css" href="chrome://booky/content/launcher/launcher.css"?>
+
+<overlay id="booky"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="application/x-javascript" src="utils.js" />
+	<script type="application/x-javascript" src="bookmarks.js" />
+	<script type="application/x-javascript" src="tabevents.js" />
+	<script type="application/x-javascript" src="launcher/launcher.js" />
+	<script type="application/x-javascript" src="preferences/preferences.js" />
+	<script type="application/x-javascript" src="booky.js" />
+
+	<toolbar id="TabsToolbar">
+		<hbox id="com_sppad_booky_container">
+			<toolbarbutton class="bookyToolbarMenu" type="menu">
+				<menupopup>
+					<menuitem label="Preferences" oncommand="" />
+					<menuitem label="Something" oncommand="" />
+					<menuitem label="Else" oncommand="" />
+				</menupopup>
+			</toolbarbutton>
+			<hbox class="quickLaunchArea">
+				<hbox class="noBookmarksDragArea">
+					Drag Tab Here
+				</hbox>
+
+				<hbox id="tabdock-dropmarker-overlay-container">
+					<image id="tabdock-movelocationindicator" collapsed="true" />
+				</hbox>
+
+				<scrollbox id="tabdock-bookmarks" ondragenter="" ondragover=""
+					ondrop="" ondragend="" ondragexit="" flex="1" />
+
+				<tooltip id="tabgroup-tooltip">
+					<label id="tabgroup-tooltip-label" inherits="value" />
+				</tooltip>
+			</hbox>
+
+			<stringbundleset>
+				<stringbundle id="booky-tab-strings"
+					src="chrome://browser/locale/tabbrowser.properties" />
+			</stringbundleset>
+		</hbox>
+	</toolbar>
+
+</overlay>
