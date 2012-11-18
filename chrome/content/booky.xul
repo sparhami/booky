@@ -26,7 +26,7 @@
 				</menupopup>
 			</toolbarbutton>
 			<hbox class="quickLaunchArea">
-				<hbox class="noBookmarksDragArea">
+				<hbox id="com_sppad_booky_noLaunchersArea" class="noBookmarksDragArea" >
 					Drag Tab Here
 				</hbox>
 

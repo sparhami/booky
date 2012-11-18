@@ -4,7 +4,7 @@ com.sppad = com.sppad || {};
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
-com.sppad.TabDock = (function() {
+com.sppad.Booky = (function() {
     
     var _connectingString = null;
     var _newTabString = null;
@@ -12,28 +12,6 @@ com.sppad.TabDock = (function() {
     var bookmarkCount = 0;
     
     return {
-        
-        getIdFromTab: function(tab) {
-            let currentUri = gBrowser.getBrowserForTab(tab).currentURI;
-            
-            try {
-                return currentUri.host || currentUri.asciiSpec;
-            } catch(err) {
-                try {
-                    return currentUri.asciiSpec;
-                } catch(err) {
-                    return tab.label;
-                }
-            }
-        },
-
-        getIdFromUriString: function(uriString) {
-            try {
-                return Services.io.newURI(uriString, null, null).host || uriString;
-            } catch(err) {
-                return uriString;
-            }
-        },
         
         loadTabs: function() {
             let container = gBrowser.tabContainer;
@@ -243,6 +221,28 @@ com.sppad.TabDock = (function() {
     }
 })();
 
+com.sppad.Booky.getIdFromTab = function(tab) {
+    let currentUri = gBrowser.getBrowserForTab(tab).currentURI;
+    
+    try {
+        return currentUri.host || currentUri.asciiSpec;
+    } catch(err) {
+        try {
+            return currentUri.asciiSpec;
+        } catch(err) {
+            return tab.label;
+        }
+    }
+};
+
+com.sppad.Booky.getIdFromUriString = function(uriString) {
+    try {
+        return Services.io.newURI(uriString, null, null).host || uriString;
+    } catch(err) {
+        return uriString;
+    }
+};
+
 window.addEventListener("load", function() {
     // Workaround: overlaying TabsToolbar with insertbefore doesn't work.
     var id = "com_sppad_booky_container";
@@ -250,5 +250,5 @@ window.addEventListener("load", function() {
     var anchor = document.getElementById('tabbrowser-tabs');
     toolbar.insertItem(id, anchor);
 
-    com.sppad.TabDock.setup();
+    com.sppad.Booky.setup();
 }, false);

@@ -161,7 +161,8 @@ com.sppad.Launcher.prototype.dragstart = function(event) {
     
     let dt = event.dataTransfer;
     
-    dt.setData("text/booky-id", this.getId());
+    dt.setData("text/uri-list", this.getId());
+    dt.setData("text/x-moz-url", this.getId() + "\n" + this.getId());
     dt.addElement(this.getNode());
     
     let tooltip = document.getElementById('com_sppad_booky_tooltip');

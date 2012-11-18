@@ -21,20 +21,43 @@ com.sppad.dd = (function() {
         getIndicator().collapsed = true;
     };
     
+    var getUris = function(event) {
+        let mozUrl = event.dataTransfer.getData('text/x-moz-url');
+        let uriList = event.dataTransfer.getData('text/uri-list');
+        let plain = event.dataTransfer.getData('text/plain');
+        let uris = [];
+        
+        if(mozUrl) {
+            com.sppad.Utils.dump("mozUrl " + mozUrl + "\n");
+            let parts = mozUrl.split('\n');
+            for(let i=0; i<parts.length; i+=2)
+                uris.push(parts[i]);
+        } else if(uriList) {
+            com.sppad.Utils.dump("uriList " + uriList + "\n");
+            let parts = uriList.split('\n');
+            for(let i=0; i<parts.length; i++)
+                if(parts[i].indexOf('#') != 0)
+                    uris.push(parts[i]);
+        } else if(plain) {
+            com.sppad.Utils.dump("plain " + plain + "\n");
+            let parts = plain.split('\n');
+            for(let i=0; i<parts.length; i++)
+                uris.push(parts[i]);
+        }
+        
+        return uris;
+    };
+    
     return {
         /**
-         * Sets the insertion point for a subsequent drop event along with the tab
-         * drop location ind. This code checks to see if the mouse is either before
-         * or past the midway point of a given tab and positions the ind before or
-         * after, respectively.
+         * Sets the insertion point for a subsequent drop event along with the
+         * tab drop location ind. This code checks to see if the mouse is either
+         * before or past the midway point of a given tab and positions the ind
+         * before or after, respectively.
          */
         dragover : function(event) {
             let obj = event.target;
             let ind = getIndicator();
-
-            // Only handle dropping tabgroups for now
-            if (!event.dataTransfer.getData("text/booky-id"))
-                return;
 
             showIndicator();
             event.preventDefault();
@@ -66,18 +89,38 @@ com.sppad.dd = (function() {
 
             ind.style.MozTransform = xform + locX + "px, " + locY + "px)";
         },
-
+        
+        dragoverNoLaunchers : function(event) {
+            event.preventDefault();
+        },
+        
         drop : function(event) {
             dump("drop\n");
 
             hideIndicator();
 
-            let id = event.dataTransfer.getData('text/booky-id');
+            let uris = getUris(event);
+            
+            com.sppad.Utils.dump("uris.length " + uris.length + "\n");
+            for(let i=0; i<uris.length; i++)
+                com.sppad.Utils.dump("got uri " + uris[i] + "\n");
+            
+            for(let i=0; i<uris.length; i++) {
+                
+                let uri = uris[i];
+                let id = com.sppad.Booky.getIdFromUriString(uri);
 
-            let bookmarkIds = com.sppad.Launcher.getLauncher(id).getBookmarkIds();
-            let prevBookmarkIds = _insertPoint && _insertPoint.js.getBookmarkIds();
+                let launcher = com.sppad.Launcher.getLauncher(id);
+                if(launcher.getBookmarkIds().length == 0) {
+                    com.sppad.Utils.dump("adding bookmark " + uris[i] + "\n");
+                    com.sppad.Bookmarks.addBookmark(uris[i]);
+                }
+                
+                let bookmarkIds = launcher.getBookmarkIds();
+                let prevBookmarkIds = _insertPoint && _insertPoint.js.getBookmarkIds();
 
-            com.sppad.Bookmarks.moveBookmarkGroupBefore(prevBookmarkIds, bookmarkIds);
+                com.sppad.Bookmarks.moveBookmarkGroupBefore(prevBookmarkIds, bookmarkIds);
+            }
             
             dump("done drop\n");
         },
@@ -85,6 +128,7 @@ com.sppad.dd = (function() {
         dragend : function(event) {
             hideIndicator();
         },
+        
     }
 })();
 
@@ -95,5 +139,9 @@ window.addEventListener("load", function() {
     launcherContainer.addEventListener('dragover', com.sppad.dd.dragover, false);
     launcherContainer.addEventListener('dragend', com.sppad.dd.dragend, false);
     launcherContainer.addEventListener('drop', com.sppad.dd.drop, false);
+    
+    let noLaunchersContainer = this.document.getElementById('com_sppad_booky_noLaunchersArea');
+    noLaunchersContainer.addEventListener('drop', com.sppad.dd.drop, false);
+    noLaunchersContainer.addEventListener('dragover', com.sppad.dd.dragoverNoLaunchers, false);
     
 }, false);

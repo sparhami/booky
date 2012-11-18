@@ -18,15 +18,22 @@ com.sppad.BookmarksListener = {
 	},
 	onItemRemoved: function(aItemId, aFolder, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
+	    
+        dump("onBeforeItemRemoved\n");
+        
 		if(aParentId === com.sppad.Bookmarks.bookmarkFolder) {
-		    let index = _bs.getItemIndex(aItemId);
+	        dump("getting index\n");
+		    
+		    let index = com.sppad.Bookmarks.bookmarksService.getItemIndex(aItemId);
+		    
+		    dump("index " + index + "\n");
 		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		}
 	},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
 		if(aProperty === "uri" && aParentId === com.sppad.Bookmarks.bookmarkFolder) {
-		    let index = _bs.getItemIndex(aItemId);
+		    let index = com.sppad.Bookmarks.bookmarksService.getItemIndex(aItemId);
 		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		    com.sppad.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
 		    com.sppad.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
@@ -84,8 +91,8 @@ com.sppad.Bookmarks = (function() {
     _bs.addObserver(com.sppad.BookmarksListener, false);
     
     return {
-    	// TODO - allow this to be set as config option ?
     	bookmarkFolder:			     _folderId,
+    	bookmarksService:            _bs,
     	
     	// event types
     	EVENT_ADD_BOOKMARK: 		'EVENT_ADD_BOOKMARK',
@@ -93,12 +100,11 @@ com.sppad.Bookmarks = (function() {
     	EVENT_MOV_BOOKMARK:			'EVENT_MOV_BOOKMARK',
     	EVENT_LOAD_BOOKMARK: 		'EVENT_LOAD_BOOKMARK',
     	
-    		
-    	cleanup : function() {
+    	cleanup: function() {
     		_bs.removeObbserver(BookmarksListener);
     	},
     	
-    	moveBookmarkGroupBefore : function(prevBookmarkIds, bookmarkIds) {
+    	moveBookmarkGroupBefore: function(prevBookmarkIds, bookmarkIds) {
     	    
     		let targetIndex = prevBookmarkIds ? _bs.getItemIndex(prevBookmarkIds[prevBookmarkIds.length - 1]) + 1 : 0;
     		
@@ -132,6 +138,8 @@ com.sppad.Bookmarks = (function() {
     	},
     	
     	bookmarkRemoved: function(aItemId, aFolderId, aIndex) {
+            dump("bookmark removed!\n");
+    	    
             let folder = _getFolder(aFolderId);
             
     		try {
@@ -147,8 +155,6 @@ com.sppad.Bookmarks = (function() {
     	},
     	
     	bookmarkMoved: function(aItemId, aFolderId, aIndex) {
-    	    dump("bookmark moved!\n");
-    	    
             let folder = _getFolder(aFolderId);
     	    
     		try {
@@ -180,7 +186,8 @@ com.sppad.Bookmarks = (function() {
          *            The uri to add a bookmark for.
          * @return The bookmark id of the added bookmark.
          */
-    	addBookmark : function(uri) {
+    	addBookmark : function(uriString) {
+            let uri = Services.io.newURI(uriString, null, null);
     	    return _bs.insertBookmark(this.bookmarkFolder, uri, _bs.DEFAULT_INDEX, "");
     	},
     	
