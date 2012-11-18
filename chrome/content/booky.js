@@ -44,6 +44,8 @@ com.sppad.TabDock = (function() {
         updateBookmarksCount: function(count) {
             bookmarkCount += count;
             document.getElementById('com_sppad_booky_container').setAttribute('bookmarkCount', bookmarkCount);
+            
+            com.sppad.Utils.dump("bookmarkCount " + bookmarkCount + "\n");
         },
         
         handleEvent : function(aEvent) {
@@ -86,28 +88,32 @@ com.sppad.TabDock = (function() {
         
         onBookmarkAdded: function(event) {
             dump("onBookmarkAdded\n");
+            
             let node = event.node;
             let id = this.getIdFromUriString(node.uri);
-            
-            dump("bookmark create id " + id +"\n");
             
             let launcher = com.sppad.Launcher.getLauncher(id);
             launcher.addBookmark(node.uri, node.icon, node.itemId);
             
-            this.updateBookmarksCount(1);
+            // Add all existing tabs in the launcher
+            let tabs = gBrowser.tabs;
+            for(let i=0; i<tabs.length; i++)
+                if(id == this.getIdFromTab(tabs[i]))
+                    launcher.addTab(tabs[i]);
             
-            // node.itemId, node.uri, node.icon
+            this.updateBookmarksCount(1);
         },
         
         onBookmarkRemoved: function(event) {
             dump("onBookmarkRemoved\n");
             
             let node = event.node;
-            let uri = node.uri;
+            let id = this.getIdFromUriString(node.uri);
+            
+            let launcher = com.sppad.Launcher.getLauncher(id);
+            launcher.removeBookmark(node.itemId);
             
             this.updateBookmarksCount(-1);
-            
-            // node.itemId, node.uri, node.icon
         },
         
         onBookmarkMoved: function(event) {

@@ -8,19 +8,6 @@ com.sppad.Launcher = function(aID) {
     var tabs = [];
     var bookmarks = [];
     var bookmarkIds= [];
-
-    dump("adding launcher with id " + id + "\n");
-    
-    var node = document.createElement('launcher');
-    let container = document.getElementById('com_sppad_booky_launchers');
-    container.appendChild(node);
-    
-    let lastChild = container.boxObject.lastChild;
-    node.ordinal = lastChild ? +lastChild.ordinal + 2 : 0;
-    node.setJavaScriptObject(this);
-    
-    var button = document.getAnonymousElementByAttribute(node, 'anonid',
-            'toolbarbutton');
     
     var openTab = function() {
         if(tabs.length == 0)
@@ -76,7 +63,20 @@ com.sppad.Launcher = function(aID) {
     };
     
     this.removeBookmark = function(aBookmarkId) {
+        com.sppad.Utils.dump('removing bookmark\n');
+        
        com.sppad.Utils.removeFromArray(bookmarkIds, aBookmarkId);
+       
+       if(bookmarkIds.length == 0) {
+           com.sppad.Utils.dump('no more bookmarks, removing\n');
+           let container = document.getElementById('com_sppad_booky_launchers');
+           container.removeChild(node);
+           
+           for(let i=0; i<tabs.length; i++)
+               tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
+           
+           delete com.sppad.Launcher.launcherMap[aID];
+       }
     };
     
     this.removeTab = function(aTab) {
@@ -96,11 +96,25 @@ com.sppad.Launcher = function(aID) {
         return aTab.com_sppad_booky_launcher == this;
     };
 
+    dump("adding launcher with id " + id + "\n");
+    
+    var node = document.createElement('launcher');
+    let container = document.getElementById('com_sppad_booky_launchers');
+    container.appendChild(node);
+
+    let lastChild = container.boxObject.lastChild;
+    node.ordinal = lastChild ? +lastChild.ordinal + 2 : 0;
+    node.setJavaScriptObject(this);
+    
+    var button = document.getAnonymousElementByAttribute(node, 'anonid',
+            'toolbarbutton');
+    
     button.addEventListener('command', openTab, false);
 
     updateCounts();
     dump("done adding launcher with id " + id + "\n");
-
+    
+    
     return {
         setImage: this.setImage,
         gedId: this.getId,
