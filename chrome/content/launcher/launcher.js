@@ -57,15 +57,17 @@ com.sppad.Launcher = function(aID) {
     
     this.addBookmark = function(aUri, anImage, aBookmarkId ) {
         bookmarkIds.push(aBookmarkId);
+        bookmarks.push(aUri);
         
         uri = aUri;
         this.setImage(anImage);
     };
     
-    this.removeBookmark = function(aBookmarkId) {
-        com.sppad.Utils.dump('removing bookmark\n');
+    this.removeBookmark = function(aUri, aBookmarkId) {
+       com.sppad.Utils.dump('removing bookmark\n');
         
        com.sppad.Utils.removeFromArray(bookmarkIds, aBookmarkId);
+       com.sppad.Utils.removeFromArray(bookmarks, aUri);
        
        if(bookmarkIds.length == 0) {
            com.sppad.Utils.dump('no more bookmarks, removing\n');
@@ -161,8 +163,9 @@ com.sppad.Launcher.prototype.dragstart = function(event) {
     
     let dt = event.dataTransfer;
     
-    dt.setData("text/uri-list", this.getId());
-    dt.setData("text/x-moz-url", this.getId() + "\n" + this.getId());
+    dt.setData('text/uri-list', this.getId());
+    dt.setData('text/x-moz-url', this.getId() + "\n" + this.getId());
+
     dt.addElement(this.getNode());
     
     let tooltip = document.getElementById('com_sppad_booky_tooltip');

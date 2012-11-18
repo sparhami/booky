@@ -176,9 +176,11 @@ com.sppad.Bookmarks = (function() {
          *            The uri to add a bookmark for.
          * @return The bookmark id of the added bookmark.
          */
-    	addBookmark : function(uriString) {
-            let uri = Services.io.newURI(uriString, null, null);
-    	    return _bs.insertBookmark(this.bookmarkFolder, uri, _bs.DEFAULT_INDEX, "");
+    	addBookmark : function(aUriString) {
+    	    // Always call _getQuicklaunchFolder in case it has been deleted
+    	    let folder = _getQuicklaunchFolder();
+            let uri = Services.io.newURI(aUriString, null, null);
+    	    return _bs.insertBookmark(folder, uri, _bs.DEFAULT_INDEX, "");
     	},
     	
     	/**

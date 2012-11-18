@@ -89,7 +89,7 @@ com.sppad.Booky = (function() {
             let id = this.getIdFromUriString(node.uri);
             
             let launcher = com.sppad.Launcher.getLauncher(id);
-            launcher.removeBookmark(node.itemId);
+            launcher.removeBookmark(node.uri, node.itemId);
             
             this.updateBookmarksCount(-1);
         },
