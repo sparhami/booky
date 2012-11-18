@@ -238,5 +238,11 @@ com.sppad.TabDock = (function() {
 })();
 
 window.addEventListener("load", function() {
+    // Workaround: overlaying TabsToolbar with insertbefore doesn't work.
+    var id = "com_sppad_booky_container";
+    var toolbar = document.getElementById('TabsToolbar');
+    var anchor = document.getElementById('tabbrowser-tabs');
+    toolbar.insertItem(id, anchor);
+
     com.sppad.TabDock.setup();
 }, false);

@@ -116,6 +116,7 @@ com.sppad.Launcher = function(aID) {
 }
 
 com.sppad.Launcher.prototype.mouseenter = function() {
+    com.sppad.Launcher.hoveringLauncher = this;
     if(com.sppad.Launcher.dragging)
         return;
     
@@ -135,6 +136,8 @@ com.sppad.Launcher.prototype.mouseenter = function() {
 };
 
 com.sppad.Launcher.prototype.mouseleave = function() {
+    com.sppad.Launcher.hoveringLauncher = null;
+    
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.hidePopup();
 };
@@ -142,20 +145,24 @@ com.sppad.Launcher.prototype.mouseleave = function() {
 com.sppad.Launcher.prototype.dragstart = function(event) {
     com.sppad.Launcher.dragging = true;
     
-    let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.hidePopup();
-    
     let dt = event.dataTransfer;
     
     dt.setData("text/booky-id", this.getId());
     dt.addElement(this.getNode());
+    
+    let tooltip = document.getElementById('com_sppad_booky_tooltip');
+    tooltip.hidePopup();
 };
 
 com.sppad.Launcher.prototype.dragend = function(event) {
     com.sppad.Launcher.dragging = false;
+    if(com.sppad.Launcher.hoveringLauncher)
+        com.sppad.Launcher.hoveringLauncher.mouseenter();
 };
 
+/** Workaround for dragging too fast and seeing a tooltip while dragging */
 com.sppad.Launcher.dragging = false;
+com.sppad.Launcher.hoveringLauncher = null;
 /** Maps ids to Launchers */
 com.sppad.Launcher.launcherMap = {};
 com.sppad.Launcher.getLauncher = function(aID) {
