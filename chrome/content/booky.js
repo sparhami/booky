@@ -6,6 +6,9 @@ Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 com.sppad.TabDock = (function() {
     
+    var _connectingString = null;
+    var _newTabString = null;
+    
     var bookmarkCount = 0;
     
     return {
@@ -89,7 +92,7 @@ com.sppad.TabDock = (function() {
             dump("bookmark create id " + id +"\n");
             
             let launcher = com.sppad.Launcher.getLauncher(id);
-            launcher.addBookmark(node.uri, node.icon);
+            launcher.addBookmark(node.uri, node.icon, node.itemId);
             
             this.updateBookmarksCount(1);
             
@@ -111,11 +114,21 @@ com.sppad.TabDock = (function() {
             dump("onBookmarkMoved\n");
             
             let node = event.node;
-            let uri = node.uri;
+            let nodePrevious = event.nodePrevious;
+            
+            let group = com.sppad.Launcher.getLauncher(this.getIdFromUriString(node.uri));
+            
+            if(nodePrevious == null) {
+                group.getNode().ordinal = 0;
+            } else {
+                let prevGroup = com.sppad.Launcher.getLauncher(this.getIdFromUriString(nodePrevious.uri));
+                group.getNode().ordinal = prevGroup.getNode().ordinal - (-1);
+            }
+
+            com.sppad.Utils.reapplyOrdinals(document.getElementById("com_sppad_booky_launchers"));
         },
         
         onTabOpen: function(aTab) {
-            
             this.onTabAttrChange(aTab);
             dump("onTabOpen\n");
         },
@@ -137,17 +150,13 @@ com.sppad.TabDock = (function() {
             let newId = this.getIdFromTab(aTab);
             let oldId = aTab.com_sppad_booky_id;
             
-            let tabStringBundle = document.getElementById("com_sppad_booky_tabstrings");
-            let newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
-            let connectingString = tabStringBundle.getString("tabs.connecting");
-            
             // If the tab hasn't loaded yet, use the label for the id
-            if(newId === "about:blank" && aTab.label != newTabString && aTab.label != "")
+            if(newId === "about:blank" && aTab.label != _newTabString && aTab.label != "")
                 newId = this.getIdFromUriString(aTab.label);
 
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
-            if(aTab.label != connectingString && newId != oldId) {
+            if(aTab.label != _connectingString && newId != oldId) {
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
                 if(com.sppad.Launcher.hasLauncher(newId))
@@ -197,6 +206,10 @@ com.sppad.TabDock = (function() {
         }, 
         
         setup: function() {
+            let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
+            _connectingString = tabStringBundle.getString("tabs.connecting");
+            _newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
+            
             com.sppad.TabEvents.addListener(this);
             
             Preferences.addListener(this, Preferences.EVENT_PREFERENCE_CHANGED);

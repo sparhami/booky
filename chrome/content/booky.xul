@@ -14,10 +14,11 @@
 	<script type="application/x-javascript" src="launcher/launcher.js" />
 	<script type="application/x-javascript" src="preferences/preferences.js" />
 	<script type="application/x-javascript" src="booky.js" />
+	<script type="application/x-javascript" src="dragdrop.js" />
 
 	<toolbar id="TabsToolbar">
 		<hbox id="com_sppad_booky_container">
-			<toolbarbutton class="bookyToolbarMenu" type="menu">
+			<toolbarbutton class="bookyToolbarMenu" type="menu" visiblity="collapse">
 				<menupopup>
 					<menuitem label="Preferences" oncommand="" />
 					<menuitem label="Something" oncommand="" />
@@ -33,8 +34,7 @@
 					<image id="com_sppad_booky_dropmarker" collapsed="true" />
 				</hbox>
 
-				<scrollbox id="com_sppad_booky_launchers" ondragenter=""
-					ondragover="" ondrop="" ondragend="" ondragexit="" flex="1" />
+				<hbox id="com_sppad_booky_launchers"/>
 
 				<tooltip id="com_sppad_booky_tooltip">
 					<label id="com_sppad_booky_tooltip_label" inherits="value" />

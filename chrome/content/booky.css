@@ -9,6 +9,20 @@
 	display: none;
 }
 
+#com_sppad_booky_dropmarker_container {
+	position:fixed;
+	top:0px;
+	left:0;
+	margin-bottom: -5px;
+	padding: 0;
+}
+
+#com_sppad_booky_dropmarker {
+	position: relative;
+  	z-index: 2147483647;
+  	list-style-image: url(chrome://browser/skin/tabbrowser/tabDragIndicator.png);
+}
+
 #TabsToolbar tab[com_sppad_booky_hasLauncher="true"] {
 	display: none !important;
 }

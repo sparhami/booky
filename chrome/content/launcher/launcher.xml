@@ -6,11 +6,11 @@
 	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<binding id="launcher">
-		<content draggable="true" ondragstart="" ondragend="">
+		<content draggable="true" ondragstart="js.dragstart(event);" ondragend="js.dragstart(event);">
 			<xul:toolbarbutton class="launcher" anonid="toolbarbutton"
 				image="chrome://mozapps/skin/places/defaultFavicon.png" container="true"
-				xbl:inherits="image,type" onclick="" onmouseenter="js.onMouseEnter();"
-				onmouseleave="js.onMouseLeave();" style="-moz-user-focus: normal;" oncontextmenu="return false;">
+				xbl:inherits="image,type" onclick="" onmouseenter="js.mouseenter();"
+				onmouseleave="js.mouseleave();" style="-moz-user-focus: normal;" oncontextmenu="return false;">
 
 				<xul:stack validate="always">
 					<xul:image class="toolbarbutton-icon tabgroup-icon" xbl:inherits="validate,src=image,label,type" />
@@ -58,7 +58,6 @@
 				<parameter name="aObj" />
 				<body><![CDATA[ this.js = aObj; ]]></body>
 			</method>
-
 
 		</implementation>
 	</binding>

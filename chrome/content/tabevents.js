@@ -61,8 +61,8 @@ com.sppad.TabEvents = (function() {
             if(!aTab.selected
                 && aTab.label != oldLabel
                 && !_tabTitleChangedMap.has(aTab)
-                && aTab.label != connectingString
-                && oldLabel != connectingString
+                && aTab.label != _connectingString
+                && oldLabel != _connectingString
                 && oldLabel != undefined)
             {
                 ttitleChangedTabsCount++;

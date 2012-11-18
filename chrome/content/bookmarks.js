@@ -98,18 +98,17 @@ com.sppad.Bookmarks = (function() {
     		_bs.removeObbserver(BookmarksListener);
     	},
     	
-    	moveBookmarkGroupBefore : function(tarGroup, srcGroup) {
-    		let movingDown = tarGroup ? tarGroup.ordinal > srcGroup.ordinal : true;
-    		let targetIndex = tarGroup ? _bs.getItemIndex(tarGroup.bookmarkIds[tarGroup.bookmarkIds.length - 1]) + 1 : 0;
-    		let bookmarkIds = srcGroup.bookmarkIdArray;
+    	moveBookmarkGroupBefore : function(prevBookmarkIds, bookmarkIds) {
+    	    
+    		let targetIndex = prevBookmarkIds ? _bs.getItemIndex(prevBookmarkIds[prevBookmarkIds.length - 1]) + 1 : 0;
     		
     		for(let i=0; i<bookmarkIds.length; i++) {
     			if(i != 0)
     				targetIndex = _bs.getItemIndex(bookmarkIds[i-1]) + 1;
     			
+    			dump("moving item to index " + targetIndex + "\n");
     			_bs.moveItem(bookmarkIds[i], this.bookmarkFolder, targetIndex);
     		}
-
     	},
     	
       	bookmarkAdded: function(aItemId, aFolderId, aIndex) {
@@ -148,6 +147,8 @@ com.sppad.Bookmarks = (function() {
     	},
     	
     	bookmarkMoved: function(aItemId, aFolderId, aIndex) {
+    	    dump("bookmark moved!\n");
+    	    
             let folder = _getFolder(aFolderId);
     	    
     		try {

@@ -7,15 +7,20 @@ com.sppad.Launcher = function(aID) {
     var uri = "";
     var tabs = [];
     var bookmarks = [];
+    var bookmarkIds= [];
 
     dump("adding launcher with id " + id + "\n");
     
     var node = document.createElement('launcher');
-    document.getElementById("com_sppad_booky_launchers").appendChild(node);
+    let container = document.getElementById('com_sppad_booky_launchers');
+    container.appendChild(node);
+    
+    let lastChild = container.boxObject.lastChild;
+    node.ordinal = lastChild ? +lastChild.ordinal + 2 : 0;
     node.setJavaScriptObject(this);
     
-    var button = document.getAnonymousElementByAttribute(node, "anonid",
-            "toolbarbutton");
+    var button = document.getAnonymousElementByAttribute(node, 'anonid',
+            'toolbarbutton');
     
     var openTab = function() {
         if(tabs.length == 0)
@@ -44,6 +49,10 @@ com.sppad.Launcher = function(aID) {
         return node;
     };
     
+    this.getBookmarkIds = function() {
+        return bookmarkIds;
+    };
+    
     this.setImage = function(anImage) {
         node.setAttribute('image', anImage
                 || 'chrome://mozapps/skin/places/defaultFavicon.png');
@@ -59,9 +68,15 @@ com.sppad.Launcher = function(aID) {
         updateCounts();
     };
     
-    this.addBookmark = function(aUri, anImage ) {
+    this.addBookmark = function(aUri, anImage, aBookmarkId ) {
+        bookmarkIds.push(aBookmarkId);
+        
         uri = aUri;
         this.setImage(anImage);
+    };
+    
+    this.removeBookmark = function(aBookmarkId) {
+       com.sppad.Utils.removeFromArray(bookmarkIds, aBookmarkId);
     };
     
     this.removeTab = function(aTab) {
@@ -88,15 +103,22 @@ com.sppad.Launcher = function(aID) {
 
     return {
         setImage: this.setImage,
+        gedId: this.getId,
+        getNode: this.getNode,
+        getBookmarkIds: this.getBookmarkIds,
         addTab: this.addTab,
         addBookmark: this.addBookmark,
         hasTab: this.hasTab,
         removeTab: this.removeTab,
+        removeBookmark: this.removeBookmark,
         updateTab: this.updateTab, 
     };
 }
 
-com.sppad.Launcher.prototype.onMouseEnter = function() {
+com.sppad.Launcher.prototype.mouseenter = function() {
+    if(com.sppad.Launcher.dragging)
+        return;
+    
     let node = this.getNode();
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     let tooltipLabel = document.getElementById('com_sppad_booky_tooltip_label');
@@ -112,12 +134,28 @@ com.sppad.Launcher.prototype.onMouseEnter = function() {
     tooltip.openPopup(node, 'after_start', xOffset, yOffset, false, false);
 };
 
-com.sppad.Launcher.prototype.onMouseLeave = function() {
+com.sppad.Launcher.prototype.mouseleave = function() {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.hidePopup();
 };
 
+com.sppad.Launcher.prototype.dragstart = function(event) {
+    com.sppad.Launcher.dragging = true;
+    
+    let tooltip = document.getElementById('com_sppad_booky_tooltip');
+    tooltip.hidePopup();
+    
+    let dt = event.dataTransfer;
+    
+    dt.setData("text/booky-id", this.getId());
+    dt.addElement(this.getNode());
+};
 
+com.sppad.Launcher.prototype.dragend = function(event) {
+    com.sppad.Launcher.dragging = false;
+};
+
+com.sppad.Launcher.dragging = false;
 /** Maps ids to Launchers */
 com.sppad.Launcher.launcherMap = {};
 com.sppad.Launcher.getLauncher = function(aID) {
