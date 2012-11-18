@@ -18,15 +18,8 @@ com.sppad.BookmarksListener = {
 	},
 	onItemRemoved: function(aItemId, aFolder, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
-	    
-        dump("onBeforeItemRemoved\n");
-        
 		if(aParentId === com.sppad.Bookmarks.bookmarkFolder) {
-	        dump("getting index\n");
-		    
 		    let index = com.sppad.Bookmarks.bookmarksService.getItemIndex(aItemId);
-		    
-		    dump("index " + index + "\n");
 		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		}
 	},
@@ -112,7 +105,6 @@ com.sppad.Bookmarks = (function() {
     			if(i != 0)
     				targetIndex = _bs.getItemIndex(bookmarkIds[i-1]) + 1;
     			
-    			dump("moving item to index " + targetIndex + "\n");
     			_bs.moveItem(bookmarkIds[i], this.bookmarkFolder, targetIndex);
     		}
     	},
@@ -138,8 +130,6 @@ com.sppad.Bookmarks = (function() {
     	},
     	
     	bookmarkRemoved: function(aItemId, aFolderId, aIndex) {
-            dump("bookmark removed!\n");
-    	    
             let folder = _getFolder(aFolderId);
             
     		try {

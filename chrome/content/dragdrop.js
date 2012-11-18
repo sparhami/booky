@@ -22,9 +22,12 @@ com.sppad.dd = (function() {
     };
     
     var getUris = function(event) {
-        let mozUrl = event.dataTransfer.getData('text/x-moz-url');
-        let uriList = event.dataTransfer.getData('text/uri-list');
-        let plain = event.dataTransfer.getData('text/plain');
+        
+        let dt = event.dataTransfer;
+        let mozUrl = dt.getData('text/x-moz-url');
+        let uriList = dt.getData('text/uri-list');
+        let plain = dt.getData('text/plain');
+        let internal = dt.getData('text/x-moz-text-internal');
         let uris = [];
         
         if(mozUrl) {
@@ -33,13 +36,15 @@ com.sppad.dd = (function() {
             for(let i=0; i<parts.length; i+=2)
                 uris.push(parts[i]);
         } else if(uriList) {
-            com.sppad.Utils.dump("uriList " + uriList + "\n");
             let parts = uriList.split('\n');
             for(let i=0; i<parts.length; i++)
                 if(parts[i].indexOf('#') != 0)
                     uris.push(parts[i]);
+        } else if(internal) {
+            let parts = internal.split('\n');
+            for(let i=0; i<parts.length; i++)
+                uris.push(parts[i]);
         } else if(plain) {
-            com.sppad.Utils.dump("plain " + plain + "\n");
             let parts = plain.split('\n');
             for(let i=0; i<parts.length; i++)
                 uris.push(parts[i]);
