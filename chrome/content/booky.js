@@ -112,8 +112,6 @@ com.sppad.TabDock = (function() {
             
             let node = event.node;
             let uri = node.uri;
-            
-        
         },
         
         onTabOpen: function(aTab) {
@@ -139,7 +137,7 @@ com.sppad.TabDock = (function() {
             let newId = this.getIdFromTab(aTab);
             let oldId = aTab.com_sppad_booky_id;
             
-            let tabStringBundle = document.getElementById("booky-tab-strings");
+            let tabStringBundle = document.getElementById("com_sppad_booky_tabstrings");
             let newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
             let connectingString = tabStringBundle.getString("tabs.connecting");
             

@@ -8,18 +8,14 @@
   list-style-image: url("chrome://booky/skin/booky-icon.png") !important;
 }
 
-#tabdock-bookmarks {
+#com_sppad_booky_launchers {
 	padding-top: 2px  !important;
 	padding-bottom: 2px  !important;
 	margin-top: -2px !important;
-	margin-bottom: -2px !important;
-}
-
-#tabdock-bookmarks {
 	border-style: none;
 	border-bottom: 0;
 }
 
-#tabdock-bookmarks .toolbarbutton-icon {
+#com_sppad_booky_launchers .toolbarbutton-icon {
 	-moz-margin-end: 0 !important;
 }

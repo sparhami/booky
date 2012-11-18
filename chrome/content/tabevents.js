@@ -21,6 +21,8 @@ com.sppad.TabEvents = (function() {
     /** The tabs that are busy */
     var _tabBusyMap = new WeakMap();
     
+    var _connectingString = null;
+    
     /** Number of tabs that have a title change event */
     var titleChangedTabsCount = 0;
     
@@ -53,9 +55,6 @@ com.sppad.TabEvents = (function() {
         },
         
         setTitleChange: function(aTab) {
-            
-            let tabStringBundle = window.document.getElementById("booky-tab-strings");
-            let connectingString = tabStringBundle.getString("tabs.connecting");
             
             let oldLabel = _tabTitleMap.get(aTab);
             
@@ -194,6 +193,9 @@ com.sppad.TabEvents = (function() {
         },
         
         setup: function() {
+            let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
+            _connectingString = tabStringBundle.getString("tabs.connecting");
+            
             let container = window.gBrowser.tabContainer;
 
             container.addEventListener("TabOpen", this, false);  

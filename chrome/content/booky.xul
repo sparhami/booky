@@ -4,7 +4,6 @@
 
 <?xml-stylesheet type="text/css" href="chrome://global/skin/"?>
 <?xml-stylesheet type="text/css" href="chrome://booky/content/booky.css"?>
-<?xml-stylesheet type="text/css" href="chrome://booky/content/launcher/launcher.css"?>
 
 <overlay id="booky"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
@@ -30,20 +29,20 @@
 					Drag Tab Here
 				</hbox>
 
-				<hbox id="tabdock-dropmarker-overlay-container">
-					<image id="tabdock-movelocationindicator" collapsed="true" />
+				<hbox id="com_sppad_booky_dropmarker_container">
+					<image id="com_sppad_booky_dropmarker" collapsed="true" />
 				</hbox>
 
-				<scrollbox id="tabdock-bookmarks" ondragenter="" ondragover=""
-					ondrop="" ondragend="" ondragexit="" flex="1" />
+				<scrollbox id="com_sppad_booky_launchers" ondragenter=""
+					ondragover="" ondrop="" ondragend="" ondragexit="" flex="1" />
 
-				<tooltip id="tabgroup-tooltip">
-					<label id="tabgroup-tooltip-label" inherits="value" />
+				<tooltip id="com_sppad_booky_tooltip">
+					<label id="com_sppad_booky_tooltip_label" inherits="value" />
 				</tooltip>
 			</hbox>
 
 			<stringbundleset>
-				<stringbundle id="booky-tab-strings"
+				<stringbundle id="com_sppad_booky_tabstrings"
 					src="chrome://browser/locale/tabbrowser.properties" />
 			</stringbundleset>
 		</hbox>

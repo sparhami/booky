@@ -128,49 +128,49 @@ com.sppad.EventSupport = function() {
 	var _typeSpecificListeners = {};
 	var _allTypeListeners = [];
 	
-	return {
+    this._fireForListeners = function(event, listeners) {
+        for (let i=0; i < listeners.length; i++) {
+            try {
+                if (typeof(listeners[i]) == "function") {
+                    listeners[i].call(this, event);
+                } else {
+                    /*
+                     * TODO - just bind once when added, that is
+                     * _listeners[type].push =
+                     * listener.handleEvent.bind(listener).
+                     */
+                    listeners[i].handleEvent.bind(listeners[i]).call(this, event);
+                }
+            } catch(err) {
+                // Make sure all other listeners still get to go
+                dump("error while firing listener: " + err + "\n");
+                dump(err.stack);
+            }
+        }
+    };
 	    
-	    _fireForListeners: function(event, listeners) {
-	        for (let i=0; i < listeners.length; i++) {
-	            try {
-	                if (typeof(listeners[i]) == "function") {
-	                    listeners[i].call(this, event);
-	                } else {
-	                    /*
-                         * TODO - just bind once when added, that is
-                         * _listeners[type].push =
-                         * listener.handleEvent.bind(listener).
-                         */
-	                    listeners[i].handleEvent.bind(listeners[i]).call(this, event);
-	                }
-	            } catch(err) {
-	                // Make sure all other listeners still get to go
-	                dump("error while firing listener: " + err + "\n");
-	                dump(err.stack);
-	            }
-	        }
-	    },
-	    
-	    _getListeners: function(type) {
-	        if(type)
-	            return _typeSpecificListeners[type] = _typeSpecificListeners[type] || [];
-	        else
-	            return _allTypeListeners;
-	    },
-	    
-	    addListener: function(listener, type) {
-	        this._getListeners(type).push(listener);
-	    },
+    this._getListeners = function(type) {
+        if(type)
+            return _typeSpecificListeners[type] = _typeSpecificListeners[type] || [];
+        else
+            return _allTypeListeners;
+    };
+};
 
-	    fire: function(event, type) {
-	        event.type = type;
+com.sppad.EventSupport.prototype.
+addListener = function(listener, type) {
+    this._getListeners(type).push(listener);
+};
 
-	        this._fireForListeners(event, this._getListeners(type));
-	        this._fireForListeners(event, this._getListeners());
-	    },
+com.sppad.EventSupport.prototype.
+fire = function(event, type) {
+    event.type = type;
 
-	    removeListener: function(listener, type) {
-	        com.sppad.Utils.removeFromArray(this._getListeners(type), listener);
-	    },
-	};
+    this._fireForListeners(event, this._getListeners(type));
+    this._fireForListeners(event, this._getListeners());
+};
+
+com.sppad.EventSupport.prototype.
+removeListener = function(listener, type) {
+    com.sppad.Utils.removeFromArray(this._getListeners(type), listener);
 };
