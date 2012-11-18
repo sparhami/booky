@@ -21,6 +21,19 @@ com.sppad.dd = (function() {
         getIndicator().collapsed = true;
     };
     
+    var canDrop = function(event) {
+        let dt = event.dataTransfer;
+        let mozUrl = dt.getData('text/x-moz-url');
+        let uriList = dt.getData('text/uri-list');
+        let plain = dt.getData('text/plain');
+        let internal = dt.getData('text/x-moz-text-internal');
+        
+        if(mozUrl || uriList || plain || internal)
+            return true;
+        else
+            return false;
+    };
+    
     var getUris = function(event) {
         
         let dt = event.dataTransfer;
@@ -61,16 +74,19 @@ com.sppad.dd = (function() {
          * before or after, respectively.
          */
         dragover : function(event) {
-            let obj = event.target;
-            let ind = getIndicator();
-
-            showIndicator();
+            if(!canDrop(event))
+                return;
+            
             event.preventDefault();
             
-            // There may be gaps where there isn't a xstabgroup. In that case,
-            // do not modify the ind location.
+            // There may be gaps where there isn't a launcher. In that case,
+            // do not modify the indicator location.
+            let obj = event.target;
             if (obj.nodeName != 'launcher')
                 return;
+            
+            let ind = getIndicator();
+            showIndicator();
 
             // make sure to get ordinal sibling
             let ps = obj.boxObject.previousSibling;
@@ -100,34 +116,23 @@ com.sppad.dd = (function() {
         },
         
         drop : function(event) {
-            dump("drop\n");
-
             hideIndicator();
-
+            
             let uris = getUris(event);
-            
-            com.sppad.Utils.dump("uris.length " + uris.length + "\n");
-            for(let i=0; i<uris.length; i++)
-                com.sppad.Utils.dump("got uri " + uris[i] + "\n");
-            
             for(let i=0; i<uris.length; i++) {
                 
                 let uri = uris[i];
                 let id = com.sppad.Booky.getIdFromUriString(uri);
 
                 let launcher = com.sppad.Launcher.getLauncher(id);
-                if(launcher.getBookmarkIds().length == 0) {
-                    com.sppad.Utils.dump("adding bookmark " + uris[i] + "\n");
-                    com.sppad.Bookmarks.addBookmark(uris[i]);
-                }
+                if(launcher.getBookmarks().indexOf(uri) < 0)
+                    com.sppad.Bookmarks.addBookmark(uri);
                 
                 let bookmarkIds = launcher.getBookmarkIds();
                 let prevBookmarkIds = _insertPoint && _insertPoint.js.getBookmarkIds();
 
                 com.sppad.Bookmarks.moveBookmarkGroupBefore(prevBookmarkIds, bookmarkIds);
             }
-            
-            dump("done drop\n");
         },
 
         dragend : function(event) {

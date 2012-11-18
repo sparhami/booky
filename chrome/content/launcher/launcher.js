@@ -36,6 +36,10 @@ com.sppad.Launcher = function(aID) {
         return node;
     };
     
+    this.getBookmarks = function() {
+        return bookmarks;
+    };
+    
     this.getBookmarkIds = function() {
         return bookmarkIds;
     };
@@ -121,6 +125,7 @@ com.sppad.Launcher = function(aID) {
         setImage: this.setImage,
         gedId: this.getId,
         getNode: this.getNode,
+        getBookmarks: this.getBookmarks,
         getBookmarkIds: this.getBookmarkIds,
         addTab: this.addTab,
         addBookmark: this.addBookmark,
