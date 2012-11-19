@@ -74,7 +74,6 @@ com.sppad.Launcher = function(aID) {
        com.sppad.Utils.removeFromArray(bookmarks, aUri);
        
        if(bookmarkIds.length == 0) {
-           com.sppad.Utils.dump('no more bookmarks, removing\n');
            let container = document.getElementById('com_sppad_booky_launchers');
            container.removeChild(node);
            
@@ -181,6 +180,9 @@ com.sppad.Launcher.prototype.dragend = function(event) {
         com.sppad.Launcher.hoveringLauncher.mouseenter();
 };
 
+
+
+
 /** Workaround for dragging too fast and seeing a tooltip while dragging */
 com.sppad.Launcher.dragging = false;
 com.sppad.Launcher.hoveringLauncher = null;
@@ -193,12 +195,14 @@ com.sppad.Launcher.getLauncher = function(aID) {
     let index = com.sppad.Utils.getIndexInArray(this.launcherIDs, aID);
     if(index < 0) {
         this.launchers.push(new com.sppad.Launcher(aID));
-        index = this.launcherIDs.push(aID) - 1;
+        this.launcherIDs.push(aID);
+        
+        index = this.launchers.length - 1;
     }
    
     return this.launchers[index];
 };
 
 com.sppad.Launcher.hasLauncher = function(aID) {
-    return com.sppad.Utils.getIndexInArray(this.launcherIDs, aID) > 0;
+    return com.sppad.Utils.getIndexInArray(this.launcherIDs, aID) >= 0;
 };

@@ -20,9 +20,7 @@ launcher[hasSingle="false"]:not(:hover) .tabgroup-icon {
 	opacity: .45;
 }
 
-.tabgroup-countindicators {
-	visibility: collapse;
-}
+
 
 launcher .tabgroup-countindicator-two, 
 launcher .tabgroup-countindicator-one {

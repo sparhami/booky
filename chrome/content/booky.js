@@ -139,6 +139,10 @@ com.sppad.Booky = (function() {
             if(newId === "about:blank" && aTab.label != _newTabString && aTab.label != "")
                 newId = this.getIdFromUriString(aTab.label);
 
+            dump("onTabAttrChange newId is " + newId + "\n");
+            dump("onTabAttrChange oldId id " + oldId + "\n");
+            dump("onTabAttrChange aTab.label id " + aTab.label + "\n");
+            
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
             if(aTab.label != _connectingString && newId != oldId) {
