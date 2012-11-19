@@ -143,14 +143,16 @@ com.sppad.Booky = (function() {
             if(aTab.label != _connectingString && newId != oldId) {
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
+                
+                dump("onTabAttrChange getting launcher for id " + newId + "\n");
                 if(com.sppad.Launcher.hasLauncher(newId))
                     com.sppad.Launcher.getLauncher(newId).addTab(aTab);
+                
+                aTab.com_sppad_booky_id = newId;   
             }
             
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
-            
-            aTab.com_sppad_booky_id = newId;   
         },
         
         onTabTitleChange: function(aTab) {

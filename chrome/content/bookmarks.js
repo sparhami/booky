@@ -99,6 +99,9 @@ com.sppad.Bookmarks = (function() {
     	
     	moveBookmarkGroupBefore: function(prevBookmarkIds, bookmarkIds) {
     	    
+    	    if(prevBookmarkIds && prevBookmarkIds.length == 0)
+    	        dump("length should not be 0\n");
+    	    
     		let targetIndex = prevBookmarkIds ? _bs.getItemIndex(prevBookmarkIds[prevBookmarkIds.length - 1]) + 1 : 0;
     		
     		for(let i=0; i<bookmarkIds.length; i++) {

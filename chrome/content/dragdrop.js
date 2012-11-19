@@ -43,21 +43,19 @@ com.sppad.dd = (function() {
         let internal = dt.getData('text/x-moz-text-internal');
         let uris = [];
         
-        if(mozUrl) {
-            com.sppad.Utils.dump("mozUrl " + mozUrl + "\n");
-            let parts = mozUrl.split('\n');
-            for(let i=0; i<parts.length; i+=2)
-                uris.push(parts[i]);
-        } else if(uriList) {
+        if(uriList) {
+            com.sppad.Utils.dump("uriList " + uriList + "\n");
             let parts = uriList.split('\n');
             for(let i=0; i<parts.length; i++)
                 if(parts[i].indexOf('#') != 0)
                     uris.push(parts[i]);
         } else if(internal) {
+            com.sppad.Utils.dump("internal " + internal + "\n");
             let parts = internal.split('\n');
             for(let i=0; i<parts.length; i++)
                 uris.push(parts[i]);
         } else if(plain) {
+            com.sppad.Utils.dump("plain " + plain + "\n");
             let parts = plain.split('\n');
             for(let i=0; i<parts.length; i++)
                 uris.push(parts[i]);
@@ -125,7 +123,7 @@ com.sppad.dd = (function() {
                 let id = com.sppad.Booky.getIdFromUriString(uri);
 
                 let launcher = com.sppad.Launcher.getLauncher(id);
-                if(!com.sppad.arrayContains(launcher.getBookmarks(), uri))
+                if(com.sppad.Utils.getIndexInArray(launcher.getBookmarks(), uri) < 0)
                     com.sppad.Bookmarks.addBookmark(uri);
                 
                 let bookmarkIds = launcher.getBookmarkIds();
@@ -139,6 +137,9 @@ com.sppad.dd = (function() {
             hideIndicator();
         },
         
+        dragexit : function(event) {
+            hideIndicator();
+        },
     }
 })();
 
@@ -148,6 +149,7 @@ window.addEventListener("load", function() {
     let launcherContainer = this.document.getElementById('com_sppad_booky_launchers');
     launcherContainer.addEventListener('dragover', com.sppad.dd.dragover, false);
     launcherContainer.addEventListener('dragend', com.sppad.dd.dragend, false);
+    launcherContainer.addEventListener('dragexit', com.sppad.dd.dragexit, false);
     launcherContainer.addEventListener('drop', com.sppad.dd.drop, false);
     
     let noLaunchersContainer = this.document.getElementById('com_sppad_booky_noLaunchersArea');

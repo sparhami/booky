@@ -97,7 +97,7 @@ com.sppad.Utils = (function() {
          */
 		removeFromArray: function(array,  obj) {
 			for( var i = 0; i < array.length; i++)
-				if (array[i] === obj)
+				if (array[i] == obj)
 					return array.splice(i, 1);
 			
 			return null;
@@ -110,19 +110,11 @@ com.sppad.Utils = (function() {
          *            The object to locate.
          */
 		getIndexInArray: function(array, obj) {
-	          for( var i = 0; i < array.length; i++)
-	                if (array[i] === obj)
-	                    return i;
-	          
-	          throw new Error("Object not found");
-		},
-		
-		arrayContains: function(array, obj) {
-		    for( var i = 0; i < array.length; i++)
-                if (array[i] == obj)
-                    return true;
-		    
-		    return false;
+	          for(var i = 0; i < array.length; i++)
+	              if (array[i] == obj)
+                      return i;
+              
+	          return -1;
 		},
 	}
 })();
@@ -176,7 +168,7 @@ fire = function(event, type) {
 
     this._fireForListeners(event, this._getListeners(type));
     this._fireForListeners(event, this._getListeners());
-};
+};  
 
 com.sppad.EventSupport.prototype.
 removeListener = function(listener, type) {

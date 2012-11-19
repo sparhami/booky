@@ -80,8 +80,6 @@ com.sppad.Launcher = function(aID) {
            
            for(let i=0; i<tabs.length; i++)
                tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
-           
-           delete com.sppad.Launcher.launcherMap[aID];
        }
     };
     
@@ -167,10 +165,7 @@ com.sppad.Launcher.prototype.dragstart = function(event) {
     com.sppad.Launcher.dragging = true;
     
     let dt = event.dataTransfer;
-    
     dt.setData('text/uri-list', this.getId());
-    dt.setData('text/x-moz-url', this.getId() + "\n" + this.getId());
-
     dt.addElement(this.getNode());
     
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
@@ -187,14 +182,20 @@ com.sppad.Launcher.prototype.dragend = function(event) {
 com.sppad.Launcher.dragging = false;
 com.sppad.Launcher.hoveringLauncher = null;
 /** Maps ids to Launchers */
-com.sppad.Launcher.launcherMap = {};
+com.sppad.Launcher.launchers = new Array();
+com.sppad.Launcher.launcherIDs = new Array();
 com.sppad.Launcher.getLauncher = function(aID) {
-    if (!this.launcherMap.hasOwnProperty(aID))
-        this.launcherMap[aID] = new com.sppad.Launcher(aID);
-
-    return this.launcherMap[aID];
+    dump("getting launcher for id " + aID + "\n");
+    
+    let index = com.sppad.Utils.getIndexInArray(this.launcherIDs, aID);
+    if(index < 0) {
+        this.launchers.push(new com.sppad.Launcher(aID));
+        index = this.launcherIDs.push(aID) - 1;
+    }
+   
+    return this.launchers[index];
 };
 
 com.sppad.Launcher.hasLauncher = function(aID) {
-    return this.launcherMap.hasOwnProperty(aID);
+    return com.sppad.Utils.getIndexInArray(this.launcherIDs, aID) > 0;
 };
