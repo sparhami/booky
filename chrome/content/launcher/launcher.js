@@ -68,7 +68,7 @@ com.sppad.Launcher = function(aID) {
     };
     
     this.removeBookmark = function(aUri, aBookmarkId) {
-       com.sppad.Utils.dump('removing bookmark\n');
+       com.sppad.Utils.dump("removing " + aUri + " from launcher " + id + "\n");
         
        com.sppad.Utils.removeFromArray(bookmarkIds, aBookmarkId);
        com.sppad.Utils.removeFromArray(bookmarks, aUri);

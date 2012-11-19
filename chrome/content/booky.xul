@@ -18,23 +18,20 @@
 
 	<toolbar id="TabsToolbar">
 		<hbox id="com_sppad_booky_container">
-			<toolbarbutton class="bookyToolbarMenu" type="menu" visiblity="collapse">
-				<menupopup>
-					<menuitem label="Preferences" oncommand="" />
-					<menuitem label="Something" oncommand="" />
-					<menuitem label="Else" oncommand="" />
-				</menupopup>
-			</toolbarbutton>
+
 			<hbox class="quickLaunchArea">
-				<hbox id="com_sppad_booky_noLaunchersArea" class="noBookmarksDragArea" >
-					Drag Tab Here
-				</hbox>
+				<label id="com_sppad_booky_noLaunchersArea" tooltip="noLaunchersTooltip"
+					value="&com_sppad_booky_noLaunchersArea_text;" />
+
+				<tooltip id="noLaunchersTooltip">
+					<label value="&com_sppad_booky_noLaunchersTooltip_text;" />
+				</tooltip>
 
 				<hbox id="com_sppad_booky_dropmarker_container">
 					<image id="com_sppad_booky_dropmarker" collapsed="true" />
 				</hbox>
 
-				<hbox id="com_sppad_booky_launchers"/>
+				<hbox id="com_sppad_booky_launchers" />
 
 				<tooltip id="com_sppad_booky_tooltip">
 					<label id="com_sppad_booky_tooltip_label" inherits="value" />

@@ -1,7 +1,7 @@
 <!ENTITY com.sppad.booky.ToolbarButton.label "Booky">
 <!ENTITY com.sppad.booky.ToolbarButton.tooltiptext "BookyToolbarItem">
-
-
+<!ENTITY com_sppad_booky_noLaunchersArea_text "Drag Here">
+<!ENTITY com_sppad_booky_noLaunchersTooltip_text "Drag a tab or bookmark here to get started">
 
 <!ENTITY tabgroup.new_tab.label "New Tab">
 <!ENTITY tabgroup.new_tab.accesskey "N">

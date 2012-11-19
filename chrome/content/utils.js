@@ -116,6 +116,14 @@ com.sppad.Utils = (function() {
 	          
 	          throw new Error("Object not found");
 		},
+		
+		arrayContains: function(array, obj) {
+		    for( var i = 0; i < array.length; i++)
+                if (array[i] == obj)
+                    return true;
+		    
+		    return false;
+		},
 	}
 })();
 
