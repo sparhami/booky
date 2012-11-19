@@ -80,6 +80,9 @@ com.sppad.Launcher = function(aID) {
            
            for(let i=0; i<tabs.length; i++)
                tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
+           
+           com.sppad.Utils.removeFromArray(com.sppad.Launcher.launchers, this);
+           com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, id);
        }
     };
     

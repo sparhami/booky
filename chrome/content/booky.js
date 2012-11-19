@@ -110,6 +110,7 @@ com.sppad.Booky = (function() {
             }
 
             com.sppad.Utils.reapplyOrdinals(document.getElementById("com_sppad_booky_launchers"));
+            dump("done onBookmarkMoved\n");
         },
         
         onTabOpen: function(aTab) {
