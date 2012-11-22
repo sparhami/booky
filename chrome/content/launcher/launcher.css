@@ -4,7 +4,7 @@ launcher .tabgroup-connector {
 	list-style-image: url("chrome://browser/skin/tabbrowser/loading.png") !important;
 }
 
-launcher.tabgroup-connector,
+launcher .tabgroup-connector,
 launcher .tabgroup-icon {
 	width: 16px;
 	height: 16px;
@@ -20,7 +20,9 @@ launcher[hasSingle="false"]:not(:hover) .tabgroup-icon {
 	opacity: .45;
 }
 
-
+launcher .tabgroup-countindicators {
+	display: none;
+}
 
 launcher .tabgroup-countindicator-two, 
 launcher .tabgroup-countindicator-one {
@@ -40,5 +42,10 @@ launcher .launcher {
 	-moz-box-orient: vertical;
 }
 
+launcher[selected="true"] .launcherWrapper {
+	background-color: rgba(192, 160, 0, .65);
+}
 
-
+launcher[titleChanged="true"] .launcherWrapper {
+	background-color: rgba(84, 140, 224, .65);
+}

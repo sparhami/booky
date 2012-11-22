@@ -8,6 +8,7 @@ com.sppad.Booky = (function() {
     
     var _connectingString = null;
     var _newTabString = null;
+    var _selectedTab = null;
     
     var bookmarkCount = 0;
     
@@ -120,6 +121,14 @@ com.sppad.Booky = (function() {
         
         onTabSelect: function(aTab) {
             dump("onTabSelect\n");
+            
+            if(_selectedTab && _selectedTab.com_sppad_booky_launcher)
+                _selectedTab.com_sppad_booky_launcher.setSelected(false);
+            
+            if(aTab.com_sppad_booky_launcher)
+                aTab.com_sppad_booky_launcher.setSelected(true);
+            
+            _selectedTab = aTab;
         },
         
         onTabClose: function(aTab) {
@@ -139,10 +148,6 @@ com.sppad.Booky = (function() {
             if(newId === "about:blank" && aTab.label != _newTabString && aTab.label != "")
                 newId = this.getIdFromUriString(aTab.label);
 
-            dump("onTabAttrChange newId is " + newId + "\n");
-            dump("onTabAttrChange oldId id " + oldId + "\n");
-            dump("onTabAttrChange aTab.label id " + aTab.label + "\n");
-            
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
             if(aTab.label != _connectingString && newId != oldId) {
@@ -162,10 +167,18 @@ com.sppad.Booky = (function() {
         
         onTabTitleChange: function(aTab) {
             dump("onTabTitleChange\n");
+            
+            aTab.com_sppad_booky_titleChanged = true;
+            if(aTab.com_sppad_booky_launcher)
+                aTab.com_sppad_booky_launcher.updateTab(aTab);
         },
         
         onTabTitleChangeCleared: function(aTab) {
             dump("onTabTitleChangeCleared\n");
+            
+            aTab.com_sppad_booky_titleChanged = false;
+            if(aTab.com_sppad_booky_launcher)
+                aTab.com_sppad_booky_launcher.updateTab(aTab);
         },
         
         onTabUnread: function(aTab) {

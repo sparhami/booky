@@ -22,10 +22,14 @@ com.sppad.Launcher = function(aID) {
         node.setAttribute("hasMultiple", tabs.length > 1);
         
         let busy = false;
-        for(let i=0; i<tabs.length; i++)
+        let titleChanged = false;
+        for(let i=0; i<tabs.length; i++) {
             busy |= (tabs[i].com_sppad_booky_busy == true);
-        
+            titleChanged |= (tabs[i].com_sppad_booky_titleChanged == true);
+        }
+
         node.setAttribute("busy", busy == true);
+        node.setAttribute("titleChanged", titleChanged == true);
     };
 
     this.getId = function() {
@@ -57,6 +61,8 @@ com.sppad.Launcher = function(aID) {
         
         com.sppad.Utils.dump("Added tab to group " + id + "\n");
         updateCounts();
+        
+        this.setSelected(gBrowser.selectedTab == aTab);
     };
     
     this.addBookmark = function(aUri, anImage, aBookmarkId ) {
@@ -92,6 +98,12 @@ com.sppad.Launcher = function(aID) {
         
         com.sppad.Utils.dump("Removed tab from group " + id + "\n");
         updateCounts();
+        
+        this.setSelected(false);
+    };
+    
+    this.setSelected = function(active) {
+        node.setAttribute('selected', active);
     };
     
     this.updateTab = function(aTab) {
@@ -132,6 +144,7 @@ com.sppad.Launcher = function(aID) {
         hasTab: this.hasTab,
         removeTab: this.removeTab,
         removeBookmark: this.removeBookmark,
+        setSelected: this.setSelected,
         updateTab: this.updateTab, 
     };
 }

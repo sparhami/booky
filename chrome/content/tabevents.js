@@ -65,7 +65,7 @@ com.sppad.TabEvents = (function() {
                 && oldLabel != _connectingString
                 && oldLabel != undefined)
             {
-                ttitleChangedTabsCount++;
+                titleChangedTabsCount++;
             
                 _tabTitleChangedMap.set(aTab, "");
                 _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_CHANGED);
