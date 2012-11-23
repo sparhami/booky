@@ -11,9 +11,9 @@
 			<xul:box class="launcherWrapper">
 				<xul:toolbarbutton class="launcher" anonid="toolbarbutton"
 					image="chrome://mozapps/skin/places/defaultFavicon.png" container="true"
-					xbl:inherits="image,type" onclick="" onmouseenter="js.mouseenter();"
+					xbl:inherits="image,type" onmouseenter="js.mouseenter();"
 					onmouseleave="js.mouseleave();" style="-moz-user-focus: normal;"
-					oncontextmenu="return false;">
+					oncontextmenu="return false;" oncommand="js.command();">
 
 					<xul:stack validate="always">
 						<xul:image class="toolbarbutton-icon tabgroup-icon"

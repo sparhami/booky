@@ -151,16 +151,17 @@ com.sppad.Bookmarks = (function() {
                 
     	  	  	// Find first node prior to the moved node of the same type
                 let node = folder.getChild(aIndex);
-                let nodePrevious = null;
-    	  	  	for(let i=aIndex-1; i>=0; i--) {
+                let nodeNext = null;
+    	  	  	for(let i=aIndex+1; i<folder.childCount; i++) {
     	  	  		if(folder.getChild(i).type === node.type) {
-    	  	 			nodePrevious = folder.getChild(i);
+    	  	  		    dump("node next at index " + i + "\n");
+    	  	  		    nodeNext = folder.getChild(i);
     	  	  			break;
     	  	  		}	
     	  	  	}
     	  	
     	    	if(node.type == node.RESULT_TYPE_URI)
-    	  	  		_eventSupport.fire( { 'node' : node, 'nodePrevious' : nodePrevious}, this.EVENT_MOV_BOOKMARK);
+    	  	  		_eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_BOOKMARK);
     	    	
     		} finally {
     	  	  	folder.containerOpen = false;
@@ -177,6 +178,7 @@ com.sppad.Bookmarks = (function() {
          */
     	addBookmark : function(aUriString) {
     	    // Always call _getQuicklaunchFolder in case it has been deleted
+    	    dump("aUriString " + aUriString + "\n");   
     	    let folder = _getQuicklaunchFolder();
             let uri = Services.io.newURI(aUriString, null, null);
     	    return _bs.insertBookmark(folder, uri, _bs.DEFAULT_INDEX, "");

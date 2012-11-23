@@ -34,10 +34,6 @@
   	list-style-image: url(chrome://browser/skin/tabbrowser/tabDragIndicator.png);
 }
 
-#com_sppad_booky_launchers_overflow {
-
-}
-
 #com_sppad_booky_launchers .autorepeatbutton-up,
 #com_sppad_booky_launchers .autorepeatbutton-down {
 	visibility: collapse !important;

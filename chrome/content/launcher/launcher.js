@@ -3,6 +3,7 @@ com.sppad = com.sppad || {};
 
 com.sppad.Launcher = function(aID) {
 
+    var self = this;
     var ordinal = 0;
     var overflow = false;
     var id = aID;
@@ -13,7 +14,7 @@ com.sppad.Launcher = function(aID) {
     var node = document.createElement('launcher');
     var overflowNode = document.createElement('menuitem');
     
-    var openTab = function() {
+    this.openTab = function() {
         if(tabs.length == 0)
             gBrowser.selectedTab = gBrowser.addTab(uri);
         else
@@ -42,6 +43,10 @@ com.sppad.Launcher = function(aID) {
     
     this.getNode = function() {
         return node;
+    };
+    
+    this.getOverflowNode = function() {
+        return overflowNode;
     };
     
     this.getBookmarks = function() {
@@ -141,21 +146,22 @@ com.sppad.Launcher = function(aID) {
         return aTab.com_sppad_booky_launcher == this;
     };
     
+    this.createBefore = function(aLauncher) {
+        let container = document.getElementById('com_sppad_booky_launchers');
+        let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
+        
+        let nodeAnchor = aLauncher ? aLauncher.getNode() : null;
+        let overflowNodeAnchor = aLauncher ? aLauncher.getOverflowNode() : null;
+        
+        container.insertBefore(node, nodeAnchor);
+        overflowContainer.insertBefore(overflowNode, overflowNodeAnchor);
+        
+        overflowNode.setAttribute('label', id);
+        node.setJavaScriptObject(self);
+    };
+    
 
-    let container = document.getElementById('com_sppad_booky_launchers');
-    let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
-
-    this.setOrdinal(com.sppad.Launcher.launchers.length * 2);
-    
-    container.appendChild(node);
-    overflowContainer.appendChild(overflowNode);
-    overflowNode.setAttribute('label', id);
-    
-    node.setJavaScriptObject(this);
-    
-    var button = document.getAnonymousElementByAttribute(node, 'anonid',
-            'toolbarbutton');
-    button.addEventListener('command', openTab, false);
+    this.createBefore(null);
     
     updateCounts();
     
@@ -165,17 +171,20 @@ com.sppad.Launcher = function(aID) {
         setOrdinal: this.setOrdinal,
         getId: this.getId,
         getNode: this.getNode,
+        getOverflowNode: this.getOverflowNode,
         getBookmarks: this.getBookmarks,
         getBookmarkIds: this.getBookmarkIds,
         getOrdinal: this.getOrdinal,
         isOverflow: this.isOverflow,
         addTab: this.addTab,
+        openTab: this.openTab,
         addBookmark: this.addBookmark,
         hasTab: this.hasTab,
         removeTab: this.removeTab,
         removeBookmark: this.removeBookmark,
         setSelected: this.setSelected,
-        updateTab: this.updateTab, 
+        updateTab: this.updateTab,
+        createBefore: this.createBefore,
     };
 }
 
@@ -221,6 +230,10 @@ com.sppad.Launcher.prototype.dragend = function(event) {
     com.sppad.Launcher.dragging = false;
     if(com.sppad.Launcher.hoveringLauncher)
         com.sppad.Launcher.hoveringLauncher.mouseenter();
+};
+
+com.sppad.Launcher.prototype.command = function() {
+    this.openTab();
 };
 
 

@@ -95,26 +95,15 @@ com.sppad.Booky = (function() {
             dump("onBookmarkMoved\n"); 
             
             let node = event.node;
-            let nodePrevious = event.nodePrevious;
+            let nodeNext = event.nodeNext;
+            
+            if(nodeNext)
+                dump("nodeNext.uri " + nodeNext.uri + "\n" );
             
             let group = com.sppad.Launcher.getLauncher(this.getIdFromUriString(node.uri));
+            let nextGroup = nodeNext ? com.sppad.Launcher.getLauncher(this.getIdFromUriString(nodeNext.uri)) : null;
             
-            let newOrdinal = 0;
-            if(nodePrevious != null) {
-                let prevGroup = com.sppad.Launcher.getLauncher(this.getIdFromUriString(nodePrevious.uri));
-                newOrdinal = +prevGroup.getOrdinal() + 2;
-            }
-
-            group.setOrdinal(newOrdinal);
-            
-            // increase all the ordinals for groups following the moved group by 2
-            let launchers = com.sppad.Launcher.launchers;
-            for(let i=0; i<launchers.length; i++) {
-                let launcher = launchers[i];
-                
-                if(launcher != group && launcher.getOrdinal() >= newOrdinal)
-                    launcher.setOrdinal(+launcher.getOrdinal() + 2);
-            }
+            group.createBefore(nextGroup);
             
             // force resize to be called so things are hidden / shown appropriately
             com.sppad.Resizer.onresize();

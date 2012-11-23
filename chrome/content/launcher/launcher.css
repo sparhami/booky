@@ -51,6 +51,12 @@ launcher[selected="true"] .launcherWrapper {
 	border-bottom: none;
 }
 
+launcher[titleChanged="true"]:last-child .launcherWrapper,
+launcher[selected="true"]:last-child .launcherWrapper {
+	margin-right: 0px;
+}
+
+
 launcher[selected="true"] .launcherWrapper {
 	background-image: -moz-linear-gradient(bottom, rgba(192, 160, 0, 1.0) 3%, rgba(192, 160, 0, .9) 8%, rgba(190, 160, 0, .8) 10%, rgba(190, 160, 0, .6) 100%);
 }
