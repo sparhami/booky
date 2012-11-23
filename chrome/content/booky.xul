@@ -32,7 +32,8 @@
 				</hbox>
 
 				<arrowscrollbox id="com_sppad_booky_launchers" />
-				<toolbarbutton id="com_sppad_booky_launchers_overflow" type="menu">
+				<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
+					type="menu">
 					<menupopup id="com_sppad_booky_launchers_overflow_menu" />
 				</toolbarbutton>
 

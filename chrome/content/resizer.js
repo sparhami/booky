@@ -29,7 +29,7 @@ com.sppad.Resizer = (function() {
             children[i].js.setOverflow(overflow);
         }
             
-        _overflowToolbarButton.setAttribute('vCollapse', !hasOverflow);
+        _overflowToolbarButton.setAttribute('overflow', hasOverflow == true);
     };
 
     return {
@@ -48,7 +48,7 @@ com.sppad.Resizer = (function() {
         setup : function() {
 
             _launchers = window.document.getElementById('com_sppad_booky_launchers');
-            _overflowToolbarButton = window.document.getElementById('com_sppad_booky_launchers_overflow');
+            _overflowToolbarButton = window.document.getElementById('com_sppad_booky_launchers_overflow_button');
             window.addEventListener('resize', this.onresize, false);
 
             _doresize();

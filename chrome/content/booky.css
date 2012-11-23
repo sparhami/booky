@@ -43,14 +43,7 @@
 	display: none !important;
 }
 
-*[vCollapse="true"] {
-	visibility: collapse;
-}
-
-*[vHidden="true"] {
-	visibility: hidden;
-}
-
+#com_sppad_booky_launchers_overflow_button:not([overflow="true"]),
 #com_sppad_booky_tooltip[hidden="true"] {
 	visibility: collapse;
 }
