@@ -42,10 +42,19 @@ launcher .launcher {
 	-moz-box-orient: vertical;
 }
 
+launcher[titleChanged="true"] .launcherWrapper,
 launcher[selected="true"] .launcherWrapper {
-	background-color: rgba(192, 160, 0, .65);
+	border-width: 1px;
+	border-style: solid;
+	margin-right: -1px;
+	border-radius: 6px 6px 0 0;
+	border-bottom: none;
+}
+
+launcher[selected="true"] .launcherWrapper {
+	background-image: -moz-linear-gradient(bottom, rgba(192, 160, 0, 1.0) 3%, rgba(192, 160, 0, .9) 8%, rgba(190, 160, 0, .8) 10%, rgba(190, 160, 0, .6) 100%);
 }
 
 launcher[titleChanged="true"] .launcherWrapper {
-	background-color: rgba(84, 140, 224, .65);
+	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 224, 1.0) 3%, rgba(84, 140, 224, .9) 8%, rgba(84, 140, 224, .8) 10%, rgba(84, 140, 224, .6) 100%);
 }

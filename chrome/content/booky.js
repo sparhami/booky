@@ -23,13 +23,9 @@ com.sppad.Booky = (function() {
         updateBookmarksCount: function(count) {
             bookmarkCount += count;
             document.getElementById('com_sppad_booky_container').setAttribute('bookmarkCount', bookmarkCount);
-            
-            com.sppad.Utils.dump("bookmarkCount " + bookmarkCount + "\n");
         },
         
         handleEvent : function(aEvent) {
-
-            dump("handleEvent, aEvent.type: " + aEvent.type + "\n");
             
             switch (aEvent.type)
             {
@@ -96,27 +92,37 @@ com.sppad.Booky = (function() {
         },
         
         onBookmarkMoved: function(event) {
-            dump("onBookmarkMoved\n");
+            dump("onBookmarkMoved\n"); 
             
             let node = event.node;
             let nodePrevious = event.nodePrevious;
             
             let group = com.sppad.Launcher.getLauncher(this.getIdFromUriString(node.uri));
             
-            if(nodePrevious == null) {
-                group.getNode().ordinal = 0;
-            } else {
+            let newOrdinal = 0;
+            if(nodePrevious != null) {
                 let prevGroup = com.sppad.Launcher.getLauncher(this.getIdFromUriString(nodePrevious.uri));
-                group.getNode().ordinal = prevGroup.getNode().ordinal - (-1);
+                newOrdinal = +prevGroup.getOrdinal() + 2;
             }
 
-            com.sppad.Utils.reapplyOrdinals(document.getElementById("com_sppad_booky_launchers"));
-            dump("done onBookmarkMoved\n");
+            group.setOrdinal(newOrdinal);
+            
+            // increase all the ordinals for groups following the moved group by 2
+            let launchers = com.sppad.Launcher.launchers;
+            for(let i=0; i<launchers.length; i++) {
+                let launcher = launchers[i];
+                
+                if(launcher != group && launcher.getOrdinal() >= newOrdinal)
+                    launcher.setOrdinal(+launcher.getOrdinal() + 2);
+            }
+            
+            // force resize to be called so things are hidden / shown appropriately
+            com.sppad.Resizer.onresize();
         },
         
         onTabOpen: function(aTab) {
-            this.onTabAttrChange(aTab);
             dump("onTabOpen\n");
+            this.onTabAttrChange(aTab);
         },
         
         onTabSelect: function(aTab) {

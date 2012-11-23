@@ -10,6 +10,9 @@ const PREFS = {
   
   // internal only
   debug: false,
+  
+  // max width, as a percentage
+  maxWidth: 40,
 };
 
 

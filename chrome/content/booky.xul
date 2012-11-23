@@ -14,11 +14,11 @@
 	<script type="application/x-javascript" src="launcher/launcher.js" />
 	<script type="application/x-javascript" src="preferences/preferences.js" />
 	<script type="application/x-javascript" src="booky.js" />
+	<script type="application/x-javascript" src="resizer.js" />
 	<script type="application/x-javascript" src="dragdrop.js" />
 
 	<toolbar id="TabsToolbar">
 		<hbox id="com_sppad_booky_container">
-
 			<hbox class="quickLaunchArea">
 				<label id="com_sppad_booky_noLaunchersArea" tooltip="noLaunchersTooltip"
 					value="&com_sppad_booky_noLaunchersArea_text;" />
@@ -31,7 +31,10 @@
 					<image id="com_sppad_booky_dropmarker" collapsed="true" />
 				</hbox>
 
-				<hbox id="com_sppad_booky_launchers" />
+				<arrowscrollbox id="com_sppad_booky_launchers" />
+				<toolbarbutton id="com_sppad_booky_launchers_overflow" type="menu">
+					<menupopup id="com_sppad_booky_launchers_overflow_menu" />
+				</toolbarbutton>
 
 				<tooltip id="com_sppad_booky_tooltip">
 					<label id="com_sppad_booky_tooltip_label" inherits="value" />

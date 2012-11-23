@@ -62,32 +62,6 @@ com.sppad.Utils = (function() {
 				node.removeChild(node.firstChild);
 		},
 		
-		/**
-         * Goes through all the children in a node and sets the ordinal value.
-         * The boxObject is used to traverse all the child nodes in ordinal
-         * value order.
-         * 
-         * The node ordinals applied are spaced out with one number between
-         * adjacent groups. This allows for easy reordering by setting the
-         * ordinal of an object to one off from a target sibling, then calling
-         * reapplyOrdinals to allow the process to be repeated.
-         * 
-         * @param container
-         *            A node, containing sub-nodes, to space the ordinals out
-         *            for.
-         */
-		reapplyOrdinals: function(container) {
-			let orderedObj = Array();
-			let currentObj = container.boxObject.firstChild;
-			
-			while(currentObj != null) {
-				orderedObj.push(currentObj);
-				currentObj = currentObj.boxObject.nextSibling;
-			}
-			
-			for(let i = 0; i < orderedObj.length; i++)
-				orderedObj[i].ordinal = (i*2) + 2;
-		},
 		
 		/**
          * Removes the first instance of an object in the array

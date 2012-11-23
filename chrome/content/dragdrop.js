@@ -123,8 +123,8 @@ com.sppad.dd = (function() {
                 let id = com.sppad.Booky.getIdFromUriString(uri);
 
                 let launcher = com.sppad.Launcher.getLauncher(id);
-                if(com.sppad.Utils.getIndexInArray(launcher.getBookmarks(), uri) < 0)
-                    com.sppad.Bookmarks.addBookmark(uri);
+                //if(com.sppad.Utils.getIndexInArray(launcher.getBookmarks(), uri) < 0)
+                //    com.sppad.Bookmarks.addBookmark(uri);
                 
                 let bookmarkIds = launcher.getBookmarkIds();
                 let prevBookmarkIds = _insertPoint && _insertPoint.js.getBookmarkIds();

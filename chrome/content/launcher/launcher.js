@@ -3,11 +3,15 @@ com.sppad = com.sppad || {};
 
 com.sppad.Launcher = function(aID) {
 
+    var ordinal = 0;
+    var overflow = false;
     var id = aID;
     var uri = "";
     var tabs = [];
     var bookmarks = [];
     var bookmarkIds= [];
+    var node = document.createElement('launcher');
+    var overflowNode = document.createElement('menuitem');
     
     var openTab = function() {
         if(tabs.length == 0)
@@ -48,9 +52,32 @@ com.sppad.Launcher = function(aID) {
         return bookmarkIds;
     };
     
+    this.isOverflow = function() {
+        return overflow;
+    };
+    
+    this.getOrdinal = function() {
+        return ordinal;
+    };
+    
     this.setImage = function(anImage) {
-        node.setAttribute('image', anImage
-                || 'chrome://mozapps/skin/places/defaultFavicon.png');
+        let image = anImage || 'chrome://mozapps/skin/places/defaultFavicon.png';
+        node.setAttribute('image', image);
+        overflowNode.setAttribute('image', image);
+    };
+    
+    this.setOverflow = function(setOverflow) {
+        overflow = setOverflow;
+        
+        node.setAttribute('vHidden', overflow);
+        overflowNode.setAttribute('vCollapse', !overflow);    
+    };
+    
+    this.setOrdinal = function(setOrdinal) {
+        ordinal = setOrdinal;
+        
+        node.ordinal = setOrdinal;
+        overflowNode.ordinal = setOrdinal;
     };
     
     this.addTab = function(aTab) {
@@ -113,32 +140,35 @@ com.sppad.Launcher = function(aID) {
     this.hasTab = function(aTab) {
         return aTab.com_sppad_booky_launcher == this;
     };
-
-    dump("adding launcher with id " + id + "\n");
     
-    var node = document.createElement('launcher');
-    let container = document.getElementById('com_sppad_booky_launchers');
-    container.appendChild(node);
 
-    let lastChild = container.boxObject.lastChild;
-    node.ordinal = lastChild ? +lastChild.ordinal + 2 : 0;
+    let container = document.getElementById('com_sppad_booky_launchers');
+    let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
+
+    this.setOrdinal(com.sppad.Launcher.launchers.length * 2);
+    
+    container.appendChild(node);
+    overflowContainer.appendChild(overflowNode);
+    overflowNode.setAttribute('label', id);
+    
     node.setJavaScriptObject(this);
     
     var button = document.getAnonymousElementByAttribute(node, 'anonid',
             'toolbarbutton');
-    
     button.addEventListener('command', openTab, false);
-
-    updateCounts();
-    dump("done adding launcher with id " + id + "\n");
     
+    updateCounts();
     
     return {
         setImage: this.setImage,
-        gedId: this.getId,
+        setOverflow: this.setOverflow,
+        setOrdinal: this.setOrdinal,
+        getId: this.getId,
         getNode: this.getNode,
         getBookmarks: this.getBookmarks,
         getBookmarkIds: this.getBookmarkIds,
+        getOrdinal: this.getOrdinal,
+        isOverflow: this.isOverflow,
         addTab: this.addTab,
         addBookmark: this.addBookmark,
         hasTab: this.hasTab,
@@ -194,8 +224,6 @@ com.sppad.Launcher.prototype.dragend = function(event) {
 };
 
 
-
-
 /** Workaround for dragging too fast and seeing a tooltip while dragging */
 com.sppad.Launcher.dragging = false;
 com.sppad.Launcher.hoveringLauncher = null;
@@ -203,8 +231,6 @@ com.sppad.Launcher.hoveringLauncher = null;
 com.sppad.Launcher.launchers = new Array();
 com.sppad.Launcher.launcherIDs = new Array();
 com.sppad.Launcher.getLauncher = function(aID) {
-    dump("getting launcher for id " + aID + "\n");
-    
     let index = com.sppad.Utils.getIndexInArray(this.launcherIDs, aID);
     if(index < 0) {
         this.launchers.push(new com.sppad.Launcher(aID));
