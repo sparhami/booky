@@ -128,7 +128,7 @@ com.sppad.Launcher = function(aID) {
                this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
            
            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launchers, this);
-           com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, id);
+           com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, this.id);
        }
     };
     
@@ -184,7 +184,7 @@ com.sppad.Launcher.prototype.mouseleave = function() {
 
 com.sppad.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
-    dt.setData('text/uri-list', this.id);
+    dt.setData('text/uri-list', this.bookmarks[0]);
     dt.addElement(this.node);
     
     let tooltip = document.getElementById('com_sppad_booky_tooltip');

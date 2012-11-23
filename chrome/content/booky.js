@@ -97,9 +97,6 @@ com.sppad.Booky = (function() {
             let node = event.node;
             let nodeNext = event.nodeNext;
             
-            if(nodeNext)
-                dump("nodeNext.uri " + nodeNext.uri + "\n" );
-            
             let group = com.sppad.Launcher.getLauncher(this.getIdFromUriString(node.uri));
             let nextGroup = nodeNext ? com.sppad.Launcher.getLauncher(this.getIdFromUriString(nodeNext.uri)) : null;
             
