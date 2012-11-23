@@ -4,232 +4,196 @@ com.sppad = com.sppad || {};
 com.sppad.Launcher = function(aID) {
 
     var self = this;
-    var ordinal = 0;
-    var overflow = false;
-    var id = aID;
-    var uri = "";
-    var tabs = [];
-    var bookmarks = [];
-    var bookmarkIds= [];
-    var node = document.createElement('launcher');
-    var overflowNode = document.createElement('menuitem');
+    this.id = aID;
+    this.tabs = [];
+    this.bookmarks = [];
+    this.bookmarkIds= [];
+    this.node = document.createElement('launcher');
+    this.overflowNode = document.createElement('menuitem');
     
     this.openTab = function() {
-        if(tabs.length == 0)
-            gBrowser.selectedTab = gBrowser.addTab(uri);
+        if(this.tabs.length == 0)
+            gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0]);
         else
-            gBrowser.selectedTab = tabs[0];
+            gBrowser.selectedTab = this.tabs[0];
     };
     
-    var updateCounts = function() {
-      
-        node.setAttribute("hasSingle", tabs.length > 0);
-        node.setAttribute("hasMultiple", tabs.length > 1);
-        
+    /**
+     * Updates the attributes applied to the DOM nodes for this launcher.
+     */
+    this.updateAttributes = function() {
         let busy = false;
+        let selected = false;
         let titleChanged = false;
-        for(let i=0; i<tabs.length; i++) {
-            busy |= (tabs[i].com_sppad_booky_busy == true);
-            titleChanged |= (tabs[i].com_sppad_booky_titleChanged == true);
+        for(let i=0; i<this.tabs.length; i++) {
+            let tab = this.tabs[i];
+            
+            busy |= tab.com_sppad_booky_busy == true;
+            selected |= tab == gBrowser.selectedTab;
+            titleChanged |= tab.com_sppad_booky_titleChanged == true;
         }
 
-        node.setAttribute("busy", busy == true);
-        node.setAttribute("titleChanged", titleChanged == true);
+        this.setAttribute("busy", busy == true);
+        this.setAttribute("selected", selected == true);
+        this.setAttribute("titleChanged", titleChanged == true);
+        this.setAttribute("hasSingle", this.tabs.length > 0);
+        this.setAttribute("hasMultiple", this.tabs.length > 1);
+    };
+    
+    /**
+     * Sets an attribute for this launcher, applying it to both the launcher
+     * node and overflow menu node.
+     * 
+     * @param attrName
+     *            The name of the attribute.
+     * @param attrValue
+     *            The value of the attribute.
+     */
+    this.setAttribute = function(attrName, attrValue) {
+        this.node.setAttribute(attrName, attrValue);
+        this.overflowNode.setAttribute(attrName, attrValue);
     };
 
-    this.getId = function() {
-        return id;
-    };
-    
-    this.getNode = function() {
-        return node;
-    };
-    
-    this.getOverflowNode = function() {
-        return overflowNode;
-    };
-    
-    this.getBookmarks = function() {
-        return bookmarks;
-    };
-    
-    this.getBookmarkIds = function() {
-        return bookmarkIds;
-    };
-    
-    this.isOverflow = function() {
-        return overflow;
-    };
-    
-    this.getOrdinal = function() {
-        return ordinal;
-    };
-    
+    /**
+     * Sets the image for the launcher or the default icon if none is specified.
+     */
     this.setImage = function(anImage) {
-        let image = anImage || 'chrome://mozapps/skin/places/defaultFavicon.png';
-        node.setAttribute('image', image);
-        overflowNode.setAttribute('image', image);
+        this.setAttribute('image', anImage || 'chrome://mozapps/skin/places/defaultFavicon.png');
     };
     
-    this.setOverflow = function(setOverflow) {
-        overflow = setOverflow;
-        
-        node.setAttribute('vHidden', overflow);
-        overflowNode.setAttribute('vCollapse', !overflow);    
+    /**
+     * Sets the overflow status, indicating that this launcher doesn't fit in
+     * the quick launch area,
+     */
+    this.setOverflow = function(overflow) {
+        this.setAttribute('overflow', overflow);
     };
     
-    this.setOrdinal = function(setOrdinal) {
-        ordinal = setOrdinal;
-        
-        node.ordinal = setOrdinal;
-        overflowNode.ordinal = setOrdinal;
-    };
-    
+    /**
+     * Adds a tab to the launcher.
+     */
     this.addTab = function(aTab) {
-        tabs.push(aTab);
-        aTab.com_sppad_booky_id = id;
+        this.tabs.push(aTab);
         aTab.com_sppad_booky_launcher = this;
         aTab.setAttribute('com_sppad_booky_hasLauncher', true);
         
-        com.sppad.Utils.dump("Added tab to group " + id + "\n");
-        updateCounts();
-        
-        this.setSelected(gBrowser.selectedTab == aTab);
+        this.updateAttributes();
     };
     
-    this.addBookmark = function(aUri, anImage, aBookmarkId ) {
-        bookmarkIds.push(aBookmarkId);
-        bookmarks.push(aUri);
+    /**
+     * Removes a tab from the launcher.
+     */
+    this.removeTab = function(aTab) {
+        com.sppad.Utils.removeFromArray(this.tabs, aTab);
+        delete aTab.com_sppad_booky_launcher;
+        aTab.removeAttribute('com_sppad_booky_hasLauncher');
         
-        uri = aUri;
+        this.updateAttributes();
+    };
+    
+    /**
+     * Adds a bookmark to the launcher.
+     * 
+     * @param aUri
+     *            A String representing the URI for the bookmark
+     * @param anImage
+     *            The URI for the image used by the launcher
+     * @param aBookmarkId
+     *            The bookmark id from the bookmarks service
+     */
+    this.addBookmark = function(aUri, anImage, aBookmarkId ) {
+        this.bookmarkIds.push(aBookmarkId);
+        this.bookmarks.push(aUri);
+        
         this.setImage(anImage);
     };
     
+    /**
+     * Removes a bookmark from the launcher.
+     * 
+     * @param aUri
+     *            A String representing the URI for the bookmark
+     * @param aBookmarkId
+     *            The bookmark id from the bookmarks service
+     */
     this.removeBookmark = function(aUri, aBookmarkId) {
-       com.sppad.Utils.dump("removing " + aUri + " from launcher " + id + "\n");
-        
-       com.sppad.Utils.removeFromArray(bookmarkIds, aBookmarkId);
-       com.sppad.Utils.removeFromArray(bookmarks, aUri);
+       com.sppad.Utils.removeFromArray(this.bookmarkIds, aBookmarkId);
+       com.sppad.Utils.removeFromArray(this.bookmarks, aUri);
        
-       if(bookmarkIds.length == 0) {
+       if(this.bookmarkIds.length == 0) {
            let container = document.getElementById('com_sppad_booky_launchers');
-           container.removeChild(node);
+           container.removeChild(this.node);
            
-           for(let i=0; i<tabs.length; i++)
-               tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
+           for(let i=0; i<this.tabs.length; i++)
+               this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
            
            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launchers, this);
            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, id);
        }
     };
     
-    this.removeTab = function(aTab) {
-        com.sppad.Utils.removeFromArray(tabs, aTab);
-        delete aTab.com_sppad_booky_launcher;
-        aTab.removeAttribute('com_sppad_booky_hasLauncher');
-        
-        com.sppad.Utils.dump("Removed tab from group " + id + "\n");
-        updateCounts();
-        
-        this.setSelected(false);
-    };
-    
-    this.setSelected = function(active) {
-        node.setAttribute('selected', active);
-    };
-    
     this.updateTab = function(aTab) {
-        updateCounts();
+        this.updateAttributes();
     };
-    
-    this.hasTab = function(aTab) {
-        return aTab.com_sppad_booky_launcher == this;
-    };
-    
+
+    /**
+     * Moves the DOM node for the launcher.
+     * 
+     * @param aLauncher
+     *            The launcher to move before. If null, the launcher is moved to
+     *            the end.
+     */
     this.createBefore = function(aLauncher) {
         let container = document.getElementById('com_sppad_booky_launchers');
         let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
         
-        let nodeAnchor = aLauncher ? aLauncher.getNode() : null;
-        let overflowNodeAnchor = aLauncher ? aLauncher.getOverflowNode() : null;
+        let nodeAnchor = aLauncher ? aLauncher.node : null;
+        let overflowNodeAnchor = aLauncher ? aLauncher.overflowNode : null;
         
-        container.insertBefore(node, nodeAnchor);
-        overflowContainer.insertBefore(overflowNode, overflowNodeAnchor);
+        container.insertBefore(this.node, nodeAnchor);
+        overflowContainer.insertBefore(this.overflowNode, overflowNodeAnchor);
         
-        overflowNode.setAttribute('label', id);
-        node.setJavaScriptObject(self);
+        this.overflowNode.setAttribute('class', 'overflowLauncher');
+        this.overflowNode.setAttribute('label', this.id);
+        this.node.setJavaScriptObject(self);
     };
     
-
     this.createBefore(null);
-    
-    updateCounts();
-    
-    return {
-        setImage: this.setImage,
-        setOverflow: this.setOverflow,
-        setOrdinal: this.setOrdinal,
-        getId: this.getId,
-        getNode: this.getNode,
-        getOverflowNode: this.getOverflowNode,
-        getBookmarks: this.getBookmarks,
-        getBookmarkIds: this.getBookmarkIds,
-        getOrdinal: this.getOrdinal,
-        isOverflow: this.isOverflow,
-        addTab: this.addTab,
-        openTab: this.openTab,
-        addBookmark: this.addBookmark,
-        hasTab: this.hasTab,
-        removeTab: this.removeTab,
-        removeBookmark: this.removeBookmark,
-        setSelected: this.setSelected,
-        updateTab: this.updateTab,
-        createBefore: this.createBefore,
-    };
+    this.updateAttributes();
 }
 
 com.sppad.Launcher.prototype.mouseenter = function() {
-    com.sppad.Launcher.hoveringLauncher = this;
-    if(com.sppad.Launcher.dragging)
-        return;
-    
-    let node = this.getNode();
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     let tooltipLabel = document.getElementById('com_sppad_booky_tooltip_label');
 
     // need to open tooltip once first to find out the dimensions for centering
-    tooltipLabel.setAttribute('value', this.getId());
-    tooltip.openPopup(node, 'after_start', 0, 0, false, false);
+    tooltipLabel.setAttribute('value', this.id);
+    tooltip.openPopup(this.node, 'after_start', 0, 0, false, false);
     
-    let xOffset = (-tooltip.boxObject.width/2) + (node.boxObject.width / 2);
+    let xOffset = (-tooltip.boxObject.width/2) + (this.node.boxObject.width / 2);
     let yOffset = -20;
     
     tooltip.hidePopup();    // need to hide it so that it is repositioned
-    tooltip.openPopup(node, 'after_start', xOffset, yOffset, false, false);
+    tooltip.openPopup(this.node, 'after_start', xOffset, yOffset, false, false);
 };
 
 com.sppad.Launcher.prototype.mouseleave = function() {
-    com.sppad.Launcher.hoveringLauncher = null;
-    
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.hidePopup();
 };
 
 com.sppad.Launcher.prototype.dragstart = function(event) {
-    com.sppad.Launcher.dragging = true;
-    
     let dt = event.dataTransfer;
-    dt.setData('text/uri-list', this.getId());
-    dt.addElement(this.getNode());
+    dt.setData('text/uri-list', this.id);
+    dt.addElement(this.node);
     
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.hidePopup();
+    tooltip.setAttribute('hidden', true);
 };
 
 com.sppad.Launcher.prototype.dragend = function(event) {
-    com.sppad.Launcher.dragging = false;
-    if(com.sppad.Launcher.hoveringLauncher)
-        com.sppad.Launcher.hoveringLauncher.mouseenter();
+    let tooltip = document.getElementById('com_sppad_booky_tooltip');
+    tooltip.setAttribute('hidden', false);
 };
 
 com.sppad.Launcher.prototype.command = function() {
@@ -237,9 +201,6 @@ com.sppad.Launcher.prototype.command = function() {
 };
 
 
-/** Workaround for dragging too fast and seeing a tooltip while dragging */
-com.sppad.Launcher.dragging = false;
-com.sppad.Launcher.hoveringLauncher = null;
 /** Maps ids to Launchers */
 com.sppad.Launcher.launchers = new Array();
 com.sppad.Launcher.launcherIDs = new Array();

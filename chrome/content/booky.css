@@ -50,3 +50,7 @@
 *[vHidden="true"] {
 	visibility: hidden;
 }
+
+#com_sppad_booky_tooltip[hidden="true"] {
+	visibility: collapse;
+}

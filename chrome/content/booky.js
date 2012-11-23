@@ -118,10 +118,10 @@ com.sppad.Booky = (function() {
             dump("onTabSelect\n");
             
             if(_selectedTab && _selectedTab.com_sppad_booky_launcher)
-                _selectedTab.com_sppad_booky_launcher.setSelected(false);
+                _selectedTab.com_sppad_booky_launcher.updateTab();
             
             if(aTab.com_sppad_booky_launcher)
-                aTab.com_sppad_booky_launcher.setSelected(true);
+                aTab.com_sppad_booky_launcher.updateTab();
             
             _selectedTab = aTab;
         },
