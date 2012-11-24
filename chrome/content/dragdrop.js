@@ -121,15 +121,28 @@ com.sppad.dd = (function() {
             if (obj.nodeName != 'menulauncher')
                 return;
             
+            let ind = getIndicator();
+            showIndicator();
+            
             // make sure to get ordinal sibling
             let ps = obj.boxObject.previousSibling;
+            let locX = 0, locY = 0;
             let rect = obj.getBoundingClientRect();
 
             if (event.clientY > (rect.top + rect.bottom) / 2) {
+                locY = rect.top;
                 _insertPoint = obj;
             } else {
+                locY = ps ? ps.getBoundingClientRect().top : rect.top
+                        - rect.height;
                 _insertPoint = ps;
             }
+            
+            locX = rect.left - 1.5 * ind.clientWidth;
+            locY += 1.5 * ind.clientHeight;
+            let xform = "matrix(0, 1, -1, 0,";
+            
+            ind.style.MozTransform = xform + locX + "px, " + locY + "px)";
         },
         
         dragoverNoLaunchers : function(event) {
