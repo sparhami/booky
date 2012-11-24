@@ -9,7 +9,7 @@ com.sppad.Launcher = function(aID) {
     this.bookmarks = [];
     this.bookmarkIds= [];
     this.node = document.createElement('launcher');
-    this.overflowNode = document.createElement('menulauncher');
+    this.menuNode = document.createElement('menulauncher');
     
     this.openTab = function() {
         if(this.tabs.length == 0)
@@ -52,7 +52,7 @@ com.sppad.Launcher = function(aID) {
      */
     this.setAttribute = function(attrName, attrValue) {
         this.node.setAttribute(attrName, attrValue);
-        this.overflowNode.setAttribute(attrName, attrValue);
+        this.menuNode.setAttribute(attrName, attrValue);
     };
 
     /**
@@ -149,13 +149,13 @@ com.sppad.Launcher = function(aID) {
         let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
         
         let nodeAnchor = aLauncher ? aLauncher.node : null;
-        let overflowNodeAnchor = aLauncher ? aLauncher.overflowNode : null;
+        let menuNodeAnchor = aLauncher ? aLauncher.menuNode : null;
         
         container.insertBefore(this.node, nodeAnchor);
-        overflowContainer.insertBefore(this.overflowNode, overflowNodeAnchor);
+        overflowContainer.insertBefore(this.menuNode, menuNodeAnchor);
         
         this.node.js = self;
-        this.overflowNode.js = self;
+        this.menuNode.js = self;
     };
     
     this.createBefore(null);
@@ -183,29 +183,18 @@ com.sppad.Launcher.prototype.mouseleave = function() {
 };
 
 com.sppad.Launcher.prototype.dragstart = function(event) {
-    dump("dragstart\n");
-    
     let dt = event.dataTransfer;
     dt.setData('text/uri-list', this.bookmarks[0]);
-    dt.addElement(this.node);
-    
-    let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.setAttribute('hidden', true);
-};
+    dt.addElement(event.target);
 
-com.sppad.Launcher.prototype.dragstart2 = function(event) {
-    dump("dragstart2\n");
-    
-    let dt = event.dataTransfer;
-    dt.setData('text/uri-list', this.bookmarks[0]);
-    dt.addElement(this.overflowNode);
-    
-    dump("done dragstart2\n");
+    // Without this check, drag/drop fails for menu launcher
+    if(event.target === this.node) {
+        let tooltip = document.getElementById('com_sppad_booky_tooltip');
+        tooltip.setAttribute('hidden', true);    
+    }
 };
 
 com.sppad.Launcher.prototype.dragend = function(event) {
-    dump("dragend\n");
-    
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.setAttribute('hidden', false);
 };

@@ -32,9 +32,9 @@
 	</binding>
 
 	<binding id="menulauncher">
-		<content onclick="js.command();">
-			<xul:box class="menulauncher" draggable="true" ondragstart="js.dragstart2(event);"
-				ondragend="js.dragend(event);">
+		<content draggable="true" onclick="js.command();" ondragstart="js.dragstart(event);"
+			ondragend="js.dragend(event);">
+			<xul:box class="menulauncher">
 				<xul:box class="menuicon">
 					<xul:image class="launcher-icon" xbl:inherits="src=image" />
 				</xul:box>

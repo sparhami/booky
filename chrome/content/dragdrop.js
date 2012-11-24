@@ -71,9 +71,7 @@ com.sppad.dd = (function() {
          * before or past the midway point of a given tab and positions the ind
          * before or after, respectively.
          */
-        dragover : function(event) {
-            dump('dragover dd\n');
-            
+        dragoverLaunchers : function(event) {
             if(!canDrop(event))
                 return;
             
@@ -109,6 +107,29 @@ com.sppad.dd = (function() {
             let xform = "matrix(1, 0, 0, 1,";
 
             ind.style.MozTransform = xform + locX + "px, " + locY + "px)";
+        },
+        
+        dragoverMenuLaunchers : function(event) {
+            if(!canDrop(event))
+                return;
+            
+            event.preventDefault();
+            
+            // There may be gaps where there isn't a launcher. In that case,
+            // do not modify the indicator location.
+            let obj = event.target;
+            if (obj.nodeName != 'menulauncher')
+                return;
+            
+            // make sure to get ordinal sibling
+            let ps = obj.boxObject.previousSibling;
+            let rect = obj.getBoundingClientRect();
+
+            if (event.clientY > (rect.top + rect.bottom) / 2) {
+                _insertPoint = obj;
+            } else {
+                _insertPoint = ps;
+            }
         },
         
         dragoverNoLaunchers : function(event) {
@@ -149,13 +170,13 @@ com.sppad.dd = (function() {
 window.addEventListener("load", function() {
 
     let launcherContainer = this.document.getElementById('com_sppad_booky_launchers');
-    launcherContainer.addEventListener('dragover', com.sppad.dd.dragover, false);
+    launcherContainer.addEventListener('dragover', com.sppad.dd.dragoverLaunchers, false);
     launcherContainer.addEventListener('dragend', com.sppad.dd.dragend, false);
     launcherContainer.addEventListener('dragexit', com.sppad.dd.dragexit, false);
     launcherContainer.addEventListener('drop', com.sppad.dd.drop, false);
     
     let overflowContainer = this.document.getElementById('com_sppad_booky_launchers_overflow_menu');
-    overflowContainer.addEventListener('dragover', com.sppad.dd.dragover, false);
+    overflowContainer.addEventListener('dragover', com.sppad.dd.dragoverMenuLaunchers, false);
     overflowContainer.addEventListener('dragend', com.sppad.dd.dragend, false);
     overflowContainer.addEventListener('dragexit', com.sppad.dd.dragexit, false);
     overflowContainer.addEventListener('drop', com.sppad.dd.drop, false);
