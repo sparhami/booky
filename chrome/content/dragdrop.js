@@ -169,6 +169,9 @@ com.sppad.dd = (function() {
         },
         
         drop : function(event) {
+            if(!_insertPoint)
+                return;
+                
             _indicator.collapsed = true;
             _indicator2.collapsed = true;
             
@@ -187,6 +190,8 @@ com.sppad.dd = (function() {
 
                 com.sppad.Bookmarks.moveBookmarkGroupBefore(prevBookmarkIds, bookmarkIds);
             }
+            
+            _insertPoint = null;
         },
 
         dragend : function(event) {
@@ -221,8 +226,6 @@ com.sppad.dd = (function() {
             _noLaunchersContainer = document.getElementById('com_sppad_booky_noLaunchersArea');
             _noLaunchersContainer.addEventListener('drop', com.sppad.dd.drop, false);
             _noLaunchersContainer.addEventListener('dragover', com.sppad.dd.dragoverNoLaunchers, false);
-            
-            
         },
     }
 })();
