@@ -32,6 +32,10 @@
 					<image id="com_sppad_booky_dropmarker" collapsed="true" />
 				</hbox>
 
+				<hbox id="com_sppad_booky_dropmarker_container2">
+					<image id="com_sppad_booky_dropmarker2" collapsed="true" />
+				</hbox>
+
 				<arrowscrollbox id="com_sppad_booky_launchers" />
 				<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
 					type="menu">
