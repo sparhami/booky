@@ -16,14 +16,42 @@ launcher[titleChanged="true"] .launcher-countindicators {
 	display: none;
 }
 
-launcher[hasMultiple="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(224, 122, 0, 1) 2px, rgba(224, 122, 0, .44) 4px, rgba(224, 122, 0, .22) 6px, rgba(224, 122, 0, 0) 100%);
-}
-
 launcher[selected="true"] {
 	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 2px, rgba(224, 192, 0, .44) 4px, rgba(224, 192, 0, .22) 6px, rgba(224, 192, 0, 0) 100%);
 }
 
 launcher[titleChanged="true"] {
 	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 2px, rgba(84, 140, 240, .44) 4px, rgba(84, 140, 240, .22) 6px, rgba(84, 140, 240, 0) 100%);
+}
+
+
+menulauncher[selected="true"] {
+	background-color: rgba(224, 192, 0, .22);
+}
+
+menulauncher[titleChanged="true"] {
+	background-color: rgba(84, 140, 240, .22);
+}
+
+menulauncher {
+	padding: 3px;
+}
+
+menulauncher:hover {
+	box-shadow: 0px 0px 3px 1px rgba(44, 117, 255, .4) inset;
+}
+
+menulauncher image {
+	min-width: 16px;
+	min-height: 16px;
+	max-width: 16px;
+	max-height: 16px;
+}
+
+menulauncher .menuicon {
+	margin-top: 3px;
+}
+
+menulauncher .menuicon {
+	margin-right: 4px;
 }

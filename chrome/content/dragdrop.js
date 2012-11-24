@@ -72,6 +72,8 @@ com.sppad.dd = (function() {
          * before or after, respectively.
          */
         dragover : function(event) {
+            dump('dragover dd\n');
+            
             if(!canDrop(event))
                 return;
             
@@ -151,6 +153,12 @@ window.addEventListener("load", function() {
     launcherContainer.addEventListener('dragend', com.sppad.dd.dragend, false);
     launcherContainer.addEventListener('dragexit', com.sppad.dd.dragexit, false);
     launcherContainer.addEventListener('drop', com.sppad.dd.drop, false);
+    
+    let overflowContainer = this.document.getElementById('com_sppad_booky_launchers_overflow_menu');
+    overflowContainer.addEventListener('dragover', com.sppad.dd.dragover, false);
+    overflowContainer.addEventListener('dragend', com.sppad.dd.dragend, false);
+    overflowContainer.addEventListener('dragexit', com.sppad.dd.dragexit, false);
+    overflowContainer.addEventListener('drop', com.sppad.dd.drop, false);
     
     let noLaunchersContainer = this.document.getElementById('com_sppad_booky_noLaunchersArea');
     noLaunchersContainer.addEventListener('drop', com.sppad.dd.drop, false);

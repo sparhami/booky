@@ -102,7 +102,7 @@ com.sppad.Booky = (function() {
             
             group.createBefore(nextGroup);
             
-            // force resize to be called so things are hidden / shown appropriately
+            // Force resize so things are hidden / shown appropriately.
             com.sppad.Resizer.onresize();
         },
         

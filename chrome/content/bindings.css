@@ -2,3 +2,7 @@
 launcher {  
   -moz-binding: url("chrome://booky/content/launcher/launcher.xml#launcher");
 }
+
+menulauncher {  
+  -moz-binding: url("chrome://booky/content/launcher/launcher.xml#menulauncher");
+}

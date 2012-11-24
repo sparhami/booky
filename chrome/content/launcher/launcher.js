@@ -9,7 +9,7 @@ com.sppad.Launcher = function(aID) {
     this.bookmarks = [];
     this.bookmarkIds= [];
     this.node = document.createElement('launcher');
-    this.overflowNode = document.createElement('menuitem');
+    this.overflowNode = document.createElement('menulauncher');
     
     this.openTab = function() {
         if(this.tabs.length == 0)
@@ -38,6 +38,7 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute("titleChanged", titleChanged == true);
         this.setAttribute("hasSingle", this.tabs.length > 0);
         this.setAttribute("hasMultiple", this.tabs.length > 1);
+        this.setAttribute('label', this.id);
     };
     
     /**
@@ -153,9 +154,8 @@ com.sppad.Launcher = function(aID) {
         container.insertBefore(this.node, nodeAnchor);
         overflowContainer.insertBefore(this.overflowNode, overflowNodeAnchor);
         
-        this.overflowNode.setAttribute('class', 'overflowLauncher');
-        this.overflowNode.setAttribute('label', this.id);
-        this.node.setJavaScriptObject(self);
+        this.node.js = self;
+        this.overflowNode.js = self;
     };
     
     this.createBefore(null);
@@ -183,6 +183,8 @@ com.sppad.Launcher.prototype.mouseleave = function() {
 };
 
 com.sppad.Launcher.prototype.dragstart = function(event) {
+    dump("dragstart\n");
+    
     let dt = event.dataTransfer;
     dt.setData('text/uri-list', this.bookmarks[0]);
     dt.addElement(this.node);
@@ -191,13 +193,25 @@ com.sppad.Launcher.prototype.dragstart = function(event) {
     tooltip.setAttribute('hidden', true);
 };
 
+com.sppad.Launcher.prototype.dragstart2 = function(event) {
+    dump("dragstart2\n");
+    
+    let dt = event.dataTransfer;
+    dt.setData('text/uri-list', this.bookmarks[0]);
+    dt.addElement(this.overflowNode);
+    
+    dump("done dragstart2\n");
+};
+
 com.sppad.Launcher.prototype.dragend = function(event) {
+    dump("dragend\n");
+    
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.setAttribute('hidden', false);
 };
 
-com.sppad.Launcher.prototype.command = function() {
-    this.openTab();
+com.sppad.Launcher.prototype.command = function(event) {
+    this.openTab(event);
 };
 
 

@@ -15,7 +15,8 @@ launcher[busy="true"] .launcher-icon {
 	display: none;
 }
 
-launcher[hasSingle="false"]:not(:hover) .launcher-icon {
+launcher[hasSingle="false"]:not(:hover) .launcher-icon,
+menulauncher[hasSingle="false"]:not(:hover) .launcher-icon {
 	filter: url("chrome://booky/content/filters.svg#grayscale");
 	opacity: .45;
 }
@@ -34,14 +35,10 @@ launcher .tabdock-item > label {
 	display: none;
 }
 
-launcher {
-	border-top-radius: 4px;
-}
-
 launcher[overflow="true"] {
 	visibility: hidden;
 }
 
-.overflowLauncher[overflow="false"] {
+menulauncher[overflow="false"] {
 	visibility: collapse;
 }

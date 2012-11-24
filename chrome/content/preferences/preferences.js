@@ -12,7 +12,7 @@ const PREFS = {
   debug: false,
   
   // max width, as a percentage
-  maxWidth: 40,
+  maxWidth: 30,
 };
 
 

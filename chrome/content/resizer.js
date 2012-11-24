@@ -8,15 +8,13 @@ com.sppad.Resizer = (function() {
     var _resizeEventId = null;
 
     var _doresize = function() {
+        dump("doing a resize\n");
+        
         let windowSize = window.innerWidth;
         let launchersSizePercentage = Math.min(CurrentPrefs['maxWidth'], 100) / 100;
         
-        let newWidth = windowSize * launchersSizePercentage;
-        if(newWidth == _launchers.maxWidth)
-            return;
-        
         _lastResizeTime = Date.now();
-        _launchers.maxWidth = newWidth;
+        _launchers.maxWidth = windowSize * launchersSizePercentage;
         
         let boxEnd = _launchers.getBoundingClientRect().right;
         let children = _launchers.children;
