@@ -20,8 +20,7 @@
 	margin-right: 4px;
 }
 
-#com_sppad_booky_dropmarker_container,
-#com_sppad_booky_dropmarker_container2 {
+#com_sppad_booky_container .dropmarkerContainer {
 	position:fixed;
 	top: 0;
 	left: 0;
@@ -29,8 +28,7 @@
 	padding: 0;
 }
 
-#com_sppad_booky_dropmarker,
-#com_sppad_booky_dropmarker2 {
+#com_sppad_booky_container .dropmarkerContainer > image {
 	position: relative;
   	z-index: 2147483647;
   	list-style-image: url(chrome://browser/skin/tabbrowser/tabDragIndicator.png);

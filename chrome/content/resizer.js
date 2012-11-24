@@ -3,13 +3,13 @@ com.sppad = com.sppad || {};
 
 com.sppad.Resizer = (function() {
 
+    const RESIZE_MAX_PERIOD = 100;
+    
     var _launchers;
     var _lastResizeTime;
     var _resizeEventId = null;
 
     var _doresize = function() {
-        dump("doing a resize\n");
-        
         let windowSize = window.innerWidth;
         let launchersSizePercentage = Math.min(CurrentPrefs['maxWidth'], 100) / 100;
         
@@ -35,12 +35,12 @@ com.sppad.Resizer = (function() {
         onresize : function() {
             window.clearTimeout(_resizeEventId);
 
-            // If it has been more than 100ms, resize now, otherwise schedule
-            // again
-            if (Date.now() - _lastResizeTime > 100)
+            // Resize at most once every 100 ms
+            let timeSinceResize = Date.now() - _lastResizeTime;
+            if (timeSinceResize > RESIZE_MAX_PERIOD)
                 _doresize();
             else
-                _resizeEventId = window.setTimeout(_doresize, 100);
+                _resizeEventId = window.setTimeout(_doresize, RESIZE_MAX_PERIOD - timeSinceResize);
         },
 
         setup : function() {

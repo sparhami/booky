@@ -4,13 +4,13 @@ com.sppad = com.sppad || {};
 com.sppad.dd = (function() {
     /** The current insert point, used when dropping */
     var _insertPoint = null;
-    var _indicator = null;
-    var _indicator2 = null;
+    var _menuIndicator = null;
+    var _toolbarIndicator = null;
     var _overflowMenuCloseEventId = null;
     
+    var _overflowButton = null;
     var _launcherContainer = null;
     var _overflowContainer = null;
-    var _overflowButton = null;
     var _noLaunchersContainer = null;
     
     var canDrop = function(event) {
@@ -79,7 +79,7 @@ com.sppad.dd = (function() {
             if (obj.nodeName != 'launcher')
                 return;
             
-            _indicator.collapsed = false;
+            _toolbarIndicator.collapsed = false;
 
             // make sure to get ordinal sibling
             let ps = obj.boxObject.previousSibling;
@@ -98,10 +98,10 @@ com.sppad.dd = (function() {
             }
 
             locY = rect.bottom;
-            locX += 2 * _indicator.clientWidth;
+            locX += 2 * _toolbarIndicator.clientWidth;
             let xform = "matrix(1, 0, 0, 1,";
 
-            _indicator.style.MozTransform = xform + locX + "px, " + locY + "px)";
+            _toolbarIndicator.style.MozTransform = xform + locX + "px, " + locY + "px)";
         },
         
         dragoverMenuLaunchers : function(event) {
@@ -119,7 +119,7 @@ com.sppad.dd = (function() {
             if (obj.nodeName != 'menulauncher')
                 return;
             
-            _indicator2.collapsed = false;
+            _menuIndicator.collapsed = false;
             
             // make sure to get ordinal sibling
             let ps = obj.boxObject.previousSibling;
@@ -135,18 +135,18 @@ com.sppad.dd = (function() {
                 _insertPoint = ps;
             }
             
-            locX = rect.left - 1.5 * _indicator2.clientWidth;
-            locY += 1.5 * _indicator2.clientHeight;
+            locX = rect.left - 1.5 * _menuIndicator.clientWidth;
+            locY += 1.5 * _menuIndicator.clientHeight;
             let xform = "matrix(0, 1, -1, 0,";
             
-            _indicator2.style.MozTransform = xform + locX + "px, " + locY + "px)";
+            _menuIndicator.style.MozTransform = xform + locX + "px, " + locY + "px)";
         },
         
         dragexitMenuLaunchers : function(event) {
             window.clearTimeout(_overflowMenuCloseEventId);
             _overflowMenuCloseEventId = window.setTimeout(_closeOverflowMenu, 650);
            
-            _indicator2.collapsed = true;
+            _menuIndicator.collapsed = true;
         },
   
         
@@ -172,8 +172,8 @@ com.sppad.dd = (function() {
             if(!_insertPoint)
                 return;
                 
-            _indicator.collapsed = true;
-            _indicator2.collapsed = true;
+            _menuIndicator.collapsed = true;
+            _toolbarIndicator.collapsed = true;
             
             let uris = getUris(event);
             for(let i=0; i<uris.length; i++) {
@@ -195,17 +195,21 @@ com.sppad.dd = (function() {
         },
 
         dragend : function(event) {
-            _indicator.collapsed = true;
-            _indicator2.collapsed = true;
+            _menuIndicator.collapsed = true;
+            _toolbarIndicator.collapsed = true;
         },
         
         dragexit : function(event) {
-            _indicator.collapsed = true;
+            _toolbarIndicator.collapsed = true;
         },
 
         setup: function() {
-            _indicator = document.getElementById('com_sppad_booky_dropmarker');
-            _indicator2 = document.getElementById('com_sppad_booky_dropmarker2');
+            _menuIndicator = document.getElementById('com_sppad_booky_menuDropmarker');
+            _toolbarIndicator = document.getElementById('com_sppad_booky_toolbarDropmarker');
+            
+            _overflowButton = document.getElementById('com_sppad_booky_launchers_overflow_button');
+            _overflowButton.addEventListener('dragover', com.sppad.dd.dragoverMenuButton, false);
+            _overflowButton.addEventListener('dragexit', com.sppad.dd.dragexitMenuLaunchers, false);
             
             _launcherContainer = document.getElementById('com_sppad_booky_launchers');
             _launcherContainer.addEventListener('dragover', com.sppad.dd.dragoverLaunchers, false);
@@ -219,10 +223,6 @@ com.sppad.dd = (function() {
             _overflowContainer.addEventListener('dragexit', com.sppad.dd.dragexitMenuLaunchers, false);
             _overflowContainer.addEventListener('drop', com.sppad.dd.drop, false);
            
-            _overflowButton = document.getElementById('com_sppad_booky_launchers_overflow_button');
-            _overflowButton.addEventListener('dragover', com.sppad.dd.dragoverMenuButton, false);
-            _overflowButton.addEventListener('dragexit', com.sppad.dd.dragexitMenuLaunchers, false);
-            
             _noLaunchersContainer = document.getElementById('com_sppad_booky_noLaunchersArea');
             _noLaunchersContainer.addEventListener('drop', com.sppad.dd.drop, false);
             _noLaunchersContainer.addEventListener('dragover', com.sppad.dd.dragoverNoLaunchers, false);
