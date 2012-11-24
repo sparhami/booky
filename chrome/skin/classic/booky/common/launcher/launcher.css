@@ -35,10 +35,14 @@ menulauncher[titleChanged="true"] {
 
 menulauncher {
 	padding: 3px;
+	border-style: solid;
+	border-width: 0 0 1px 0;
+	border-color: rgba(44, 117, 255, 0);
 }
 
 menulauncher:hover {
-	box-shadow: 0px 0px 3px 1px rgba(44, 117, 255, .4) inset;
+	background-image: -moz-linear-gradient(bottom, rgba(44, 117, 255, .3) 1px, rgba(44, 117, 255, 0) 2px);
+	border-color: rgba(44, 117, 255, 1);
 }
 
 menulauncher image {
