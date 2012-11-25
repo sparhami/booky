@@ -35,9 +35,6 @@ com.sppad.Resizer = (function() {
     };
     
     var _updateAttributes = function() {
-
-        dump("updating attributes for overflow\n");
-        
         let selected = false;
         let titleChanged = false;
         let children = _launchers.children;
@@ -54,10 +51,6 @@ com.sppad.Resizer = (function() {
         
         _overflowDecorator.setAttribute('selected', selected == true);
         _overflowDecorator.setAttribute('titleChanged', titleChanged == true);
-        
-        dump("overflow selected " + selected + "\n");
-        dump("overflow titleChanged " + titleChanged + "\n");
-        dump("done updating attributes for overflow\n");
     };
 
     return {
@@ -74,17 +67,14 @@ com.sppad.Resizer = (function() {
         },
         
         onTabSelect : function(aTab) {
-            dump("com.spad.Resizer onTabSelected\n");
             _updateAttributes();
         },
         
         onTabTitleChange : function(aTab) {
-            dump("com.spad.Resizer onTabTitleChange\n");
             _updateAttributes();
         },
         
         onTabTitleChangeCleared : function(aTab) {
-            dump("com.spad.Resizer onTabTitleChangeCleared\n");
             _updateAttributes();
         },
         
@@ -96,7 +86,7 @@ com.sppad.Resizer = (function() {
             _overflowToolbarButton = window.document.getElementById('com_sppad_booky_launchers_overflow_button');
             window.addEventListener('resize', this.onResize, false);
 
-            _doresize();
+            _doResize();
         },
 
     }

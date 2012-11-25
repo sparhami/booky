@@ -4,8 +4,12 @@
 	font-style: italic;
 }
 
+#com_sppad_booky_container .dropmarkerContainer > image {
+  	list-style-image: url(chrome://browser/skin/tabbrowser/tabDragIndicator.png);
+}
+
 .bookyToolbarMenu {
-  list-style-image: url("chrome://booky/skin/booky-icon.png") !important;
+  	list-style-image: url("chrome://booky/skin/booky-icon.png");
 }
 
 #com_sppad_booky_launchers {
@@ -18,4 +22,14 @@
 
 #com_sppad_booky_launchers .toolbarbutton-icon {
 	-moz-margin-end: 0 !important;
+}
+
+#com_sppad_booky_noLaunchersArea {
+	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 2px, rgba(84, 140, 240, .44) 4px, rgba(84, 140, 240, .15) 6px, rgba(84, 140, 240, 0) 100%);
+	
+	padding: 3px 3px 4px 3px;
+}
+
+.quickLaunchArea {
+	margin-right: 4px;
 }

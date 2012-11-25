@@ -4,6 +4,7 @@ com.sppad = com.sppad || {};
 com.sppad.dd = (function() {
     /** The current insert point, used when dropping */
     var _insertPoint = null;
+    var _insertValid = false;
     var _menuIndicator = null;
     var _toolbarIndicator = null;
     var _overflowMenuCloseEventId = null;
@@ -102,6 +103,7 @@ com.sppad.dd = (function() {
             let xform = "matrix(1, 0, 0, 1,";
 
             _toolbarIndicator.style.MozTransform = xform + locX + "px, " + locY + "px)";
+            _insertValid = true;
         },
         
         dragoverMenuLaunchers : function(event) {
@@ -140,6 +142,7 @@ com.sppad.dd = (function() {
             let xform = "matrix(0, 1, -1, 0,";
             
             _menuIndicator.style.MozTransform = xform + locX + "px, " + locY + "px)";
+            _insertValid = true;
         },
         
         dragexitMenuLaunchers : function(event) {
@@ -166,12 +169,15 @@ com.sppad.dd = (function() {
         
         dragoverNoLaunchers : function(event) {
             event.preventDefault();
+            _insertValid = true;
         },
         
         drop : function(event) {
-            if(!_insertPoint)
+            if(!_insertValid) {
+                com.sppad.Utils.dump("Not a valid target to drop.\n");
                 return;
-                
+            }
+     
             _menuIndicator.collapsed = true;
             _toolbarIndicator.collapsed = true;
             
@@ -192,6 +198,7 @@ com.sppad.dd = (function() {
             }
             
             _insertPoint = null;
+            _insertValid = true;
         },
 
         dragend : function(event) {

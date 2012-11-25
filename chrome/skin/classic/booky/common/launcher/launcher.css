@@ -1,5 +1,9 @@
 @import url("chrome://booky-platform/skin/launcher/launcher.css");
 
+launcher .launcher-connector {
+	list-style-image: url("chrome://browser/skin/tabbrowser/loading.png") !important;
+}
+
 .launcher-countindicators {
 	margin-top: 5px;
 	margin-bottom: -2px;

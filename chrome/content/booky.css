@@ -9,17 +9,6 @@
 	display: none;
 }
 
-#com_sppad_booky_noLaunchersArea {
-	box-shadow: 0 0px 3px 5px rgba(44, 117, 255, .8);
-	
-	padding: 1px 4px 1px 4px;
-	margin: 5px 3px 6px 3px;
-}
-
-.quickLaunchArea {
-	margin-right: 4px;
-}
-
 #com_sppad_booky_container .dropmarkerContainer {
 	position:fixed;
 	top: 0;
@@ -31,7 +20,6 @@
 #com_sppad_booky_container .dropmarkerContainer > image {
 	position: relative;
   	z-index: 2147483647;
-  	list-style-image: url(chrome://browser/skin/tabbrowser/tabDragIndicator.png);
 }
 
 #com_sppad_booky_launchers .autorepeatbutton-up,
