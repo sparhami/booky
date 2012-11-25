@@ -82,8 +82,7 @@ com.sppad.dd = (function() {
             
             _toolbarIndicator.collapsed = false;
 
-            // make sure to get ordinal sibling
-            let ps = obj.boxObject.previousSibling;
+            let ps = obj.previousSibling;
             let locX = 0, locY = 0;
             let rect = obj.getBoundingClientRect();
 
@@ -123,8 +122,7 @@ com.sppad.dd = (function() {
             
             _menuIndicator.collapsed = false;
             
-            // make sure to get ordinal sibling
-            let ps = obj.boxObject.previousSibling;
+            let ps = obj.previousSibling;
             let locX = 0, locY = 0;
             let rect = obj.getBoundingClientRect();
 
@@ -200,7 +198,7 @@ com.sppad.dd = (function() {
             _insertPoint = null;
             _insertValid = true;
         },
-
+        
         dragend : function(event) {
             _menuIndicator.collapsed = true;
             _toolbarIndicator.collapsed = true;
