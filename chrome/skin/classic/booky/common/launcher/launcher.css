@@ -16,10 +16,12 @@ launcher[titleChanged="true"] .launcher-countindicators {
 	display: none;
 }
 
+#com_sppad_booky_launchers_overflow_decorator[selected="true"],
 launcher[selected="true"] {
 	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 2px, rgba(224, 192, 0, .44) 4px, rgba(224, 192, 0, .15) 6px, rgba(224, 192, 0, 0) 100%);
 }
 	
+#com_sppad_booky_launchers_overflow_decorator[titleChanged="true"],
 launcher[titleChanged="true"] {
 	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 2px, rgba(84, 140, 240, .44) 4px, rgba(84, 140, 240, .15) 6px, rgba(84, 140, 240, 0) 100%);
 }
@@ -32,6 +34,6 @@ launcher[titleChanged="true"] {
 	background-image: -moz-linear-gradient(left, rgba(224, 192, 0, 1) 0px, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 4px);
 }
 
-.menulauncher[titleChanged="true"] > .menu-iconic-left {
+.menulauncher[titleChanged="true"] > .menu-iconic-left{
 	background-image: -moz-linear-gradient(left, rgba(84, 140, 240, 1) 0px, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 4px);
 }					

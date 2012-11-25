@@ -37,22 +37,28 @@
 				</hbox>
 
 				<arrowscrollbox id="com_sppad_booky_launchers" />
-				<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
-					type="menu">
-					<menupopup id="com_sppad_booky_launchers_overflow_menu">
-						<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
-							onclick="js.command();" ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
-							<menupopup>
-								<menuitem class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;"
-									oncommand="js.command();" />
-							</menupopup>
-						</menu>
-					</menupopup>
-				</toolbarbutton>
+				<stack>
+					<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
+						type="menu">
+						<menupopup id="com_sppad_booky_launchers_overflow_menu" />
+					</toolbarbutton>
+					<box id="com_sppad_booky_launchers_overflow_decorator" />
+				</stack>
+
 
 				<tooltip id="com_sppad_booky_tooltip">
 					<label id="com_sppad_booky_tooltip_label" inherits="value" />
 				</tooltip>
+
+				<box style="display: none">
+					<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
+						onclick="js.command();" ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
+						<menupopup>
+							<menuitem class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
+								accesskey="&com_sppad_booky_switchTo.accesskey;" oncommand="js.command();" />
+						</menupopup>
+					</menu>
+				</box>
 			</hbox>
 
 			<stringbundleset>

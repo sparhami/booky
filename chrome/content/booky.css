@@ -48,3 +48,8 @@
 #com_sppad_booky_tooltip[hidden="true"] {
 	visibility: collapse;
 }
+
+#com_sppad_booky_launchers_overflow_decorator {
+	pointer-events: none;
+	margin-bottom: 2px;
+}

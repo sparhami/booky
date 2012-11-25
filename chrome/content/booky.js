@@ -103,7 +103,7 @@ com.sppad.Booky = (function() {
             group.createBefore(nextGroup);
             
             // Force resize so things are hidden / shown appropriately.
-            com.sppad.Resizer.onresize();
+            com.sppad.Resizer.onResize();
         },
         
         onTabOpen: function(aTab) {
@@ -114,11 +114,14 @@ com.sppad.Booky = (function() {
         onTabSelect: function(aTab) {
             dump("onTabSelect\n");
             
-            if(_selectedTab && _selectedTab.com_sppad_booky_launcher)
+            if(_selectedTab.com_sppad_booky_launcher)
                 _selectedTab.com_sppad_booky_launcher.updateTab();
             
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.updateTab();
+            
+            if(_selectedTab.com_sppad_booky_launcher || aTab.com_sppad_booky_launcher)
+                com.sppad.Resizer.onTabSelect(aTab);
             
             _selectedTab = aTab;
         },
@@ -161,16 +164,21 @@ com.sppad.Booky = (function() {
             dump("onTabTitleChange\n");
             
             aTab.com_sppad_booky_titleChanged = true;
-            if(aTab.com_sppad_booky_launcher)
+            if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
+                com.sppad.Resizer.onTabTitleChange(aTab);
+            }
         },
         
         onTabTitleChangeCleared: function(aTab) {
             dump("onTabTitleChangeCleared\n");
             
             aTab.com_sppad_booky_titleChanged = false;
-            if(aTab.com_sppad_booky_launcher)
+            if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
+                com.sppad.Resizer.onTabTitleChangeCleared(aTab);
+            }
+
         },
         
         onTabUnread: function(aTab) {
@@ -202,6 +210,8 @@ com.sppad.Booky = (function() {
         }, 
         
         setup: function() {
+            _selectedTab = gBrowser.selectedTab;
+            
             let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
             _connectingString = tabStringBundle.getString("tabs.connecting");
             _newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
