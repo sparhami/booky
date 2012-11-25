@@ -22,10 +22,10 @@
 		<hbox id="com_sppad_booky_container">
 			<hbox class="quickLaunchArea">
 				<label id="com_sppad_booky_noLaunchersArea" tooltip="noLaunchersTooltip"
-					value="&com_sppad_booky_noLaunchersArea_text;" />
+					value="&com_sppad_booky_noLaunchersArea.label;" />
 
 				<tooltip id="noLaunchersTooltip">
-					<label value="&com_sppad_booky_noLaunchersTooltip_text;" />
+					<label value="&com_sppad_booky_noLaunchersTooltip.label;" />
 				</tooltip>
 
 				<hbox class="dropmarkerContainer">
@@ -39,7 +39,15 @@
 				<arrowscrollbox id="com_sppad_booky_launchers" />
 				<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
 					type="menu">
-					<menupopup id="com_sppad_booky_launchers_overflow_menu" />
+					<menupopup id="com_sppad_booky_launchers_overflow_menu">
+						<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
+							onclick="js.command();" ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
+							<menupopup>
+								<menuitem class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;"
+									oncommand="js.command();" />
+							</menupopup>
+						</menu>
+					</menupopup>
 				</toolbarbutton>
 
 				<tooltip id="com_sppad_booky_tooltip">

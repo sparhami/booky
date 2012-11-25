@@ -39,6 +39,7 @@
 	visibility: collapse !important;
 }
 
+#com_sppad_booky_launcher_overflow_item_template,
 #TabsToolbar tab[com_sppad_booky_hasLauncher="true"] {
 	display: none !important;
 }

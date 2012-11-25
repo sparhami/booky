@@ -2,21 +2,24 @@ var com = com || {};
 com.sppad = com.sppad || {};
 
 com.sppad.Launcher = function(aID) {
-
+    
+    let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
+    
     var self = this;
     this.id = aID;
     this.tabs = [];
     this.bookmarks = [];
     this.bookmarkIds= [];
     this.node = document.createElement('launcher');
-    this.menuNode = document.createElement('menulauncher');
+    this.menuNode = overflowTemplateNode.cloneNode('menu');
+    this.menuNode.removeAttribute('id');
     
-    this.openTab = function() {
+    this.openTab = function() {     
         if(this.tabs.length == 0)
             gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0]);
-        else
+        else            
             gBrowser.selectedTab = this.tabs[0];
-    };
+    };          
     
     /**
      * Updates the attributes applied to the DOM nodes for this launcher.
@@ -171,7 +174,7 @@ com.sppad.Launcher.prototype.mouseenter = function() {
     tooltip.openPopup(this.node, 'after_start', 0, 0, false, false);
     
     let xOffset = (-tooltip.boxObject.width/2) + (this.node.boxObject.width / 2);
-    let yOffset = -20;
+    let yOffset = -20;          
     
     tooltip.hidePopup();    // need to hide it so that it is repositioned
     tooltip.openPopup(this.node, 'after_start', xOffset, yOffset, false, false);
@@ -180,7 +183,7 @@ com.sppad.Launcher.prototype.mouseenter = function() {
 com.sppad.Launcher.prototype.mouseleave = function() {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.hidePopup();
-};
+};      
 
 com.sppad.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
@@ -188,7 +191,7 @@ com.sppad.Launcher.prototype.dragstart = function(event) {
     dt.addElement(event.target);
 
     // Without this check, drag/drop fails for menu launcher
-    if(event.target === this.node) {
+    if(event.target === this.node) {                    
         let tooltip = document.getElementById('com_sppad_booky_tooltip');
         tooltip.setAttribute('hidden', true);    
     }

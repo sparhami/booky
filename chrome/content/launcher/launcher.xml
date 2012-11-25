@@ -30,17 +30,4 @@
 			</xul:toolbarbutton>
 		</content>
 	</binding>
-
-	<binding id="menulauncher">
-		<content draggable="true" onclick="js.command();" ondragstart="js.dragstart(event);"
-			ondragend="js.dragend(event);">
-			<xul:box class="menulauncher">
-				<xul:box class="menuicon">
-					<xul:image class="launcher-icon" xbl:inherits="src=image" />
-				</xul:box>
-
-				<xul:label xbl:inherits="value=label" />
-			</xul:box>
-		</content>
-	</binding>
 </bindings>

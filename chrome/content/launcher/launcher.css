@@ -16,8 +16,8 @@ launcher[busy="true"] .launcher-icon {
 }
 
 launcher[hasSingle="false"]:not(:hover) .launcher-icon,
-menulauncher[hasSingle="false"]:not(:hover) .launcher-icon {
-	filter: url("chrome://booky/content/filters.svg#grayscale");
+.menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
+	filter: url("chrome://booky/content/filters.svg	#grayscale");
 	opacity: .45;
 }
 
@@ -39,6 +39,6 @@ launcher[overflow="true"] {
 	visibility: hidden;
 }
 
-menulauncher[overflow="false"] {
-	visibility: collapse;
+.menulauncher[overflow="false"] {
+	display: none;
 }

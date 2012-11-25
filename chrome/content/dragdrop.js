@@ -116,7 +116,7 @@ com.sppad.dd = (function() {
             // There may be gaps where there isn't a launcher. In that case,
             // do not modify the indicator location.
             let obj = event.target;
-            if (obj.nodeName != 'menulauncher')
+            if (obj.nodeName != 'menu')
                 return;
             
             _menuIndicator.collapsed = false;
