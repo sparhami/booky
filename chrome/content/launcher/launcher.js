@@ -108,6 +108,7 @@ com.sppad.Launcher = function(aID) {
     this.addBookmark = function(aUri, anImage, aBookmarkId ) {
         this.bookmarkIds.push(aBookmarkId);
         this.bookmarks.push(aUri);
+        com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId] = this;
         
         this.setImage(anImage);
     };
@@ -123,6 +124,7 @@ com.sppad.Launcher = function(aID) {
     this.removeBookmark = function(aUri, aBookmarkId) {
        com.sppad.Utils.removeFromArray(this.bookmarkIds, aBookmarkId);
        com.sppad.Utils.removeFromArray(this.bookmarks, aUri);
+       delete com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId];
        
        if(this.bookmarkIds.length == 0) {
            let container = document.getElementById('com_sppad_booky_launchers');
@@ -206,7 +208,8 @@ com.sppad.Launcher.prototype.command = function(event) {
     this.openTab(event);
 };
 
-
+/** Maps bookmark ids to Launchers */
+com.sppad.Launcher.bookmarkIDToLauncher = {};
 /** Maps ids to Launchers */
 com.sppad.Launcher.launchers = new Array();
 com.sppad.Launcher.launcherIDs = new Array();
@@ -225,3 +228,7 @@ com.sppad.Launcher.getLauncher = function(aID) {
 com.sppad.Launcher.hasLauncher = function(aID) {
     return com.sppad.Utils.getIndexInArray(this.launcherIDs, aID) >= 0;
 };
+
+com.sppad.Launcher.getLauncherFromBookmarkId = function(aBookmarkId) {
+    return this.bookmarkIDToLauncher[aBookmarkId];
+}

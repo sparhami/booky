@@ -66,6 +66,10 @@ com.sppad.Resizer = (function() {
                 _resizeEventId = window.setTimeout(_doResize, RESIZE_PERIOD - timeSinceResize);
         },
         
+        onTabClose : function(aTab) {
+            _updateAttributes();
+        },
+        
         onTabSelect : function(aTab) {
             _updateAttributes();
         },

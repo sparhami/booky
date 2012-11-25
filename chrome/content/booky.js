@@ -62,8 +62,6 @@ com.sppad.Booky = (function() {
         },
         
         onBookmarkAdded: function(event) {
-            dump("onBookmarkAdded\n");
-            
             let node = event.node;
             let id = this.getIdFromUriString(node.uri);
             
@@ -80,20 +78,20 @@ com.sppad.Booky = (function() {
         },
         
         onBookmarkRemoved: function(event) {
-            dump("onBookmarkRemoved\n");
-            
             let node = event.node;
-            let id = this.getIdFromUriString(node.uri);
+            // Need to lookup by the bookmark id because the uri of the boomark
+            // may have changed (if it has been modified at not deleted).
+            let launcher = com.sppad.Launcher.getLauncherFromBookmarkId(node.itemId);
+       
+            // Can occur due to how bookmarks are edited (at least on Linux)
+            if(!launcher)
+                return;
             
-            let launcher = com.sppad.Launcher.getLauncher(id);
             launcher.removeBookmark(node.uri, node.itemId);
-            
             this.updateBookmarksCount(-1);
         },
         
         onBookmarkMoved: function(event) {
-            dump("onBookmarkMoved\n"); 
-            
             let node = event.node;
             let nodeNext = event.nodeNext;
             
@@ -107,13 +105,10 @@ com.sppad.Booky = (function() {
         },
         
         onTabOpen: function(aTab) {
-            dump("onTabOpen\n");
             this.onTabAttrChange(aTab);
         },
         
         onTabSelect: function(aTab) {
-            dump("onTabSelect\n");
-            
             if(_selectedTab.com_sppad_booky_launcher)
                 _selectedTab.com_sppad_booky_launcher.updateTab();
             
@@ -127,15 +122,13 @@ com.sppad.Booky = (function() {
         },
         
         onTabClose: function(aTab) {
-            dump("onTabClose\n");
-            
-            if(aTab.com_sppad_booky_launcher)
+            if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.removeTab(aTab);
+                com.sppad.Resizer.onTabTitleChangeCleared(aTab);
+            }
         },
         
         onTabAttrChange: function(aTab) {
-            dump("onTabAttrChange\n");
-            
             let newId = this.getIdFromTab(aTab);
             let oldId = aTab.com_sppad_booky_id;
             
@@ -149,7 +142,6 @@ com.sppad.Booky = (function() {
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
                 
-                dump("onTabAttrChange getting launcher for id " + newId + "\n");
                 if(com.sppad.Launcher.hasLauncher(newId))
                     com.sppad.Launcher.getLauncher(newId).addTab(aTab);
                 
@@ -161,8 +153,6 @@ com.sppad.Booky = (function() {
         },
         
         onTabTitleChange: function(aTab) {
-            dump("onTabTitleChange\n");
-            
             aTab.com_sppad_booky_titleChanged = true;
             if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
@@ -171,8 +161,6 @@ com.sppad.Booky = (function() {
         },
         
         onTabTitleChangeCleared: function(aTab) {
-            dump("onTabTitleChangeCleared\n");
-            
             aTab.com_sppad_booky_titleChanged = false;
             if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
@@ -182,24 +170,20 @@ com.sppad.Booky = (function() {
         },
         
         onTabUnread: function(aTab) {
-            dump("onTabUnread\n");
+
         },
         
         onTabUnreadCleared: function(aTab) {
-            dump("onTabUnreadCleared\n");
+
         },
         
         onTabBusy: function(aTab) {
-            dump("onTabBusy\n");
-            
             aTab.com_sppad_booky_busy = true;
             if(aTab.com_sppad_booky_launcher)
                aTab.com_sppad_booky_launcher.updateTab(aTab);
         },
         
         onTabBusyCleared: function(aTab) {
-            dump("onTabBusyCleared\n");
-            
             aTab.com_sppad_booky_busy = false;
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.updateTab(aTab);

@@ -30,7 +30,7 @@ launcher[titleChanged="true"] {
 	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 2px, rgba(84, 140, 240, .44) 4px, rgba(84, 140, 240, .15) 6px, rgba(84, 140, 240, 0) 100%);
 }
 
-.menulauncher .menu-iconic-left {
+.menulauncher > .menu-iconic-left {
 	padding-left: 8px !important;
 }
 
