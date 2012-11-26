@@ -14,8 +14,8 @@ launcher[busy="true"] .launcher-icon {
 
 launcher[hasSingle="false"]:not(:hover) .launcher-icon,
 .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
-	filter: url("chrome://booky/content/filters.svg	#grayscale");
-	opacity: .45;
+	filter: url("chrome://booky/content/filters.svg#grayscale");
+	opacity: .55;
 }
 
 launcher .launcher-countindicator-two, 

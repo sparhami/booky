@@ -6,15 +6,4 @@
 <!ENTITY com_sppad_booky_switchTo.label "Switch To">
 <!ENTITY com_sppad_booky_switchTo.accesskey "T">
 
-<!ENTITY tabgroup.new_tab.label "New Tab">
-<!ENTITY tabgroup.new_tab.accesskey "N">
-<!ENTITY tabgroup.reload_tab.label "Reload Tab(s)">
-<!ENTITY tabgroup.reload_tab.accesskey "R">
-<!ENTITY tabgroup.close_tab.label "Close Tab(s)">
-<!ENTITY tabgroup.close_tab.accesskey "C">
-<!ENTITY tabgroup.bookmark_menu.label "Bookmarks">
-<!ENTITY tabgroup.bookmark_tab.label "Bookmark Tab(s)">
-<!ENTITY tabgroup.bookmark_tab.accesskey "B">
-
-<!ENTITY tabdock.open_new_tab.label "Open a new tab">
-<!ENTITY tabdock.close_current_tab.label "Close tab">
+<!ENTITY preference.maxWidth.label "Max Width (percentage)">

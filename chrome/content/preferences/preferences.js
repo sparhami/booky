@@ -1,3 +1,6 @@
+var com = com || {};
+com.sppad = com.sppad || {};
+
 /**
  * The default prefs code in here modified from Mark Finkle's Default
  * Preferences code:
@@ -62,9 +65,9 @@ PrefListener.prototype.unregister = function() {
 };  
   
 
-var CurrentPrefs = {};
+com.sppad.CurrentPrefs = {};
 
-var Preferences = (function() {
+com.sppad.Preferences = (function() {
     
     var _eventSupport = new com.sppad.EventSupport();
     var _EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
@@ -72,9 +75,9 @@ var Preferences = (function() {
     /** Listens for prefs changes in order to record them, fire event */
     var _myListener = new PrefListener(PREF_BRANCH,  
             function(branch, name) {  
-                  CurrentPrefs[name] = _getPreference(branch, name);
+                com.sppad.CurrentPrefs[name] = _getPreference(branch, name);
                   
-                  _eventSupport.fire( { 'name' : name, 'value' : CurrentPrefs[name] }, _EVENT_PREFERENCE_CHANGED);
+                _eventSupport.fire( { 'name' : name, 'value' : com.sppad.CurrentPrefs[name] }, _EVENT_PREFERENCE_CHANGED);
             });  
     
     /**

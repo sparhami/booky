@@ -14,7 +14,7 @@ com.sppad.Resizer = (function() {
 
     var _doResize = function() {
         let windowSize = window.innerWidth;
-        let launchersSizePercentage = Math.min(CurrentPrefs['maxWidth'], 100) / 100;
+        let launchersSizePercentage = Math.min(com.sppad.CurrentPrefs['maxWidth'], 100) / 100;
         
         _lastResizeTime = Date.now();
         _launchers.maxWidth = windowSize * launchersSizePercentage;

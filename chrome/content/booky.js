@@ -26,7 +26,6 @@ com.sppad.Booky = (function() {
         },
         
         handleEvent : function(aEvent) {
-            
             switch (aEvent.type)
             {
                 case com.sppad.Bookmarks.EVENT_ADD_BOOKMARK:
@@ -56,8 +55,24 @@ com.sppad.Booky = (function() {
                     return this.onTabBusy(aEvent.tab);
                 case com.sppad.TabEvents.EVENT_TAB_BUSY_CLEARED:
                     return this.onTabBusyCleared(aEvent.tab);
+                case com.sppad.Preferences.EVENT_PREFERENCE_CHANGED:
+                    return this.prefChanged(aEvent.name, aEvent.value);
                 default:
                     return null;
+            }
+        },
+        
+        prefChanged: function(name, value) {  
+            com.sppad.Utils.dump("pref change: " + name + " -> " + value + "\n");
+              
+            switch(name)
+            { 
+              case 'maxWidth':
+                  return com.sppad.Resizer.onResize();
+              case "debug":
+                  return com.sppad.Utils.enableDebug(value);
+              default:
+                  return null;
             }
         },
         
@@ -166,7 +181,6 @@ com.sppad.Booky = (function() {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
                 com.sppad.Resizer.onTabTitleChangeCleared(aTab);
             }
-
         },
         
         onTabUnread: function(aTab) {
@@ -190,19 +204,20 @@ com.sppad.Booky = (function() {
         },
         
         loadPreferences: function() {
-            this.prefChanged("debug", CurrentPrefs['debug']);
+            this.prefChanged("debug", com.sppad.CurrentPrefs['debug']);
         }, 
         
         setup: function() {
-            _selectedTab = gBrowser.selectedTab;
+            com.sppad.Preferences.addListener(this, com.sppad.Preferences.EVENT_PREFERENCE_CHANGED);
+            this.loadPreferences();
             
             let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
             _connectingString = tabStringBundle.getString("tabs.connecting");
             _newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
             
-            com.sppad.TabEvents.addListener(this);
+            _selectedTab = gBrowser.selectedTab;
             
-            Preferences.addListener(this, Preferences.EVENT_PREFERENCE_CHANGED);
+            com.sppad.TabEvents.addListener(this);
             com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_ADD_BOOKMARK);
             com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_MOV_BOOKMARK);
             com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_DEL_BOOKMARK);
@@ -214,9 +229,9 @@ com.sppad.Booky = (function() {
         },
         
         cleanup: function() {
-            com.sppad.TabEvents.removeListener(this);
+            com.sppad.Preferences.removeListener(this, com.sppad.Preferences.EVENT_PREFERENCE_CHANGED);
             
-            Preferences.removeListener(this, Preferences.EVENT_PREFERENCE_CHANGED);
+            com.sppad.TabEvents.removeListener(this);
             com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_ADD_BOOKMARK);
             com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_MOV_BOOKMARK);
             com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_DEL_BOOKMARK);

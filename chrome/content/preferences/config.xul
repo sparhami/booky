@@ -2,13 +2,15 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://browser/skin/preferences/preferences.css" type="text/css"?>
 
+<?xml-stylesheet href="config.css" type="text/css"?>
+
 <!DOCTYPE prefwindow [
 <!ENTITY % mainDTD SYSTEM "chrome://booky/locale/booky.dtd">
 %mainDTD;
 ]>
 
 <prefwindow title="Unread Tab Tracker Preferences" id="booky-preferences-window"
-	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"">
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script src="config.js" type="application/javascript" />
 
@@ -25,10 +27,35 @@
 				</columns>
 				<rows>
 					<row>
-					
+						<caption label="&preference.maxWidth.label;" />
+						<textbox id="com_sppad_booky_preference_maxWidth" type="number"
+							min="0" max="100" preference="extensions.booky.maxWidth" orient="vertical" />
 					</row>
 				</rows>
 			</grid>
 		</groupbox>
 	</prefpane>
+
+	<prefpane id="com_sppad_booky_GeneralPrefPane" label="Style">
+		<preferences>
+			<preference id="extensions.booky.maxWidth" name="extensions.booky.maxWidth"
+				type="int" />
+		</preferences>
+
+		<groupbox>
+			<grid>
+				<columns>
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<caption label="&preference.maxWidth.label;" />
+						<textbox id="com_sppad_booky_preference_maxWidth" type="number"
+							min="0" max="100" preference="extensions.booky.maxWidth" orient="vertical" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+	</prefpane>
+
 </prefwindow>
