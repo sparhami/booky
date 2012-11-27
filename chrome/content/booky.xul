@@ -51,10 +51,12 @@
 
 				<box style="display: none">
 					<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
-						onclick="js.command();" ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
+						ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
 						<menupopup>
 							<menuitem class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
 								accesskey="&com_sppad_booky_switchTo.accesskey;" oncommand="js.command();" />
+							<menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
+								accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
 						</menupopup>
 					</menu>
 				</box>

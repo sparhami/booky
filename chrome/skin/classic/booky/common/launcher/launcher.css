@@ -20,16 +20,16 @@ launcher[titleChanged="true"] .launcher-countindicators {
 	visibility: hidden;
 }
 
-#com_sppad_booky_launchers_overflow_decorator[selected="true"],
-launcher[selected="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 2px, rgba(224, 192, 0, .33) 4px, rgba(224, 192, 0, .15) 5px, rgba(224, 192, 0, 0) 100%);
-}
-	
 #com_sppad_booky_launchers_overflow_decorator[titleChanged="true"],
 launcher[titleChanged="true"] {
 	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 2px, rgba(84, 140, 240, .33) 4px, rgba(84, 140, 240, .15) 5px, rgba(84, 140, 240, 0) 100%);
 }
 
+#com_sppad_booky_launchers_overflow_decorator[selected="true"],
+launcher[selected="true"] {
+	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 2px, rgba(224, 192, 0, .33) 4px, rgba(224, 192, 0, .15) 5px, rgba(224, 192, 0, 0) 100%);
+}
+	
 .menulauncher > .menu-iconic-left {
 	padding-left: 8px !important;
 }

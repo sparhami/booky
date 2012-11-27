@@ -11,7 +11,7 @@
 			<xul:toolbarbutton class="launcher" anonid="toolbarbutton"
 				image="chrome://mozapps/skin/places/defaultFavicon.png" container="true"
 				xbl:inherits="image,type" onmouseenter="js.mouseenter();" onmouseleave="js.mouseleave();"
-				style="-moz-user-focus: normal;" oncontextmenu="return false;" oncommand="js.command();"
+				style="-moz-user-focus: normal;" oncontextmenu="return false;" onclick="js.click(event);"
 				orient="vertical">
 
 				<xul:stack validate="always">
@@ -27,7 +27,22 @@
 					<xul:box class="launcher-countindicator-two" />
 					<xul:box class="launcher-countindicator-one" />
 				</xul:hbox>
+
+				<xul:menupopup anonid="contextMenu" onpopupshowing="js.contextShowing();"
+					onpopuphiding="js.contextHiding();">
+					<xul:menuitem class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
+						accesskey="&com_sppad_booky_switchTo.accesskey;" oncommand="js.command();" />
+					<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
+						accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
+				</xul:menupopup>
+
 			</xul:toolbarbutton>
 		</content>
+
+		<implementation>
+			<field name="contextMenu" readonly="true"><![CDATA[ 
+      			document.getAnonymousElementByAttribute(this, "anonid", "contextMenu") 
+      		]]></field>
+		</implementation>
 	</binding>
 </bindings>

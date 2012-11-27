@@ -15,11 +15,15 @@ com.sppad.Launcher = function(aID) {
     this.menuNode.removeAttribute('id');
     
     this.openTab = function() {     
+        gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0]);
+    };       
+    
+    this.switchTo = function() {
         if(this.tabs.length == 0)
-            gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0]);
+            this.openTab();
         else            
             gBrowser.selectedTab = this.tabs[0];
-    };          
+    };
     
     /**
      * Updates the attributes applied to the DOM nodes for this launcher.
@@ -42,6 +46,19 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute("hasSingle", this.tabs.length > 0);
         this.setAttribute("hasMultiple", this.tabs.length > 1);
         this.setAttribute('label', this.id);
+        
+        let nodeItemClose = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_close');
+        let menuNodeItemClose = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_close');
+        
+        
+        if(this.tabs.length == 0) {
+            nodeItemClose.setAttribute('disabled', 'true');
+            menuNodeItemClose.setAttribute('disabled', 'true');
+        } else {
+            nodeItemClose.removeAttribute('disabled');
+            menuNodeItemClose.removeAttribute('disabled');
+        }
+        
     };
     
     /**
@@ -205,8 +222,37 @@ com.sppad.Launcher.prototype.dragend = function(event) {
 };
 
 com.sppad.Launcher.prototype.command = function(event) {
-    this.openTab(event);
+    this.switchTo(event);
 };
+
+com.sppad.Launcher.prototype.click = function(event) {
+    
+    if(event.button == 0)
+        this.switchTo(event);
+    else if(event.button == 1)
+        this.openTab(event);
+    else if(event.button == 2)
+        this.node.contextMenu.openPopup(this.node, "after_start", 0, 0, false, false);
+    
+};
+
+com.sppad.Launcher.prototype.contextShowing = function(event) {
+    let tooltip = document.getElementById('com_sppad_booky_tooltip');
+    tooltip.setAttribute('hidden', true);  
+};
+
+com.sppad.Launcher.prototype.contextHiding = function(event) {
+    let tooltip = document.getElementById('com_sppad_booky_tooltip');
+    tooltip.setAttribute('hidden', false);
+};
+
+com.sppad.Launcher.prototype.close = function(event) {
+
+    while(this.tabs.length > 0)
+        gBrowser.removeTab(this.tabs.pop());
+    
+};
+
 
 /** Maps bookmark ids to Launchers */
 com.sppad.Launcher.bookmarkIDToLauncher = {};

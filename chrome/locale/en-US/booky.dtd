@@ -5,5 +5,7 @@
 
 <!ENTITY com_sppad_booky_switchTo.label "Switch To">
 <!ENTITY com_sppad_booky_switchTo.accesskey "T">
+<!ENTITY com_sppad_booky_close.label "Close">
+<!ENTITY com_sppad_booky_close.accesskey "C">
 
 <!ENTITY preference.maxWidth.label "Max Width (percentage)">
