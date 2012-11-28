@@ -11,18 +11,21 @@ com.sppad.Launcher = function(aID) {
     this.bookmarks = [];
     this.bookmarkIds= [];
     this.node = document.createElement('launcher');
-    this.menuNode = overflowTemplateNode.cloneNode('menu');
+    this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
     
     this.openTab = function() {     
         gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0]);
     };       
     
-    this.switchTo = function() {
+    this.switchTo = function(event) {
         if(this.tabs.length == 0)
             this.openTab();
-        else            
+        else if(event.target)
+            gBrowser.selectedTab = event.target.tab;
+        else
             gBrowser.selectedTab = this.tabs[0];
+   
     };
     
     /**
@@ -52,7 +55,6 @@ com.sppad.Launcher = function(aID) {
         
         let nodeItemClose = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_close');
         let menuNodeItemClose = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_close');
-        
         
         if(this.tabs.length == 0) {
             nodeItemClose.setAttribute('disabled', 'true');
@@ -97,9 +99,24 @@ com.sppad.Launcher = function(aID) {
      * Adds a tab to the launcher.
      */
     this.addTab = function(aTab) {
+        let tabMenuTemplateNode = document.getElementById('com_sppad_booky_launcher_tabMenu_item_template');
+        
         this.tabs.push(aTab);
         aTab.com_sppad_booky_launcher = this;
+        aTab.com_sppad_booky_launcherId = this.id;
+        aTab.com_sppad_booky_launcher_tabMenu_item = tabMenuTemplateNode.cloneNode(true);
+        aTab.com_sppad_booky_launcher_tabMenu_item.removeAttribute('id');
+        aTab.com_sppad_booky_launcher_tabMenu_item.setAttribute('label', aTab.label);
+        aTab.com_sppad_booky_launcher_overflowTabMenu_item = aTab.com_sppad_booky_launcher_tabMenu_item.cloneNode(true);
         aTab.setAttribute('com_sppad_booky_hasLauncher', true);
+        
+        aTab.com_sppad_booky_launcher_tabMenu_item.tab = aTab;
+        aTab.com_sppad_booky_launcher_overflowTabMenu_item.tab = aTab;
+        aTab.com_sppad_booky_launcher_tabMenu_item.js = this;
+        aTab.com_sppad_booky_launcher_overflowTabMenu_item.js = this;
+        
+        this.node.tabsMenu.appendChild(aTab.com_sppad_booky_launcher_tabMenu_item);
+        this.menuNode.tabsMenu.appendChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
         
         this.updateAttributes();
     };
@@ -108,8 +125,13 @@ com.sppad.Launcher = function(aID) {
      * Removes a tab from the launcher.
      */
     this.removeTab = function(aTab) {
+        this.node.tabsMenu.removeChild(aTab.com_sppad_booky_launcher_tabMenu_item);
+        this.menuNode.tabsMenu.removeChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
+        
         com.sppad.Utils.removeFromArray(this.tabs, aTab);
         delete aTab.com_sppad_booky_launcher;
+        delete aTab.com_sppad_booky_launcher_tabMenu_item;
+        delete aTab.com_sppad_booky_launcher_overflowTabMenu_item;
         aTab.removeAttribute('com_sppad_booky_hasLauncher');
         
         this.updateAttributes();
@@ -159,6 +181,9 @@ com.sppad.Launcher = function(aID) {
     };
     
     this.updateTab = function(aTab) {
+        aTab.com_sppad_booky_launcher_tabMenu_item.setAttribute('label', aTab.label);
+        aTab.com_sppad_booky_launcher_overflowTabMenu_item.setAttribute('label', aTab.label);
+        
         this.updateAttributes();
     };
 
@@ -181,6 +206,12 @@ com.sppad.Launcher = function(aID) {
         
         this.node.js = self;
         this.menuNode.js = self;
+        
+        this.node.tabsMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_switchTo');
+        this.node.bookmarksMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_bookmarks');
+      
+        this.menuNode.tabsMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_switchTo');
+        this.menuNode.bookmarksMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_bookmarks');
     };
     
     this.createBefore(null);
@@ -250,10 +281,8 @@ com.sppad.Launcher.prototype.contextHiding = function(event) {
 };
 
 com.sppad.Launcher.prototype.close = function(event) {
-
     while(this.tabs.length > 0)
         gBrowser.removeTab(this.tabs.pop());
-    
 };
 
 

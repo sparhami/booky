@@ -63,9 +63,9 @@
 
 							<menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
 								accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
-
 						</menupopup>
 					</menu>
+					<menuitem id="com_sppad_booky_launcher_tabMenu_item_template" oncommand="js.command(event)" />
 				</box>
 			</hbox>
 
