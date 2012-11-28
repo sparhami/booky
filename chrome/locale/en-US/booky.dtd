@@ -7,6 +7,8 @@
 <!ENTITY com_sppad_booky_switchTo.accesskey "T">
 <!ENTITY com_sppad_booky_bookmarks.label "Bookmarks">
 <!ENTITY com_sppad_booky_bookmarks.accesskey "B">
+<!ENTITY com_sppad_booky_reload.label "Reload">
+<!ENTITY com_sppad_booky_reload.accesskey "R">
 <!ENTITY com_sppad_booky_close.label "Close">
 <!ENTITY com_sppad_booky_close.accesskey "C">
 
@@ -16,7 +18,6 @@
 <!ENTITY preference.hideTabStrategy.hideAllTabs.label "always">
 <!ENTITY preference.hideTabStrategy.showActiveGroup.label "except when in the active launcher group">
 <!ENTITY preference.hideTabStrategy.hideNoTabs.label "never">
-
 
 <!ENTITY preference.hideLauncherStrategy.label "Hide quick launchers">
 <!ENTITY preference.hideLauncherStrategy.overflowOnly.label "Only when they overflow the available space">

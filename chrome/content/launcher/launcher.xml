@@ -32,17 +32,23 @@
 			<xul:menupopup anonid="contextMenu" onpopupshowing="js.contextShowing();"
 				onpopuphiding="js.contextHiding();">
 
-				<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;">
-					<xul:menupopup class="launcher_menupopup_switchTo" />
+				<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
+					accesskey="&com_sppad_booky_switchTo.accesskey;">
+					<xul:menupopup class="launcher_menupopup_switchTo"
+						onpopupshowing="js.tabsPopupShowing(event);" />
 				</xul:menu>
 
-				<xul:menu class="launcher_menu_bookmarks" label="&com_sppad_booky_bookmarks.label;" accesskey="&com_sppad_booky_bookmarks.accesskey;">
-					<xul:menupopup class="launcher_menupopup_bookmarks" />
+				<xul:menu class="launcher_menu_bookmarks" label="&com_sppad_booky_bookmarks.label;"
+					accesskey="&com_sppad_booky_bookmarks.accesskey;">
+					<xul:menupopup class="launcher_menupopup_bookmarks"
+						onpopupshowing="js.bookmarksPopupShowing(event);" />
 				</xul:menu>
 
+				<xul:menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
+					accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
 				<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
 					accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
-					
+
 			</xul:menupopup>
 		</content>
 

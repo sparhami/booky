@@ -8,10 +8,6 @@
   	list-style-image: url(chrome://browser/skin/tabbrowser/tabDragIndicator.png);
 }
 
-.bookyToolbarMenu {
-  	list-style-image: url("chrome://booky/skin/booky-icon.png");
-}
-
 #com_sppad_booky_launchers {
 	padding-top: 2px  !important;
 	padding-bottom: 2px  !important;

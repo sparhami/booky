@@ -6,6 +6,9 @@ com.sppad.Launcher = function(aID) {
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
     var self = this;
+    this.tabCountDirty = true;
+    this.tabsUpdateTime = 0;
+    this.bookmarksUpdateTime = 0;
     this.id = aID;
     this.tabs = [];
     this.bookmarks = [];
@@ -14,18 +17,17 @@ com.sppad.Launcher = function(aID) {
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
     
-    this.openTab = function() {     
-        gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0]);
+    this.openTab = function(aUri) {     
+        gBrowser.selectedTab = gBrowser.addTab(aUri || this.bookmarks[0]);
     };       
     
     this.switchTo = function(event) {
         if(this.tabs.length == 0)
             this.openTab();
-        else if(event.target)
+        else if(event && event.target)
             gBrowser.selectedTab = event.target.tab;
         else
             gBrowser.selectedTab = this.tabs[0];
-   
     };
     
     /**
@@ -49,25 +51,40 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute("busy", busy == true);
         this.setAttribute("selected", selected == true);
         this.setAttribute("titleChanged", titleChanged == true);
-        this.setAttribute("hasSingle", this.tabs.length > 0);
-        this.setAttribute("hasMultiple", this.tabs.length > 1);
         this.setAttribute('label', this.id);
         
-        let nodeItemClose = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_close');
-        let menuNodeItemClose = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_close');
-        
-        if(this.tabs.length == 0) {
-            this.node.tabsMenu.setAttribute('disabled', 'true');
-            this.menuNode.tabsMenu.setAttribute('disabled', 'true');
-            nodeItemClose.setAttribute('disabled', 'true');
-            menuNodeItemClose.setAttribute('disabled', 'true');
-        } else {
-            this.node.tabsMenu.removeAttribute('disabled');
-            this.menuNode.tabsMenu.removeAttribute('disabled');
-            nodeItemClose.removeAttribute('disabled');
-            menuNodeItemClose.removeAttribute('disabled');
+        if(this.tabCountDirty) {
+            this.setAttribute("hasSingle", this.tabs.length > 0);
+            this.setAttribute("hasMultiple", this.tabs.length > 1);
+            
+            let nodeItemClose = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_close');
+            let menuNodeItemClose = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_close');
+            let nodeItemReload = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_reload');
+            let menuNodeItemReload = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_reload');
+     
+            let nodeTabsMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_switchTo');
+            let menuNodeTabsMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_switchTo');
+      
+            if(this.tabs.length == 0) {
+                nodeTabsMenu.setAttribute('disabled', 'true');
+                nodeItemClose.setAttribute('disabled', 'true');
+                nodeItemReload.setAttribute('disabled', 'true');
+                
+                menuNodeTabsMenu.setAttribute('disabled', 'true');
+                menuNodeItemClose.setAttribute('disabled', 'true');
+                menuNodeItemReload.setAttribute('disabled', 'true');
+            } else {
+                nodeTabsMenu.removeAttribute('disabled');
+                nodeItemClose.removeAttribute('disabled');
+                nodeItemReload.removeAttribute('disabled');
+                
+                menuNodeTabsMenu.removeAttribute('disabled');
+                menuNodeItemClose.removeAttribute('disabled');
+                menuNodeItemReload.removeAttribute('disabled');
+            }
         }
         
+        this.tabCountDirty = false;
     };
     
     /**
@@ -103,24 +120,13 @@ com.sppad.Launcher = function(aID) {
      * Adds a tab to the launcher.
      */
     this.addTab = function(aTab) {
-        let tabMenuTemplateNode = document.getElementById('com_sppad_booky_launcher_tabMenu_item_template');
+        this.tabCountDirty = true;
+        this.tabsUpdateTime = Date.now();
         
         this.tabs.push(aTab);
         aTab.com_sppad_booky_launcher = this;
         aTab.com_sppad_booky_launcherId = this.id;
-        aTab.com_sppad_booky_launcher_tabMenu_item = tabMenuTemplateNode.cloneNode(true);
-        aTab.com_sppad_booky_launcher_tabMenu_item.removeAttribute('id');
-        aTab.com_sppad_booky_launcher_tabMenu_item.setAttribute('label', aTab.label);
-        aTab.com_sppad_booky_launcher_overflowTabMenu_item = aTab.com_sppad_booky_launcher_tabMenu_item.cloneNode(true);
         aTab.setAttribute('com_sppad_booky_hasLauncher', true);
-        
-        aTab.com_sppad_booky_launcher_tabMenu_item.tab = aTab;
-        aTab.com_sppad_booky_launcher_overflowTabMenu_item.tab = aTab;
-        aTab.com_sppad_booky_launcher_tabMenu_item.js = this;
-        aTab.com_sppad_booky_launcher_overflowTabMenu_item.js = this;
-        
-        this.node.tabsMenuPopup.appendChild(aTab.com_sppad_booky_launcher_tabMenu_item);
-        this.menuNode.tabsMenuPopup.appendChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
         
         this.updateAttributes();
     };
@@ -129,13 +135,11 @@ com.sppad.Launcher = function(aID) {
      * Removes a tab from the launcher.
      */
     this.removeTab = function(aTab) {
-        this.node.tabsMenuPopup.removeChild(aTab.com_sppad_booky_launcher_tabMenu_item);
-        this.menuNode.tabsMenuPopup.removeChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
+        this.tabCountDirty = true;
+        this.tabsUpdateTime = Date.now();
         
         com.sppad.Utils.removeFromArray(this.tabs, aTab);
         delete aTab.com_sppad_booky_launcher;
-        delete aTab.com_sppad_booky_launcher_tabMenu_item;
-        delete aTab.com_sppad_booky_launcher_overflowTabMenu_item;
         aTab.removeAttribute('com_sppad_booky_hasLauncher');
         
         this.updateAttributes();
@@ -151,7 +155,9 @@ com.sppad.Launcher = function(aID) {
      * @param aBookmarkId
      *            The bookmark id from the bookmarks service
      */
-    this.addBookmark = function(aUri, anImage, aBookmarkId ) {
+    this.addBookmark = function(aUri, anImage, aBookmarkId) {
+        this.bookmarksUpdateTime = Date.now();
+        
         this.bookmarkIds.push(aBookmarkId);
         this.bookmarks.push(aUri);
         com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId] = this;
@@ -168,26 +174,27 @@ com.sppad.Launcher = function(aID) {
      *            The bookmark id from the bookmarks service
      */
     this.removeBookmark = function(aUri, aBookmarkId) {
-       com.sppad.Utils.removeFromArray(this.bookmarkIds, aBookmarkId);
-       com.sppad.Utils.removeFromArray(this.bookmarks, aUri);
-       delete com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId];
-       
-       if(this.bookmarkIds.length == 0) {
-           let container = document.getElementById('com_sppad_booky_launchers');
-           container.removeChild(this.node);
+        this.bookmarksUpdateTime = Date.now();
+        
+        let index = com.sppad.Utils.getIndexInArray(this.bookmarkIds, aBookmarkId);
+        this.bookmarkIds.splice(index, 1);
+        this.bookmarks.splice(index, 1);
+        
+        delete com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId];
+        
+        if(this.bookmarkIds.length == 0) {
+            let container = document.getElementById('com_sppad_booky_launchers');
+            container.removeChild(this.node);
            
-           for(let i=0; i<this.tabs.length; i++)
-               this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
+            for(let i=0; i<this.tabs.length; i++)
+                this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
            
-           com.sppad.Utils.removeFromArray(com.sppad.Launcher.launchers, this);
-           com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, this.id);
-       }
+            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launchers, this);
+            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, this.id);
+        }
     };
     
     this.updateTab = function(aTab) {
-        aTab.com_sppad_booky_launcher_tabMenu_item.setAttribute('label', aTab.label);
-        aTab.com_sppad_booky_launcher_overflowTabMenu_item.setAttribute('label', aTab.label);
-        
         this.updateAttributes();
     };
 
@@ -211,13 +218,9 @@ com.sppad.Launcher = function(aID) {
         this.node.js = self;
         this.menuNode.js = self;
         
-        this.node.tabsMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_switchTo');
-        this.node.tabsMenuPopup = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menupopup_switchTo');
-        this.node.bookmarksMenuPopup = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menupopup_bookmarks');
-      
-        this.menuNode.tabsMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_switchTo');
-        this.menuNode.tabsMenuPopup = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menupopup_switchTo');
-        this.menuNode.bookmarksMenuPopup = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menupopup_bookmarks');
+        this.tabCountDirty = true;
+        this.tabsUpdateTime = Date.now();
+        this.bookmarksUpdateTime = Date.now();
     };
     
     this.createBefore(null);
@@ -268,12 +271,62 @@ com.sppad.Launcher.prototype.command = function(event) {
 com.sppad.Launcher.prototype.click = function(event) {
     
     if(event.button == 0)
-        this.switchTo(event);
+        this.switchTo();
     else if(event.button == 1)
-        this.openTab(event);
+        this.openTab();
     else if(event.button == 2)
         this.node.contextMenu.openPopup(this.node, "after_start", 0, 0, false, false);
     
+};
+
+com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
+    let node = event.target;
+    if(node.bookmarksUpdateTime == this.bookmarksUpdateTime)
+        return;
+    
+    while(node.firstChild)
+        node.removeChild(node.firstChild);
+
+    for(let i=0; i<this.bookmarks.length; i++) {
+        let bookmark = this.bookmarks[i];
+        
+        let menuitem = document.createElement('menuitem');
+        menuitem.setAttribute('label', bookmark);
+        menuitem.addEventListener('command', function(event) { this.openTab(bookmark); }.bind(this) );
+        
+        node.appendChild(menuitem);
+    }
+    
+    node.bookmarksUpdateTime = this.bookmarksUpdateTime;
+};
+
+com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
+    let node = event.target;
+    if(node.tabsUpdateTime == this.tabsUpdateTime)
+    {
+        let tabMenuItems = node.childNodes;
+        for(let i=0; i<tabMenuItems.length; i++)
+            tabMenuItems[i].setAttribute('label', tabMenuItems[i].tab.label);
+    }
+    else
+    {
+        while(node.firstChild)
+            node.removeChild(node.firstChild);
+
+        for(let i=0; i<this.tabs.length; i++) {
+            let tab = this.tabs[i];
+              
+            let menuitem = document.createElement('menuitem');
+            menuitem.tab = tab;
+            menuitem.setAttribute('label', tab.label);
+            menuitem.addEventListener('command', function(event) { this.switchTo(event); }.bind(this) );
+              
+            node.appendChild(menuitem);
+        }
+          
+        node.tabsUpdateTime = this.tabsUpdateTime;
+    }
+
 };
 
 com.sppad.Launcher.prototype.contextShowing = function(event) {
@@ -289,6 +342,11 @@ com.sppad.Launcher.prototype.contextHiding = function(event) {
 com.sppad.Launcher.prototype.close = function(event) {
     while(this.tabs.length > 0)
         gBrowser.removeTab(this.tabs.pop());
+};
+
+com.sppad.Launcher.prototype.reload = function(event) {
+    for(let i=0; i<this.tabs.length; i++)
+        gBrowser.reloadTab(this.tabs[i]);
 };
 
 
