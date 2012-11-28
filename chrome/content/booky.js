@@ -71,9 +71,18 @@ com.sppad.Booky = (function() {
                   return com.sppad.Resizer.onResize();
               case "debug":
                   return com.sppad.Utils.enableDebug(value);
+              case "hideTabStrategy":
+              case "hideLauncherStrategy":
+                  return this.applyAttribute('TabsToolbar', name, value);
               default:
                   return null;
             }
+        },
+        
+        applyAttribute: function(id, name, value) {
+            document.getElementById(id).setAttribute("com_sppad_booky_" + name, value);
+            // Force resize so things are hidden / shown appropriately.
+            com.sppad.Resizer.onResize();
         },
         
         onBookmarkAdded: function(event) {
@@ -205,6 +214,8 @@ com.sppad.Booky = (function() {
         
         loadPreferences: function() {
             this.prefChanged("debug", com.sppad.CurrentPrefs['debug']);
+            this.prefChanged("hideTabStrategy", com.sppad.CurrentPrefs['hideTabStrategy']);
+            this.prefChanged("hideLauncherStrategy", com.sppad.CurrentPrefs['hideLauncherStrategy']);
         }, 
         
         setup: function() {

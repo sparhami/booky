@@ -28,7 +28,8 @@
 }
 
 #com_sppad_booky_launcher_overflow_item_template,
-#TabsToolbar tab[com_sppad_booky_hasLauncher="true"] {
+#TabsToolbar[com_sppad_booky_hideTabStrategy="hideAllTabs"] tab[com_sppad_booky_hasLauncher="true"],
+#TabsToolbar[com_sppad_booky_hideTabStrategy="showActiveGroup"] tab[com_sppad_booky_hasLauncher="true"]:not([com_sppad_booky_activeGroup="true"]) {
 	display: none !important;
 }
 

@@ -39,6 +39,9 @@ com.sppad.Launcher = function(aID) {
             selected |= tab == gBrowser.selectedTab;
             titleChanged |= tab.com_sppad_booky_titleChanged == true;
         }
+        
+        for(let i=0; i<this.tabs.length; i++)
+            this.tabs[i].setAttribute("com_sppad_booky_activeGroup", selected == true);
 
         this.setAttribute("busy", busy == true);
         this.setAttribute("selected", selected == true);

@@ -16,6 +16,12 @@ const PREFS = {
   
   // max width, as a percentage
   maxWidth: 30,
+  
+  // One of showActiveGroup, hideAllTabs, hideNoTabs
+  hideTabStrategy: 'showActiveGroup',
+  
+  // One of overflowOnly, noOpenTabs
+  hideLauncherStrategy: 'overflowOnly',
 };
 
 

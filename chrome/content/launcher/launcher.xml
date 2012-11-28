@@ -27,16 +27,23 @@
 					<xul:box class="launcher-countindicator-two" />
 					<xul:box class="launcher-countindicator-one" />
 				</xul:hbox>
-
-				<xul:menupopup anonid="contextMenu" onpopupshowing="js.contextShowing();"
-					onpopuphiding="js.contextHiding();">
-					<xul:menuitem class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
-						accesskey="&com_sppad_booky_switchTo.accesskey;" oncommand="js.command();" />
-					<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
-						accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
-				</xul:menupopup>
-
 			</xul:toolbarbutton>
+
+			<xul:menupopup anonid="contextMenu" onpopupshowing="js.contextShowing();"
+				onpopuphiding="js.contextHiding();">
+
+				<xul:menu label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;">
+					<xul:menupopup class="launcher_menu_switchTo" />
+				</xul:menu>
+
+				<xul:menu label="&com_sppad_booky_bookmarks.label;" accesskey="&com_sppad_booky_bookmarks.accesskey;">
+					<xul:menupopup class="launcher_menu_bookmarks"></xul:menupopup>
+				</xul:menu>
+
+				<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
+					accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
+					
+			</xul:menupopup>
 		</content>
 
 		<implementation>

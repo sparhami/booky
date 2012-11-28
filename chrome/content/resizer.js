@@ -21,11 +21,13 @@ com.sppad.Resizer = (function() {
         
         let boxEnd = _launchers.getBoundingClientRect().right;
         let children = _launchers.children;
+        let hideLaunchersWithoutTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
         
         let hasOverflow = false;
         for (let i=0; i < children.length; i++) {
             let overflow = children[i].getBoundingClientRect().right > boxEnd;
             hasOverflow |= overflow;
+            hasOverflow |= (hideLaunchersWithoutTabs && (children[i].getAttribute('hasSingle') == 'false'));
             
             children[i].js.setOverflow(overflow);
         }

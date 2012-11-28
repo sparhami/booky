@@ -5,7 +5,19 @@
 
 <!ENTITY com_sppad_booky_switchTo.label "Switch To">
 <!ENTITY com_sppad_booky_switchTo.accesskey "T">
+<!ENTITY com_sppad_booky_bookmarks.label "Bookmarks">
+<!ENTITY com_sppad_booky_bookmarks.accesskey "B">
 <!ENTITY com_sppad_booky_close.label "Close">
 <!ENTITY com_sppad_booky_close.accesskey "C">
 
 <!ENTITY preference.maxWidth.label "Max Width (percentage)">
+
+<!ENTITY preference.hideTabStrategy.label "Hide tabs with quick launchers">
+<!ENTITY preference.hideTabStrategy.hideAllTabs.label "always">
+<!ENTITY preference.hideTabStrategy.showActiveGroup.label "except when in the active launcher group">
+<!ENTITY preference.hideTabStrategy.hideNoTabs.label "never">
+
+
+<!ENTITY preference.hideLauncherStrategy.label "Hide quick launchers">
+<!ENTITY preference.hideLauncherStrategy.overflowOnly.label "Only when they overflow the available space">
+<!ENTITY preference.hideLauncherStrategy.noOpenTabs.label "When they overflow and/or do not have any open tabs">

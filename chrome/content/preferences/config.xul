@@ -18,6 +18,10 @@
 		<preferences>
 			<preference id="extensions.booky.maxWidth" name="extensions.booky.maxWidth"
 				type="int" />
+			<preference id="extensions.booky.hideTabStrategy" name="extensions.booky.hideTabStrategy"
+				type="string" />
+			<preference id="extensions.booky.hideLauncherStrategy" name="extensions.booky.hideLauncherStrategy"
+				type="string" />
 		</preferences>
 
 		<groupbox>
@@ -29,33 +33,36 @@
 					<row>
 						<caption label="&preference.maxWidth.label;" />
 						<textbox id="com_sppad_booky_preference_maxWidth" type="number"
-							min="0" max="100" preference="extensions.booky.maxWidth" orient="vertical" />
+							min="0" max="100" preference="extensions.booky.maxWidth" />
+					</row>
+					<row>
+						<caption label="&preference.hideTabStrategy.label;" />
+					</row>
+					<row>
+						<radiogroup preference="extensions.booky.hideTabStrategy"
+							orient="vertical">
+							<radio value="hideAllTabs" label="&preference.hideTabStrategy.hideAllTabs.label;" />
+							<radio value="showActiveGroup" label="&preference.hideTabStrategy.showActiveGroup.label;" />
+							<radio value="hideNoTabs" label="&preference.hideTabStrategy.hideNoTabs.label;" />
+						</radiogroup>
+					</row>
+					<row>
+						<caption label="&preference.hideLauncherStrategy.label;" />
+					</row>
+					<row>
+						<radiogroup preference="extensions.booky.hideLauncherStrategy"
+							orient="vertical">
+							<radio value="overflowOnly" label="&preference.hideLauncherStrategy.overflowOnly.label;" />
+							<radio value="noOpenTabs" label="&preference.hideLauncherStrategy.noOpenTabs.label;" />
+						</radiogroup>
 					</row>
 				</rows>
 			</grid>
 		</groupbox>
 	</prefpane>
 
-	<prefpane id="com_sppad_booky_GeneralPrefPane" label="Style">
-		<preferences>
-			<preference id="extensions.booky.maxWidth" name="extensions.booky.maxWidth"
-				type="int" />
-		</preferences>
+	<prefpane id="com_sppad_booky_StylePrefPane" label="Style">
 
-		<groupbox>
-			<grid>
-				<columns>
-					<column />
-				</columns>
-				<rows>
-					<row>
-						<caption label="&preference.maxWidth.label;" />
-						<textbox id="com_sppad_booky_preference_maxWidth" type="number"
-							min="0" max="100" preference="extensions.booky.maxWidth" orient="vertical" />
-					</row>
-				</rows>
-			</grid>
-		</groupbox>
 	</prefpane>
 
 </prefwindow>
