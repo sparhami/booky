@@ -57,9 +57,13 @@ com.sppad.Launcher = function(aID) {
         let menuNodeItemClose = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_close');
         
         if(this.tabs.length == 0) {
+            this.node.tabsMenu.setAttribute('disabled', 'true');
+            this.menuNode.tabsMenu.setAttribute('disabled', 'true');
             nodeItemClose.setAttribute('disabled', 'true');
             menuNodeItemClose.setAttribute('disabled', 'true');
         } else {
+            this.node.tabsMenu.removeAttribute('disabled');
+            this.menuNode.tabsMenu.removeAttribute('disabled');
             nodeItemClose.removeAttribute('disabled');
             menuNodeItemClose.removeAttribute('disabled');
         }
@@ -115,8 +119,8 @@ com.sppad.Launcher = function(aID) {
         aTab.com_sppad_booky_launcher_tabMenu_item.js = this;
         aTab.com_sppad_booky_launcher_overflowTabMenu_item.js = this;
         
-        this.node.tabsMenu.appendChild(aTab.com_sppad_booky_launcher_tabMenu_item);
-        this.menuNode.tabsMenu.appendChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
+        this.node.tabsMenuPopup.appendChild(aTab.com_sppad_booky_launcher_tabMenu_item);
+        this.menuNode.tabsMenuPopup.appendChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
         
         this.updateAttributes();
     };
@@ -125,8 +129,8 @@ com.sppad.Launcher = function(aID) {
      * Removes a tab from the launcher.
      */
     this.removeTab = function(aTab) {
-        this.node.tabsMenu.removeChild(aTab.com_sppad_booky_launcher_tabMenu_item);
-        this.menuNode.tabsMenu.removeChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
+        this.node.tabsMenuPopup.removeChild(aTab.com_sppad_booky_launcher_tabMenu_item);
+        this.menuNode.tabsMenuPopup.removeChild(aTab.com_sppad_booky_launcher_overflowTabMenu_item);
         
         com.sppad.Utils.removeFromArray(this.tabs, aTab);
         delete aTab.com_sppad_booky_launcher;
@@ -208,10 +212,12 @@ com.sppad.Launcher = function(aID) {
         this.menuNode.js = self;
         
         this.node.tabsMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_switchTo');
-        this.node.bookmarksMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_bookmarks');
+        this.node.tabsMenuPopup = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menupopup_switchTo');
+        this.node.bookmarksMenuPopup = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menupopup_bookmarks');
       
         this.menuNode.tabsMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_switchTo');
-        this.menuNode.bookmarksMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_bookmarks');
+        this.menuNode.tabsMenuPopup = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menupopup_switchTo');
+        this.menuNode.bookmarksMenuPopup = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menupopup_bookmarks');
     };
     
     this.createBefore(null);

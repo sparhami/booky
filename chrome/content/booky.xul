@@ -53,19 +53,22 @@
 					<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
 						ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
 						<menupopup>
-							<menu label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;">
-								<menupopup class="launcher_menu_switchTo" />
+							<menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
+								accesskey="&com_sppad_booky_switchTo.accesskey;">
+								<menupopup class="launcher_menupopup_switchTo" />
 							</menu>
 
-							<menu label="&com_sppad_booky_bookmarks.label;" accesskey="&com_sppad_booky_bookmarks.accesskey;">
-								<menupopup class="launcher_menu_bookmarks"></menupopup>
+							<menu class="launcher_menu_bookmarks" label="&com_sppad_booky_bookmarks.label;"
+								accesskey="&com_sppad_booky_bookmarks.accesskey;">
+								<menupopup class="launcher_menupopup_bookmarks" />
 							</menu>
 
 							<menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
 								accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
 						</menupopup>
 					</menu>
-					<menuitem id="com_sppad_booky_launcher_tabMenu_item_template" oncommand="js.command(event)" />
+					<menuitem id="com_sppad_booky_launcher_tabMenu_item_template"
+						oncommand="js.command(event)" />
 				</box>
 			</hbox>
 

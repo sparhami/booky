@@ -32,12 +32,12 @@
 			<xul:menupopup anonid="contextMenu" onpopupshowing="js.contextShowing();"
 				onpopuphiding="js.contextHiding();">
 
-				<xul:menu label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;">
-					<xul:menupopup class="launcher_menu_switchTo" />
+				<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;" accesskey="&com_sppad_booky_switchTo.accesskey;">
+					<xul:menupopup class="launcher_menupopup_switchTo" />
 				</xul:menu>
 
-				<xul:menu label="&com_sppad_booky_bookmarks.label;" accesskey="&com_sppad_booky_bookmarks.accesskey;">
-					<xul:menupopup class="launcher_menu_bookmarks"></xul:menupopup>
+				<xul:menu class="launcher_menu_bookmarks" label="&com_sppad_booky_bookmarks.label;" accesskey="&com_sppad_booky_bookmarks.accesskey;">
+					<xul:menupopup class="launcher_menupopup_bookmarks" />
 				</xul:menu>
 
 				<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
