@@ -35,7 +35,7 @@
 					<image id="com_sppad_booky_menuDropmarker" collapsed="true" />
 				</hbox>
 
-				<arrowscrollbox id="com_sppad_booky_launchers" />
+				<scrollbox id="com_sppad_booky_launchers"/>
 				<stack>
 					<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
 						type="menu">
@@ -52,7 +52,7 @@
 				<box style="display: none">
 					<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
 						ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
-						<menupopup>
+						<menupopup onpopupshowing="if(this == event.target) js.overflowMenuShowing(event);">
 							<menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
 								accesskey="&com_sppad_booky_switchTo.accesskey;">
 								<menupopup class="launcher_menupopup_switchTo" onpopupshowing="js.tabsPopupShowing(event);" />

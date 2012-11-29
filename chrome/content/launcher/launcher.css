@@ -33,7 +33,7 @@ launcher .tabdock-item > label {
 }
 
 launcher[overflow="true"] {
-	visibility: hidden;
+	visibility: collapse;
 }
 
 #TabsToolbar[com_sppad_booky_hideLauncherStrategy="noOpenTabs"] launcher[hasSingle="false"] {

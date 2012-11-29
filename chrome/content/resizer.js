@@ -4,6 +4,7 @@ com.sppad = com.sppad || {};
 com.sppad.Resizer = (function() {
 
     const RESIZE_PERIOD = 100;
+    const ITEM_WIDTH = 24;
     
     var _launchers;
     var _overflowDecorator;
@@ -16,16 +17,19 @@ com.sppad.Resizer = (function() {
         let windowSize = window.innerWidth;
         let launchersSizePercentage = Math.min(com.sppad.CurrentPrefs['maxWidth'], 100) / 100;
         
-        _lastResizeTime = Date.now();
-        _launchers.maxWidth = windowSize * launchersSizePercentage;
+        let maxWidth = windowSize * launchersSizePercentage;
         
-        let boxEnd = _launchers.getBoundingClientRect().right;
+        _lastResizeTime = Date.now();
+        _launchers.maxWidth = maxWidth;
+        
+        let boxEnd = _launchers.getBoundingClientRect().left + maxWidth;
         let children = _launchers.children;
         let hideLaunchersWithoutTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
         
         let hasOverflow = false;
         for (let i=0; i < children.length; i++) {
-            let overflow = children[i].getBoundingClientRect().right > boxEnd;
+            
+            let overflow = (children[i].getBoundingClientRect().left + ITEM_WIDTH) > boxEnd;
             hasOverflow |= overflow;
             hasOverflow |= (hideLaunchersWithoutTabs && (children[i].getAttribute('hasSingle') == 'false'));
             

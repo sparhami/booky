@@ -6,7 +6,6 @@ com.sppad.Launcher = function(aID) {
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
     var self = this;
-    this.tabCountDirty = true;
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;
@@ -53,38 +52,24 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute("titleChanged", titleChanged == true);
         this.setAttribute('label', this.id);
         
-        if(this.tabCountDirty) {
-            this.setAttribute("hasSingle", this.tabs.length > 0);
-            this.setAttribute("hasMultiple", this.tabs.length > 1);
-            
-            let nodeItemClose = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_close');
-            let menuNodeItemClose = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_close');
-            let nodeItemReload = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_reload');
-            let menuNodeItemReload = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_reload');
-     
-            let nodeTabsMenu = document.getAnonymousElementByAttribute(this.node, 'class', 'launcher_menu_switchTo');
-            let menuNodeTabsMenu = document.getAnonymousElementByAttribute(this.menuNode, 'class', 'launcher_menu_switchTo');
-      
-            if(this.tabs.length == 0) {
-                nodeTabsMenu.setAttribute('disabled', 'true');
-                nodeItemClose.setAttribute('disabled', 'true');
-                nodeItemReload.setAttribute('disabled', 'true');
-                
-                menuNodeTabsMenu.setAttribute('disabled', 'true');
-                menuNodeItemClose.setAttribute('disabled', 'true');
-                menuNodeItemReload.setAttribute('disabled', 'true');
-            } else {
-                nodeTabsMenu.removeAttribute('disabled');
-                nodeItemClose.removeAttribute('disabled');
-                nodeItemReload.removeAttribute('disabled');
-                
-                menuNodeTabsMenu.removeAttribute('disabled');
-                menuNodeItemClose.removeAttribute('disabled');
-                menuNodeItemReload.removeAttribute('disabled');
-            }
-        }
-        
-        this.tabCountDirty = false;
+        this.setAttribute("hasSingle", this.tabs.length > 0);
+        this.setAttribute("hasMultiple", this.tabs.length > 1);
+    };
+    
+    this.disableMenuItems = function(rootNode) {
+        let tabsMenu = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_switchTo');
+        let itemClose = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_close');
+        let itemReload = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_reload');
+
+        if(this.tabs.length == 0) {
+            tabsMenu.setAttribute('disabled', 'true');
+            itemClose.setAttribute('disabled', 'true');
+            itemReload.setAttribute('disabled', 'true');
+        } else {
+            tabsMenu.removeAttribute('disabled');
+            itemClose.removeAttribute('disabled');
+            itemReload.removeAttribute('disabled');
+        }     
     };
     
     /**
@@ -120,7 +105,6 @@ com.sppad.Launcher = function(aID) {
      * Adds a tab to the launcher.
      */
     this.addTab = function(aTab) {
-        this.tabCountDirty = true;
         this.tabsUpdateTime = Date.now();
         
         this.tabs.push(aTab);
@@ -135,7 +119,6 @@ com.sppad.Launcher = function(aID) {
      * Removes a tab from the launcher.
      */
     this.removeTab = function(aTab) {
-        this.tabCountDirty = true;
         this.tabsUpdateTime = Date.now();
         
         com.sppad.Utils.removeFromArray(this.tabs, aTab);
@@ -221,10 +204,11 @@ com.sppad.Launcher = function(aID) {
         this.tabCountDirty = true;
         this.tabsUpdateTime = Date.now();
         this.bookmarksUpdateTime = Date.now();
+        
+        this.updateAttributes();
     };
     
     this.createBefore(null);
-    this.updateAttributes();
 }
 
 com.sppad.Launcher.prototype.mouseenter = function() {
@@ -331,12 +315,18 @@ com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
 
 com.sppad.Launcher.prototype.contextShowing = function(event) {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.setAttribute('hidden', true);  
+    tooltip.setAttribute('hidden', true);
+    
+    this.disableMenuItems(this.node);
 };
 
 com.sppad.Launcher.prototype.contextHiding = function(event) {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.setAttribute('hidden', false);
+};
+
+com.sppad.Launcher.prototype.overflowMenuShowing = function(event) {
+    this.disableMenuItems(this.menuNode);
 };
 
 com.sppad.Launcher.prototype.close = function(event) {

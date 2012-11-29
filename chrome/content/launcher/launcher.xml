@@ -29,8 +29,8 @@
 				</xul:hbox>
 			</xul:toolbarbutton>
 
-			<xul:menupopup anonid="contextMenu" onpopupshowing="js.contextShowing();"
-				onpopuphiding="js.contextHiding();">
+			<xul:menupopup anonid="contextMenu" onpopupshowing="if(this == event.target) js.contextShowing(event);"
+				onpopuphiding="if(this == event.target) js.contextHiding(event);">
 
 				<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
 					accesskey="&com_sppad_booky_switchTo.accesskey;">
