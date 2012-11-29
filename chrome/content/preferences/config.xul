@@ -28,12 +28,15 @@
 			<grid>
 				<columns>
 					<column />
+					<column />
 				</columns>
 				<rows>
 					<row>
-						<caption label="&preference.maxWidth.label;" />
-						<textbox id="com_sppad_booky_preference_maxWidth" type="number"
-							min="0" max="100" preference="extensions.booky.maxWidth" />
+						<box>
+							<caption label="&preference.maxWidth.label;" />
+							<textbox id="com_sppad_booky_preference_maxWidth" type="number"
+								min="0" max="100" preference="extensions.booky.maxWidth" />
+						</box>
 					</row>
 					<row>
 						<caption label="&preference.hideTabStrategy.label;" />
@@ -42,6 +45,7 @@
 						<radiogroup preference="extensions.booky.hideTabStrategy"
 							orient="vertical">
 							<radio value="hideAllTabs" label="&preference.hideTabStrategy.hideAllTabs.label;" />
+							<radio value="showActiveTab" label="&preference.hideTabStrategy.showActiveTab.label;" />
 							<radio value="showActiveGroup" label="&preference.hideTabStrategy.showActiveGroup.label;" />
 							<radio value="hideNoTabs" label="&preference.hideTabStrategy.hideNoTabs.label;" />
 						</radiogroup>

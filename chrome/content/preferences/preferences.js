@@ -17,7 +17,7 @@ const PREFS = {
   // max width, as a percentage
   maxWidth: 30,
   
-  // One of showActiveGroup, hideAllTabs, hideNoTabs
+  // One of showActiveTab, showActiveGroup, hideAllTabs, hideNoTabs
   hideTabStrategy: 'showActiveGroup',
   
   // One of overflowOnly, noOpenTabs

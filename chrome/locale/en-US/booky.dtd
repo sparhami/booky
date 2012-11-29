@@ -16,6 +16,7 @@
 
 <!ENTITY preference.hideTabStrategy.label "Hide tabs with quick launchers">
 <!ENTITY preference.hideTabStrategy.hideAllTabs.label "always">
+<!ENTITY preference.hideTabStrategy.showActiveTab.label "except when it is selected">
 <!ENTITY preference.hideTabStrategy.showActiveGroup.label "except when in the active launcher group">
 <!ENTITY preference.hideTabStrategy.hideNoTabs.label "never">
 
