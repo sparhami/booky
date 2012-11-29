@@ -292,10 +292,7 @@ com.sppad.Launcher.prototype.click = function(event) {
 };
 
 com.sppad.Launcher.prototype.scroll = function(event) {
-    dump("scroll event\n");
-    
-    dump("event.detail" +  event.detail + "\n");
-    this.switchTo(false, (event.detail > 0) ? true : false, event.shiftKey);  
+    this.switchTo(false, (event.detail < 0) ? true : false, event.shiftKey);  
 };
 
 com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
