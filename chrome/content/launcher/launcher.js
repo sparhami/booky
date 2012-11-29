@@ -6,10 +6,12 @@ com.sppad.Launcher = function(aID) {
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
     var self = this;
+    var _selectedIndex = 0;
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;
     this.tabs = [];
+    this.selected = false;
     this.bookmarks = [];
     this.bookmarkIds= [];
     this.node = document.createElement('launcher');
@@ -20,13 +22,29 @@ com.sppad.Launcher = function(aID) {
         gBrowser.selectedTab = gBrowser.addTab(aUri || this.bookmarks[0]);
     };       
     
-    this.switchTo = function(event) {
-        if(this.tabs.length == 0)
+    this.switchTo = function(openIfClosed, next, reverse) {
+        if(openIfClosed && this.tabs.length == 0)
             this.openTab();
-        else if(event && event.target)
-            gBrowser.selectedTab = event.target.tab;
-        else
-            gBrowser.selectedTab = this.tabs[0];
+        else {
+            let direction = this.selected ? (next == true ? 1 : -1) : 0;
+            let index = this.getNextIndex(direction, reverse);
+            
+            gBrowser.selectedTab = this.tabs[index];
+        }
+    };
+    
+    this.mod = function(n, m) {
+        return ( ( n % m ) + m ) % m;
+    };
+    
+    this.getNextIndex = function(direction, reverse) {
+        let index = _selectedIndex;
+        let count = direction > 0 ? +1 :
+                    direction < 0 ? -1 :
+                    0;
+        
+        index += (reverse === true) ? 0 - count : count;
+        return this.mod(index, this.tabs.length);
     };
     
     /**
@@ -42,11 +60,16 @@ com.sppad.Launcher = function(aID) {
             busy |= tab.com_sppad_booky_busy == true;
             selected |= tab == gBrowser.selectedTab;
             titleChanged |= tab.com_sppad_booky_titleChanged == true;
+            
+            if(tab == gBrowser.selectedTab)
+                _selectedIndex = i;
         }
         
         for(let i=0; i<this.tabs.length; i++)
             this.tabs[i].setAttribute("com_sppad_booky_activeGroup", selected == true);
 
+        this.selected = selected;
+        
         this.setAttribute("busy", busy == true);
         this.setAttribute("selected", selected == true);
         this.setAttribute("titleChanged", titleChanged == true);
@@ -126,6 +149,7 @@ com.sppad.Launcher = function(aID) {
         aTab.removeAttribute('com_sppad_booky_hasLauncher');
         
         this.updateAttributes();
+        _selectedIndex = Math.max(_selectedIndex, this.tabs.length - 1);
     };
     
     /**
@@ -201,6 +225,10 @@ com.sppad.Launcher = function(aID) {
         this.node.js = self;
         this.menuNode.js = self;
         
+        this.node.addEventListener("DOMMouseScroll", this.scroll.bind(this), false);
+        // does not work
+        // this.menuNode.addEventListener("DOMMouseScroll", this.scroll, true);
+        
         this.tabCountDirty = true;
         this.tabsUpdateTime = Date.now();
         this.bookmarksUpdateTime = Date.now();
@@ -249,18 +277,25 @@ com.sppad.Launcher.prototype.dragend = function(event) {
 };
 
 com.sppad.Launcher.prototype.command = function(event) {
-    this.switchTo(event);
+    gBrowser.selectedTab = event.target.tab;
 };
 
 com.sppad.Launcher.prototype.click = function(event) {
     
     if(event.button == 0)
-        this.switchTo();
+        this.switchTo(true, true, event.shiftKey);
     else if(event.button == 1)
         this.openTab();
     else if(event.button == 2)
         this.node.contextMenu.openPopup(this.node, "after_start", 0, 0, false, false);
     
+};
+
+com.sppad.Launcher.prototype.scroll = function(event) {
+    dump("scroll event\n");
+    
+    dump("event.detail" +  event.detail + "\n");
+    this.switchTo(false, (event.detail > 0) ? true : false, event.shiftKey);  
 };
 
 com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
@@ -303,7 +338,7 @@ com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
             let menuitem = document.createElement('menuitem');
             menuitem.tab = tab;
             menuitem.setAttribute('label', tab.label);
-            menuitem.addEventListener('command', function(event) { this.switchTo(event); }.bind(this) );
+            menuitem.addEventListener('command', function(event) { gBrowser.selectedTab = event.target.tab; }.bind(this) );
               
             node.appendChild(menuitem);
         }
