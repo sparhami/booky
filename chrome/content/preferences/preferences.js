@@ -22,6 +22,9 @@ const PREFS = {
   
   // One of overflowOnly, noOpenTabs
   hideLauncherStrategy: 'overflowOnly',
+  
+  // True or false
+  grayoutInactiveIcons: true,
 };
 
 

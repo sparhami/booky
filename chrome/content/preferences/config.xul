@@ -66,7 +66,26 @@
 	</prefpane>
 
 	<prefpane id="com_sppad_booky_StylePrefPane" label="Style">
+		<preferences>
+			<preference id="extensions.booky.grayoutInactiveIcons" name="extensions.booky.grayoutInactiveIcons"
+				type="bool" />
+		</preferences>
 
+		<groupbox>
+			<grid>
+				<columns>
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<box>
+							<checkbox preference="extensions.booky.grayoutInactiveIcons"
+								label="&preference.grayoutInactiveIcons.label;" />
+						</box>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
 	</prefpane>
 
 </prefwindow>

@@ -73,6 +73,7 @@ com.sppad.Booky = (function() {
                   return com.sppad.Utils.enableDebug(value);
               case "hideTabStrategy":
               case "hideLauncherStrategy":
+              case "grayoutInactiveIcons":
                   return this.applyAttribute('TabsToolbar', name, value);
               default:
                   return null;
@@ -216,6 +217,7 @@ com.sppad.Booky = (function() {
             this.prefChanged("debug", com.sppad.CurrentPrefs['debug']);
             this.prefChanged("hideTabStrategy", com.sppad.CurrentPrefs['hideTabStrategy']);
             this.prefChanged("hideLauncherStrategy", com.sppad.CurrentPrefs['hideLauncherStrategy']);
+            this.prefChanged("grayoutInactiveIcons", com.sppad.CurrentPrefs['grayoutInactiveIcons']);
         }, 
         
         setup: function() {

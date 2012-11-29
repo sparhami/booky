@@ -23,3 +23,5 @@
 <!ENTITY preference.hideLauncherStrategy.label "Hide quick launchers">
 <!ENTITY preference.hideLauncherStrategy.overflowOnly.label "Only when they overflow the available space">
 <!ENTITY preference.hideLauncherStrategy.noOpenTabs.label "When they overflow and/or do not have any open tabs">
+
+<!ENTITY preference.grayoutInactiveIcons.label "Grayout inactive icons">
