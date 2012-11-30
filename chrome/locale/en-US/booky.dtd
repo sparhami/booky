@@ -16,12 +16,13 @@
 
 <!ENTITY preference.hideTabStrategy.label "Hide tabs with quick launchers">
 <!ENTITY preference.hideTabStrategy.hideAllTabs.label "always">
-<!ENTITY preference.hideTabStrategy.showActiveTab.label "except when it is selected">
+<!ENTITY preference.hideTabStrategy.showActiveTab.label "except when selected">
 <!ENTITY preference.hideTabStrategy.showActiveGroup.label "except when in the active launcher group">
 <!ENTITY preference.hideTabStrategy.hideNoTabs.label "never">
 
-<!ENTITY preference.hideLauncherStrategy.label "Hide quick launchers">
-<!ENTITY preference.hideLauncherStrategy.overflowOnly.label "Only when they overflow the available space">
-<!ENTITY preference.hideLauncherStrategy.noOpenTabs.label "When they overflow and/or do not have any open tabs">
+<!ENTITY preference.hideLauncherStrategy.label "Launcher placement">
+<!ENTITY preference.hideLauncherStrategy.overflowOnly.label "Default ordering">
+<!ENTITY preference.hideLauncherStrategy.noOpenTabs.label "Send to menu when no tabs are open">
+<!ENTITY preference.hideLauncherStrategy.groupOpenTabs.label "Group open tabs to the left">
 
 <!ENTITY preference.grayoutInactiveIcons.label "Grayout inactive icons">

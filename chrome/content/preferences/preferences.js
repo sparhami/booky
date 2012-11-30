@@ -20,7 +20,7 @@ const PREFS = {
   // One of showActiveTab, showActiveGroup, hideAllTabs, hideNoTabs
   hideTabStrategy: 'showActiveGroup',
   
-  // One of overflowOnly, noOpenTabs
+  // One of overflowOnly, noOpenTabs, groupOpenTabs
   hideLauncherStrategy: 'overflowOnly',
   
   // True or false

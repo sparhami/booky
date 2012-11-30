@@ -58,6 +58,7 @@
 							orient="vertical">
 							<radio value="overflowOnly" label="&preference.hideLauncherStrategy.overflowOnly.label;" />
 							<radio value="noOpenTabs" label="&preference.hideLauncherStrategy.noOpenTabs.label;" />
+							<radio value="groupOpenTabs" label="&preference.hideLauncherStrategy.groupOpenTabs.label;" />
 						</radiogroup>
 					</row>
 				</rows>

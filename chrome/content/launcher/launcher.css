@@ -36,6 +36,14 @@ launcher[overflow="true"] {
 	visibility: collapse;
 }
 
+#TabsToolbar[com_sppad_booky_hideLauncherStrategy="groupOpenTabs"] launcher[hasSingle="true"] {
+	-moz-box-ordinal-group: 1;
+}
+
+#TabsToolbar[com_sppad_booky_hideLauncherStrategy="groupOpenTabs"] launcher[hasSingle="false"] {
+	-moz-box-ordinal-group: 2;
+}
+
 #TabsToolbar[com_sppad_booky_hideLauncherStrategy="noOpenTabs"] launcher[hasSingle="false"] {
 	visibility: collapse;
 }
