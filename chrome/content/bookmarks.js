@@ -97,14 +97,14 @@ com.sppad.Bookmarks = (function() {
     		_bs.removeObbserver(BookmarksListener);
     	},
     	
-    	moveBookmarkGroupBefore: function(prevBookmarkIds, bookmarkIds) {
-    		let targetIndex = prevBookmarkIds ? _bs.getItemIndex(prevBookmarkIds[prevBookmarkIds.length - 1]) + 1 : 0;
+    	moveBookmarkGroupBefore: function(prevBookmarkIDs, bookmarkIDs) {
+    		let targetIndex = prevBookmarkIDs ? _bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
     		
-    		for(let i=0; i<bookmarkIds.length; i++) {
+    		for(let i=0; i<bookmarkIDs.length; i++) {
     			if(i != 0)
-    				targetIndex = _bs.getItemIndex(bookmarkIds[i-1]) + 1;
+    				targetIndex = _bs.getItemIndex(bookmarkIDs[i-1]) + 1;
     			
-    			_bs.moveItem(bookmarkIds[i], this.bookmarkFolder, targetIndex);
+    			_bs.moveItem(bookmarkIDs[i], this.bookmarkFolder, targetIndex);
     		}
     	},
     	
@@ -183,6 +183,16 @@ com.sppad.Bookmarks = (function() {
             let uri = Services.io.newURI(aUriString, null, null);
     	    return _bs.insertBookmark(folder, uri, _bs.DEFAULT_INDEX, "");
     	},
+    	
+        /**
+         * Removes a bookmark (or any other item, such as a folder).
+         * 
+         * @param aItemId
+         *            The id of the item to remove
+         */
+        removeBookmark : function(aItemId) {
+            return _bs.removeItem(aItemId);
+        },
     	
     	/**
          * Loads the bookmarks from the specified bookmark folder by firing an

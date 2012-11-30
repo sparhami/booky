@@ -114,7 +114,7 @@ com.sppad.Booky = (function() {
             if(!launcher)
                 return;
             
-            launcher.removeBookmark(node.uri, node.itemId);
+            launcher.removeBookmark(node.itemId);
             this.updateBookmarksCount(-1);
         },
         

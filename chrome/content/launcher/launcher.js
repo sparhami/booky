@@ -13,7 +13,7 @@ com.sppad.Launcher = function(aID) {
     this.tabs = [];
     this.selected = false;
     this.bookmarks = [];
-    this.bookmarkIds= [];
+    this.bookmarkIDs= [];
     this.node = document.createElement('launcher');
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
@@ -225,7 +225,7 @@ com.sppad.Launcher = function(aID) {
     this.addBookmark = function(aUri, anImage, aBookmarkId) {
         this.bookmarksUpdateTime = Date.now();
         
-        this.bookmarkIds.push(aBookmarkId);
+        this.bookmarkIDs.push(aBookmarkId);
         this.bookmarks.push(aUri);
         com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId] = this;
         
@@ -235,21 +235,19 @@ com.sppad.Launcher = function(aID) {
     /**
      * Removes a bookmark from the launcher.
      * 
-     * @param aUri
-     *            A String representing the URI for the bookmark
      * @param aBookmarkId
      *            The bookmark id from the bookmarks service
      */
-    this.removeBookmark = function(aUri, aBookmarkId) {
+    this.removeBookmark = function(aBookmarkId) {
         this.bookmarksUpdateTime = Date.now();
         
-        let index = com.sppad.Utils.getIndexInArray(this.bookmarkIds, aBookmarkId);
-        this.bookmarkIds.splice(index, 1);
+        let index = com.sppad.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
+        this.bookmarkIDs.splice(index, 1);
         this.bookmarks.splice(index, 1);
         
         delete com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId];
         
-        if(this.bookmarkIds.length == 0) {
+        if(this.bookmarkIDs.length == 0) {
             let container = document.getElementById('com_sppad_booky_launchers');
             container.removeChild(this.node);
            
@@ -288,12 +286,12 @@ com.sppad.Launcher = function(aID) {
         this.node = container.insertBefore(this.node, nodeAnchor);
         this.menuNode = overflowContainer.insertBefore(this.menuNode, menuNodeAnchor);
         
-        this.updateAttributes();
         for(let i=this.tabs.length - 1; i>=0; i--)
             this.placeTab(this.tabs[i], true);
     };
     
     this.createBefore(null);
+    this.updateAttributes();
     
     this.node.addEventListener("DOMMouseScroll", this.scroll.bind(this), false);
     this.node.js = self;
@@ -365,13 +363,20 @@ com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
     if(node.bookmarksUpdateTime == this.bookmarksUpdateTime)
         return;
     
-    while(node.firstChild)
-        node.removeChild(node.firstChild);
+    let toRemove = new Array();
+    let children = node.childNodes;
+    for(let i=0; i<children.length; i++)
+        if(children[i].hasAttribute('bookmark'))
+            toRemove.push(children[i]);
+    
+    for(let i=0; i<toRemove.length; i++)
+        node.removeChild(toRemove[i]);
 
     for(let i=0; i<this.bookmarks.length; i++) {
         let bookmark = this.bookmarks[i];
         
         let menuitem = document.createElement('menuitem');
+        menuitem.setAttribute('bookmark', true);
         menuitem.setAttribute('label', bookmark);
         menuitem.addEventListener('command', function(event) { this.openTab(bookmark); }.bind(this) );
         
@@ -435,6 +440,24 @@ com.sppad.Launcher.prototype.reload = function(event) {
     for(let i=0; i<this.tabs.length; i++)
         gBrowser.reloadTab(this.tabs[i]);
 };
+
+com.sppad.Launcher.prototype.remove = function(event) {
+    /*
+     * Bookmark event firing actually removes the bookmark. Don't use a while
+     * loop since if things go bad, could get stuck. Note that we only ever
+     * remove the 0th index. Also don't want to check length everythime since it
+     * will be modified.
+     */
+    let count = this.bookmarkIDs.length;
+    for(let i=0; i<count; i++)
+        com.sppad.Bookmarks.removeBookmark(this.bookmarkIDs[0]);
+};
+
+com.sppad.Launcher.prototype.openAllBookmarks = function(event) {
+    let count = this.bookmarkIDs.length;
+    for(let i=0; i<count; i++)
+        this.openTab(this.bookmarks[i]);
+}
 
 
 /** Maps bookmark ids to Launchers */

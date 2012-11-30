@@ -7,10 +7,14 @@
 <!ENTITY com_sppad_booky_switchTo.accesskey "T">
 <!ENTITY com_sppad_booky_bookmarks.label "Bookmarks">
 <!ENTITY com_sppad_booky_bookmarks.accesskey "B">
+<!ENTITY com_sppad_booky_bookmarks_openAll.label "Open All in Tabs">
+<!ENTITY com_sppad_booky_bookmarks_openAll.accesskey "A">
 <!ENTITY com_sppad_booky_reload.label "Reload">
 <!ENTITY com_sppad_booky_reload.accesskey "R">
 <!ENTITY com_sppad_booky_close.label "Close">
 <!ENTITY com_sppad_booky_close.accesskey "C">
+<!ENTITY com_sppad_booky_remove.label "Delete">
+<!ENTITY com_sppad_booky_remove.accesskey "D">
 
 <!ENTITY preference.maxWidth.label "Max Width (percentage)">
 
