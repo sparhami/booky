@@ -23,10 +23,15 @@ com.sppad.Launcher = function(aID) {
     };       
     
     this.switchTo = function(openIfClosed, next, reverse) {
+        
+        dump("switchTo " + openIfClosed + " " + next + " " + reverse + "\n");
         if(openIfClosed && this.tabs.length == 0)
             this.openTab();
         else {
             let direction = this.selected ? (next == true ? 1 : -1) : 0;
+            dump("_selectedIndex " + _selectedIndex + " direction " + direction + "\n");
+            dump("this.tabs.length " + this.tabs.length + " \n");
+            
             let index = this.getNextIndex(direction, reverse);
             
             gBrowser.selectedTab = this.tabs[index];
@@ -79,6 +84,12 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute("hasMultiple", this.tabs.length > 1);
     };
     
+    /**
+     * Sets the disabled state for the items in the context / overflow menus.
+     * 
+     * @param rootNode
+     *            The DOM node for the menu.
+     */
     this.disableMenuItems = function(rootNode) {
         let tabsMenu = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_switchTo');
         let itemClose = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_close');
@@ -124,10 +135,50 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute('overflow', overflow);
     };
     
+    this.placeTab = function(aTab, launcherMoving) {
+        /*
+         * Insert after all tabs in the specified node. If launcher is not
+         * moving and has any tabs, insert after all existing tabs in the
+         * launcher. Otherwise, find the previous launcher with tabs open.
+         */
+        let node = this.node;
+        if(launcherMoving || this.tabs.length <= 1) {
+            do {
+                node = node.previousSibling;
+            } while(node != null && node.js.tabs.length == 0);
+        }
+        
+        let index = 0;
+        let currentIndex = 0;
+        let tabs = gBrowser.tabs;
+        
+        // Get the index of the last tab belonging to the node.
+        if(node)
+            for(let i = 0; i < tabs.length; i++)
+                if(tabs[i] == aTab)
+                    currentIndex = i;
+                else if(tabs[i].com_sppad_booky_launcherId === node.js.id)
+                    index = i + 1;
+          
+        // Need to offset by 1 since the tab is giving up its existing spot
+        if(currentIndex < index)
+            index--;
+            
+        gBrowser.moveTabTo(aTab, index);
+    };
+    
     /**
      * Adds a tab to the launcher.
+     * 
+     * @param aTab
+     *            The tab to add
      */
     this.addTab = function(aTab) {
+        if(aTab.com_sppad_booky_launcher === this) {
+            com.sppad.Utils.dump('WW - This tab is already in this launcher.\n');
+            return;
+        }
+        
         this.tabsUpdateTime = Date.now();
         
         this.tabs.push(aTab);
@@ -136,12 +187,21 @@ com.sppad.Launcher = function(aID) {
         aTab.setAttribute('com_sppad_booky_hasLauncher', true);
         
         this.updateAttributes();
+        this.placeTab(aTab, false);
     };
     
     /**
      * Removes a tab from the launcher.
+     * 
+     * @param aTab
+     *            The tab to remove
      */
     this.removeTab = function(aTab) {
+        if(aTab.com_sppad_booky_launcher !== this) {
+            com.sppad.Utils.dump('WW - This tab is not in this launcher.\n');
+            return;
+        }
+        
         this.tabsUpdateTime = Date.now();
         
         com.sppad.Utils.removeFromArray(this.tabs, aTab);
@@ -201,6 +261,12 @@ com.sppad.Launcher = function(aID) {
         }
     };
     
+    /**
+     * Updates this launcher to reflect changes made in a tab.
+     * 
+     * @param aTab
+     *            A tab that has changed
+     */
     this.updateTab = function(aTab) {
         this.updateAttributes();
     };
@@ -219,24 +285,22 @@ com.sppad.Launcher = function(aID) {
         let nodeAnchor = aLauncher ? aLauncher.node : null;
         let menuNodeAnchor = aLauncher ? aLauncher.menuNode : null;
         
-        container.insertBefore(this.node, nodeAnchor);
-        overflowContainer.insertBefore(this.menuNode, menuNodeAnchor);
-        
-        this.node.js = self;
-        this.menuNode.js = self;
-        
-        this.node.addEventListener("DOMMouseScroll", this.scroll.bind(this), false);
-        // does not work
-        // this.menuNode.addEventListener("DOMMouseScroll", this.scroll, true);
-        
-        this.tabCountDirty = true;
-        this.tabsUpdateTime = Date.now();
-        this.bookmarksUpdateTime = Date.now();
+        this.node = container.insertBefore(this.node, nodeAnchor);
+        this.menuNode = overflowContainer.insertBefore(this.menuNode, menuNodeAnchor);
         
         this.updateAttributes();
+        for(let i=this.tabs.length - 1; i>=0; i--)
+            this.placeTab(this.tabs[i], true);
     };
     
     this.createBefore(null);
+    
+    this.node.addEventListener("DOMMouseScroll", this.scroll.bind(this), false);
+    this.node.js = self;
+    this.menuNode.js = self;
+    
+    com.sppad.Launcher.launchers.push(this);
+    com.sppad.Launcher.launcherIDs.push(this.id);
 }
 
 com.sppad.Launcher.prototype.mouseenter = function() {
@@ -292,6 +356,7 @@ com.sppad.Launcher.prototype.click = function(event) {
 };
 
 com.sppad.Launcher.prototype.scroll = function(event) {
+    dump("scroll " + event.detail + " shift? " + event.shiftKey + "\n");
     this.switchTo(false, event.detail < 0, event.shiftKey);  
 };
 
@@ -379,14 +444,7 @@ com.sppad.Launcher.launchers = new Array();
 com.sppad.Launcher.launcherIDs = new Array();
 com.sppad.Launcher.getLauncher = function(aID) {
     let index = com.sppad.Utils.getIndexInArray(this.launcherIDs, aID);
-    if(index < 0) {
-        this.launchers.push(new com.sppad.Launcher(aID));
-        this.launcherIDs.push(aID);
-        
-        index = this.launchers.length - 1;
-    }
-   
-    return this.launchers[index];
+    return (index >=  0) ? this.launchers[index] : new com.sppad.Launcher(aID);
 };
 
 com.sppad.Launcher.hasLauncher = function(aID) {

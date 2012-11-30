@@ -34,6 +34,7 @@ com.sppad.TabEvents = (function() {
 
     
     return {
+        EVENT_TAB_MOVED: 'EVENT_TAB_MOVED',
         EVENT_TAB_OPENED: 'EVENT_TAB_OPENED',
         EVENT_TAB_CLOSED: 'EVENT_TAB_CLOSED',
         EVENT_TAB_SELECTED: 'EVENT_TAB_SELECTED',
@@ -154,6 +155,10 @@ com.sppad.TabEvents = (function() {
             this.setUnread(aTab);
         },
         
+        onTabMove: function(aTab) {
+            _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_MOVED);
+        },
+        
         onTabSelect: function(aTab)  {
             // ignore events on closed tabs
             if(aTab.closed)
@@ -181,6 +186,8 @@ com.sppad.TabEvents = (function() {
             {
                 case "TabOpen":
                     return this.onTabOpen(aEvent.target);
+                case "TabMove":
+                    return this.onTabMove(aEvent.target);
                 case "TabSelect":
                     return this.onTabSelect(aEvent.target);
                 case "TabClose":
@@ -198,7 +205,8 @@ com.sppad.TabEvents = (function() {
             
             let container = window.gBrowser.tabContainer;
 
-            container.addEventListener("TabOpen", this, false);  
+            container.addEventListener("TabMove", this, false);  
+            container.addEventListener("TabOpen", this, false);
             container.addEventListener("TabSelect", this, false);
             container.addEventListener("TabClose", this, false);
             container.addEventListener("TabAttrModified", this, false);

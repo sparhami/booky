@@ -25,4 +25,4 @@
 <!ENTITY preference.hideLauncherStrategy.noOpenTabs.label "Send to menu when no tabs are open">
 <!ENTITY preference.hideLauncherStrategy.groupOpenTabs.label "Group open tabs to the left">
 
-<!ENTITY preference.grayoutInactiveIcons.label "Grayout inactive icons">
+<!ENTITY preference.grayoutInactiveIcons.label "Gray-out inactive icons">

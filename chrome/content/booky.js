@@ -35,6 +35,8 @@ com.sppad.Booky = (function() {
                     return this.onBookmarkMoved(aEvent);
                 case com.sppad.Bookmarks.EVENT_DEL_BOOKMARK:
                     return this.onBookmarkRemoved(aEvent);
+                case com.sppad.TabEvents.EVENT_TAB_MOVED:
+                    return this.onTabMove(aEvent.tab);
                 case com.sppad.TabEvents.EVENT_TAB_OPENED:
                     return this.onTabOpen(aEvent.tab);
                 case com.sppad.TabEvents.EVENT_TAB_SELECTED:
@@ -127,6 +129,10 @@ com.sppad.Booky = (function() {
             
             // Force resize so things are hidden / shown appropriately.
             com.sppad.Resizer.onResize();
+        },
+        
+        onTabMove: function(aTab) {
+            com.sppad.Utils.dump('Tab moved\n');
         },
         
         onTabOpen: function(aTab) {
