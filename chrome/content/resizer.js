@@ -51,10 +51,12 @@ com.sppad.Resizer = (function() {
             if(child.getAttribute('overflow') != 'true')
                 continue;
             
+            unread |= child.getAttribute('unread') == 'true';
             selected |= child.getAttribute('selected') == 'true';
             titleChanged |= child.getAttribute('titleChanged') == 'true';
         }
         
+        _overflowDecorator.setAttribute('unread', unread == true);
         _overflowDecorator.setAttribute('selected', selected == true);
         _overflowDecorator.setAttribute('titleChanged', titleChanged == true);
     };

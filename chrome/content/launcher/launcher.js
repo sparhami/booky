@@ -24,14 +24,10 @@ com.sppad.Launcher = function(aID) {
     
     this.switchTo = function(openIfClosed, next, reverse) {
         
-        dump("switchTo " + openIfClosed + " " + next + " " + reverse + "\n");
         if(openIfClosed && this.tabs.length == 0)
             this.openTab();
         else {
             let direction = this.selected ? (next == true ? 1 : -1) : 0;
-            dump("_selectedIndex " + _selectedIndex + " direction " + direction + "\n");
-            dump("this.tabs.length " + this.tabs.length + " \n");
-            
             let index = this.getNextIndex(direction, reverse);
             
             gBrowser.selectedTab = this.tabs[index];
@@ -57,12 +53,14 @@ com.sppad.Launcher = function(aID) {
      */
     this.updateAttributes = function() {
         let busy = false;
+        let unread = false;
         let selected = false;
         let titleChanged = false;
         for(let i=0; i<this.tabs.length; i++) {
             let tab = this.tabs[i];
             
             busy |= tab.com_sppad_booky_busy == true;
+            unread |= tab.hasAttribute('unread');
             selected |= tab == gBrowser.selectedTab;
             titleChanged |= tab.com_sppad_booky_titleChanged == true;
             
@@ -76,6 +74,7 @@ com.sppad.Launcher = function(aID) {
         this.selected = selected;
         
         this.setAttribute("busy", busy == true);
+        this.setAttribute("unread", unread == true);
         this.setAttribute("selected", selected == true);
         this.setAttribute("titleChanged", titleChanged == true);
         this.setAttribute('label', this.id);
@@ -363,6 +362,8 @@ com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
     if(node.bookmarksUpdateTime == this.bookmarksUpdateTime)
         return;
     
+    // Remove all items that are bookmarks, not others (such as open all
+    // bookmarks menu item).    
     let toRemove = new Array();
     let children = node.childNodes;
     for(let i=0; i<children.length; i++)

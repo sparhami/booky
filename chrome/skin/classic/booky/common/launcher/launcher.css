@@ -15,29 +15,39 @@ launcher .launcher-connector {
 	margin-right: 3px;
 }
 
+launcher[unread="true"] .launcher-countindicators,
 launcher[selected="true"] .launcher-countindicators,
 launcher[titleChanged="true"] .launcher-countindicators {
 	visibility: hidden;
 }
 
+#com_sppad_booky_launchers_overflow_decorator[unread="true"],
+launcher[unread="true"] {
+	background-image: -moz-linear-gradient(bottom, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 3px);
+}
+
 #com_sppad_booky_launchers_overflow_decorator[titleChanged="true"],
 launcher[titleChanged="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 2px, rgba(84, 140, 240, .33) 4px, rgba(84, 140, 240, .15) 5px, rgba(84, 140, 240, 0) 100%);
+	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px);
 }
 
 #com_sppad_booky_launchers_overflow_decorator[selected="true"],
 launcher[selected="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 2px, rgba(224, 192, 0, .33) 4px, rgba(224, 192, 0, .15) 5px, rgba(224, 192, 0, 0) 100%);
+	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 3px);
 }
 	
 .menulauncher > .menu-iconic-left {
 	padding-left: 8px !important;
 }
 
-.menulauncher[selected="true"] > .menu-iconic-left {
-	background-image: -moz-linear-gradient(left, rgba(224, 192, 0, 1) 0px, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 4px);
+.menulauncher[unread="true"] > .menu-iconic-left {
+	background-image: -moz-linear-gradient(left, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 4px);
 }
 
 .menulauncher[titleChanged="true"] > .menu-iconic-left{
-	background-image: -moz-linear-gradient(left, rgba(84, 140, 240, 1) 0px, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 4px);
-}					
+	background-image: -moz-linear-gradient(left, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 4px);
+}	
+
+.menulauncher[selected="true"] > .menu-iconic-left {
+	background-image: -moz-linear-gradient(left, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 4px);
+}				
