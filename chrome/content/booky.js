@@ -69,16 +69,24 @@ com.sppad.Booky = (function() {
               
             switch(name)
             { 
+              case 'maxIcons':
               case 'maxWidth':
-                  return com.sppad.Resizer.onResize();
+              case 'overflowMode':
+                  com.sppad.Resizer.onResize();
+                  break;
               case "debug":
-                  return com.sppad.Utils.enableDebug(value);
+                  com.sppad.Utils.enableDebug(value);
+                  break;
               case "hideTabStrategy":
-              case "hideLauncherStrategy":
               case "grayoutInactiveIcons":
-                  return this.applyAttribute('TabsToolbar', name, value);
+                  this.applyAttribute('TabsToolbar', name, value);
+                  break;
+              case "hideLauncherStrategy":
+                  this.applyAttribute('TabsToolbar', name, value);
+                  com.sppad.Resizer.onResize();
+                  break;
               default:
-                  return null;
+                  break;
             }
         },
         
@@ -156,6 +164,7 @@ com.sppad.Booky = (function() {
             if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.removeTab(aTab);
                 com.sppad.Resizer.onTabTitleChangeCleared(aTab);
+                com.sppad.Resizer.onResize();
             }
         },
         
@@ -176,7 +185,12 @@ com.sppad.Booky = (function() {
                 if(com.sppad.Launcher.hasLauncher(newId))
                     com.sppad.Launcher.getLauncher(newId).addTab(aTab);
                 
-                aTab.com_sppad_booky_id = newId;   
+                aTab.com_sppad_booky_id = newId;
+                
+                // Adding / changing the launcher may cause the overflow
+                // strategy to change whether one or more launchers do/do not
+                // overflow.
+                com.sppad.Resizer.onResize();
             }
             
             if(aTab.com_sppad_booky_launcher)

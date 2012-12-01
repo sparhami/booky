@@ -14,8 +14,14 @@ const PREFS = {
   // internal only
   debug: false,
   
+  // One of maxWidth, maxIcons
+  overflowMode: 'maxWidth',
+  
   // max width, as a percentage
   maxWidth: 30,
+  
+  // max icons, number
+  maxIcons: 20,
   
   // One of showActiveTab, showActiveGroup, hideAllTabs, hideNoTabs
   hideTabStrategy: 'showActiveGroup',

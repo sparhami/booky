@@ -16,7 +16,11 @@
 
 	<prefpane id="com_sppad_booky_GeneralPrefPane" label="General">
 		<preferences>
+			<preference id="extensions.booky.overflowMode" name="extensions.booky.overflowMode"
+				type="string" />
 			<preference id="extensions.booky.maxWidth" name="extensions.booky.maxWidth"
+				type="int" />
+			<preference id="extensions.booky.maxIcons" name="extensions.booky.maxIcons"
 				type="int" />
 			<preference id="extensions.booky.hideTabStrategy" name="extensions.booky.hideTabStrategy"
 				type="string" />
@@ -32,11 +36,33 @@
 				</columns>
 				<rows>
 					<row>
-						<box>
-							<caption label="&preference.maxWidth.label;" />
-							<textbox id="com_sppad_booky_preference_maxWidth" type="number"
-								min="0" max="100" preference="extensions.booky.maxWidth" />
-						</box>
+						<caption label="&preference.overflowMode.label;" />
+					</row>
+					<row>
+						<radiogroup preference="extensions.booky.overflowMode" orient="vertical">
+							<hbox>
+								<radio value="maxWidth" label="&preference.maxWidth.label;" flex="1" />
+								<textbox id="com_sppad_booky_preference_maxWidth" type="number"
+									min="0" max="100" preference="extensions.booky.maxWidth" />
+							</hbox>
+							<hbox>
+								<radio value="maxIcons" label="&preference.maxIcons.label;" flex="1" />
+								<textbox id="com_sppad_booky_preference_maxIcons" type="number"
+									min="0" max="999" preference="extensions.booky.maxIcons" />
+							</hbox>
+						</radiogroup>
+					</row>
+					<row>
+						<caption label="&preference.hideLauncherStrategy.label;" />
+					</row>
+					<row>
+						<radiogroup preference="extensions.booky.hideLauncherStrategy"
+							orient="vertical">
+							<radio value="overflowOnly" label="&preference.hideLauncherStrategy.overflowOnly.label;" />
+							<radio value="noOpenTabs" label="&preference.hideLauncherStrategy.noOpenTabs.label;" />
+							<radio value="groupOpenTabs"
+								label="&preference.hideLauncherStrategy.groupOpenTabs.label;" />
+						</radiogroup>
 					</row>
 					<row>
 						<caption label="&preference.hideTabStrategy.label;" />
@@ -48,17 +74,6 @@
 							<radio value="showActiveTab" label="&preference.hideTabStrategy.showActiveTab.label;" />
 							<radio value="showActiveGroup" label="&preference.hideTabStrategy.showActiveGroup.label;" />
 							<radio value="hideNoTabs" label="&preference.hideTabStrategy.hideNoTabs.label;" />
-						</radiogroup>
-					</row>
-					<row>
-						<caption label="&preference.hideLauncherStrategy.label;" />
-					</row>
-					<row>
-						<radiogroup preference="extensions.booky.hideLauncherStrategy"
-							orient="vertical">
-							<radio value="overflowOnly" label="&preference.hideLauncherStrategy.overflowOnly.label;" />
-							<radio value="noOpenTabs" label="&preference.hideLauncherStrategy.noOpenTabs.label;" />
-							<radio value="groupOpenTabs" label="&preference.hideLauncherStrategy.groupOpenTabs.label;" />
 						</radiogroup>
 					</row>
 				</rows>

@@ -32,10 +32,6 @@ launcher .tabdock-item > label {
 	display: none;
 }
 
-launcher[overflow="true"] {
-	visibility: collapse;
-}
-
 .launcher_menupopup_bookmarks > * {
 	-moz-box-ordinal-group: 2;
 }
@@ -53,11 +49,10 @@ launcher[overflow="true"] {
 	-moz-box-ordinal-group: 2;
 }
 
-#TabsToolbar[com_sppad_booky_hideLauncherStrategy="noOpenTabs"] launcher[hasSingle="false"] {
+launcher[overflow="true"] {
 	visibility: collapse;
 }
 
-#TabsToolbar[com_sppad_booky_hideLauncherStrategy="overflowOnly"] .menulauncher[overflow="false"],
-#TabsToolbar[com_sppad_booky_hideLauncherStrategy="noOpenTabs"] .menulauncher[overflow="false"][hasSingle="true"] {
+.menulauncher[overflow="false"] {
 	display: none;
 }

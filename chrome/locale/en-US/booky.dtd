@@ -16,17 +16,19 @@
 <!ENTITY com_sppad_booky_remove.label "Delete">
 <!ENTITY com_sppad_booky_remove.accesskey "D">
 
-<!ENTITY preference.maxWidth.label "Max Width (percentage)">
+<!ENTITY preference.overflowMode.label "Maximum Space Taken">
+<!ENTITY preference.maxWidth.label "Max width (percentage)">
+<!ENTITY preference.maxIcons.label "Max number of icons">
 
-<!ENTITY preference.hideTabStrategy.label "Hide tabs with quick launchers">
-<!ENTITY preference.hideTabStrategy.hideAllTabs.label "always">
-<!ENTITY preference.hideTabStrategy.showActiveTab.label "except when selected">
-<!ENTITY preference.hideTabStrategy.showActiveGroup.label "except when in the active launcher group">
-<!ENTITY preference.hideTabStrategy.hideNoTabs.label "never">
+<!ENTITY preference.hideTabStrategy.label "Hide Tabs with Quick Launchers">
+<!ENTITY preference.hideTabStrategy.hideAllTabs.label "Always">
+<!ENTITY preference.hideTabStrategy.showActiveTab.label "Except when selected">
+<!ENTITY preference.hideTabStrategy.showActiveGroup.label "Except when in the active launcher group">
+<!ENTITY preference.hideTabStrategy.hideNoTabs.label "Never">
 
-<!ENTITY preference.hideLauncherStrategy.label "Launcher placement">
+<!ENTITY preference.hideLauncherStrategy.label "Quick Launcher Placement">
 <!ENTITY preference.hideLauncherStrategy.overflowOnly.label "Default ordering">
 <!ENTITY preference.hideLauncherStrategy.noOpenTabs.label "Send to menu when no tabs are open">
-<!ENTITY preference.hideLauncherStrategy.groupOpenTabs.label "Group open tabs to the left">
+<!ENTITY preference.hideLauncherStrategy.groupOpenTabs.label "Group those with open tabs to the left">
 
 <!ENTITY preference.grayoutInactiveIcons.label "Gray-out inactive icons">

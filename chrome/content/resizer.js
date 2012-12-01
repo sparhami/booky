@@ -14,30 +14,103 @@ com.sppad.Resizer = (function() {
     var _resizeEventId = null;
 
     var _doResize = function() {
+        
+        /*
+         * If you don't do this, bad things will occur. The only time resize
+         * should be getting called is when the menu is supposed to be closed
+         * anyway.
+         * 
+         * The issue observed is when 'hideLauncherStrategy' is 'groupOpenTabs'
+         * and a bookmark is opened from a submenu. The tab getting added to the
+         * launcher causes this function to be called.
+         * 
+         * However, it seems that modifying the menu or submenus while open
+         * causes it to not open again correctly when pressed again.
+         * Specifically, the onpopuphiding function never gets called, so it
+         * seems the menu does not close correctly. If you resize the window for
+         * a bit it might end up calling the onpopuphiding, etc. and open as
+         * expected.
+         * 
+         * It might make more sense to check if _overflowToolbarButton is open,
+         * then set a timeout to check again when it is closed. However,
+         * checking open returns false here. Not sure why setting open to false
+         * would have any effect in that case, but it seems to work.
+         */
+        _overflowToolbarButton.open = false;
+        
         let windowSize = window.innerWidth;
+        
+        let overflowIcons = com.sppad.CurrentPrefs['overflowMode'] === 'maxIcons';
+        let hideLaunchersWithoutTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
+        let groupOpenTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'groupOpenTabs';
+        
         let launchersSizePercentage = Math.min(com.sppad.CurrentPrefs['maxWidth'], 100) / 100;
-        
         let maxWidth = windowSize * launchersSizePercentage;
+        let maxIcons = com.sppad.CurrentPrefs['maxIcons'];
         
-        _lastResizeTime = Date.now();
-        _launchers.maxWidth = maxWidth;
+        _launchers.maxWidth = overflowIcons == true ? windowSize : maxWidth;
         
         let boxEnd = _launchers.getBoundingClientRect().left + maxWidth;
         let children = _launchers.children;
-        let hideLaunchersWithoutTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
         
-        let hasOverflow = false;
+        let overflowCount = 0;
+        let openLaunchers = 0;
+        let openLaunchersEncountered = 0;
+        
+        // Get the total number of open launchers
         for (let i=0; i < children.length; i++) {
+            let child = children[i];
+            let isOpen = child.getAttribute('hasSingle') == 'true';
+            if(isOpen)
+                openLaunchers++;
+        }
+        
+        // For each node, need to evaluate if it overflows or not
+        for (let i=0; i < children.length; i++) {
+            let overflow = false;
+            let child = children[i];
+            let isOpen = child.getAttribute('hasSingle') == 'true';
             
-            let overflow = (children[i].getBoundingClientRect().left + ITEM_WIDTH) > boxEnd;
-            hasOverflow |= overflow;
-            hasOverflow |= (hideLaunchersWithoutTabs && (children[i].getAttribute('hasSingle') == 'false'));
+            if(isOpen)
+                openLaunchersEncountered++;
             
-            children[i].js.setOverflow(overflow);
+            // Always set closed tabs when hideLaunchersWithoutTabs to overflow
+            if(hideLaunchersWithoutTabs && !isOpen)
+                overflow = true;
+                
+            // Now to check if we have exceeded maxWidth or maxIcons
+            if(overflowIcons) {
+                if(groupOpenTabs) {
+                    let remainingOpenLaunchers = openLaunchers - openLaunchersEncountered;
+                    let remainingSlots = maxIcons - (i - overflowCount);
+                    
+                    /*
+                     * If there are no open slots, then everyone overflows.
+                     * Otherwise, if the launcher is closed, check if the
+                     * remaining slots will be taken by open launchers.
+                     */
+                    if(remainingSlots == 0)
+                        overflow = true;
+                    else if(!isOpen && remainingOpenLaunchers >= remainingSlots)
+                        overflow = true;
+                } else if(hideLaunchersWithoutTabs) {
+                    overflow |= openLaunchersEncountered > maxIcons;
+                } else {
+                    overflow |= ((i > (maxIcons - 1)) == true);
+                }
+            } else {
+                overflow |= (((child.getBoundingClientRect().left + ITEM_WIDTH) > boxEnd) == true);
+            }
+            
+            if(overflow)
+                overflowCount++;
+            
+            child.js.setOverflow(overflow == true);
         }
             
-        _overflowToolbarButton.setAttribute('overflow', hasOverflow == true);
+        _overflowToolbarButton.setAttribute('overflow', (overflowCount > 0) == true);
         _updateAttributes();
+        _lastResizeTime = Date.now();
     };
     
     var _updateAttributes = function() {
