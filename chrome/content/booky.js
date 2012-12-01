@@ -284,20 +284,14 @@ window.addEventListener("load", function() {
     var anchor = document.getElementById('tabbrowser-tabs');
     toolbar.insertItem(id, anchor);
 
-    // Add ourselves to the default set (for now). Want to make it a toolbar
-    // button soon.
-    let defaultsetItems = toolbar.getAttribute('defaultset').split(',');
-    let defaultset = '';
-    
-    for(let i=0; i<defaultsetItems.length; i++) {
-        if(defaultsetItems[i] == 'tabbrowser-tabs')
-            defaultset += id + ',';
-        
-        defaultset += defaultsetItems[i] + ',';
-    }
-    
+    /*
+     * Do not persist, since we may be uninstalled. Only want this since we
+     * aren't a proper toolbar button. This prevents the add-on from being
+     * removed from the GUI when the user presses the restore default set button
+     * in customize toolbar.
+     */
+    let defaultset = toolbar.getAttribute('defaultset') + id + ',';
     toolbar.setAttribute("defaultset", defaultset);
-    // document.persist(toolbar.id, "defaultset");
     
     com.sppad.Booky.setup();
 }, false);
