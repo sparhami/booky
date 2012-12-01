@@ -55,14 +55,14 @@ com.sppad.Launcher = function(aID) {
         let busy = false;
         let unread = false;
         let selected = false;
-        let titleChanged = false;
+        let titlechanged = false;
         for(let i=0; i<this.tabs.length; i++) {
             let tab = this.tabs[i];
             
             busy |= tab.com_sppad_booky_busy == true;
             unread |= tab.hasAttribute('unread');
             selected |= tab == gBrowser.selectedTab;
-            titleChanged |= tab.com_sppad_booky_titleChanged == true;
+            titlechanged |= tab.com_sppad_booky_titlechanged == true;
             
             if(tab == gBrowser.selectedTab)
                 _selectedIndex = i;
@@ -76,7 +76,7 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute("busy", busy == true);
         this.setAttribute("unread", unread == true);
         this.setAttribute("selected", selected == true);
-        this.setAttribute("titleChanged", titleChanged == true);
+        this.setAttribute("titlechanged", titlechanged == true);
         this.setAttribute('label', this.id);
         
         this.setAttribute("hasSingle", this.tabs.length > 0);
@@ -359,43 +359,36 @@ com.sppad.Launcher.prototype.scroll = function(event) {
 
 com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
     let node = event.target;
-    if(node.bookmarksUpdateTime == this.bookmarksUpdateTime)
-        return;
-    
-    // Remove all items that are bookmarks, not others (such as open all
-    // bookmarks menu item).    
-    let toRemove = new Array();
-    let children = node.childNodes;
-    for(let i=0; i<children.length; i++)
-        if(children[i].hasAttribute('bookmark'))
-            toRemove.push(children[i]);
-    
-    for(let i=0; i<toRemove.length; i++)
-        node.removeChild(toRemove[i]);
-
-    for(let i=0; i<this.bookmarks.length; i++) {
-        let bookmark = this.bookmarks[i];
+    if(node.bookmarksUpdateTime != this.bookmarksUpdateTime) {
+        // Remove all items that are bookmarks, not others (such as open all
+        // bookmarks menu item).
+        let toRemove = new Array();
+        let children = node.childNodes;
+        for(let i=0; i<children.length; i++)
+            if(children[i].hasAttribute('bookmark'))
+                toRemove.push(children[i]);
         
-        let menuitem = document.createElement('menuitem');
-        menuitem.setAttribute('bookmark', true);
-        menuitem.setAttribute('label', bookmark);
-        menuitem.addEventListener('command', function(event) { this.openTab(bookmark); }.bind(this) );
+        for(let i=0; i<toRemove.length; i++)
+            node.removeChild(toRemove[i]);
+    
+        for(let i=0; i<this.bookmarks.length; i++) {
+            let bookmark = this.bookmarks[i];
+            
+            let menuitem = document.createElement('menuitem');
+            menuitem.setAttribute('bookmark', true);
+            menuitem.setAttribute('label', bookmark);
+            menuitem.addEventListener('command', function(event) { this.openTab(bookmark); }.bind(this) );
+            
+            node.appendChild(menuitem);
+        }
         
-        node.appendChild(menuitem);
+        node.bookmarksUpdateTime = this.bookmarksUpdateTime;
     }
-    
-    node.bookmarksUpdateTime = this.bookmarksUpdateTime;
 };
 
 com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
     let node = event.target;
-    if(node.tabsUpdateTime == this.tabsUpdateTime)
-    {
-        let tabMenuItems = node.childNodes;
-        for(let i=0; i<tabMenuItems.length; i++)
-            tabMenuItems[i].setAttribute('label', tabMenuItems[i].tab.label);
-    }
-    else
+    if(node.tabsUpdateTime != this.tabsUpdateTime)
     {
         while(node.firstChild)
             node.removeChild(node.firstChild);
@@ -405,7 +398,7 @@ com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
               
             let menuitem = document.createElement('menuitem');
             menuitem.tab = tab;
-            menuitem.setAttribute('label', tab.label);
+            menuitem.setAttribute('class', 'com_sppad_booky_tab');
             menuitem.addEventListener('command', function(event) { gBrowser.selectedTab = event.target.tab; }.bind(this) );
               
             node.appendChild(menuitem);
@@ -414,6 +407,14 @@ com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
         node.tabsUpdateTime = this.tabsUpdateTime;
     }
 
+    let tabMenuItems = node.childNodes;
+    for(let i=0; i<tabMenuItems.length; i++) {
+        tabMenuItems[i].setAttribute('label', tabMenuItems[i].tab.label);
+        tabMenuItems[i].setAttribute('image', tabMenuItems[i].tab.getAttribute('image'));
+        tabMenuItems[i].setAttribute('unread', tabMenuItems[i].tab.getAttribute('unread'));
+        tabMenuItems[i].setAttribute('selected', tabMenuItems[i].tab.getAttribute('selected'));
+        tabMenuItems[i].setAttribute('titlechanged', tabMenuItems[i].tab.getAttribute('titlechanged'));
+    }
 };
 
 com.sppad.Launcher.prototype.contextShowing = function(event) {

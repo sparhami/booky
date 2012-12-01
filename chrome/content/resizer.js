@@ -42,9 +42,10 @@ com.sppad.Resizer = (function() {
     
     var _updateAttributes = function() {
         let selected = false;
-        let titleChanged = false;
-        let children = _launchers.children;
+        let unread = false;
+        let titlechanged = false;
         
+        let children = _launchers.children;
         for (let i=0; i < children.length; i++) {
             let child = children[i];
             
@@ -53,12 +54,12 @@ com.sppad.Resizer = (function() {
             
             unread |= child.getAttribute('unread') == 'true';
             selected |= child.getAttribute('selected') == 'true';
-            titleChanged |= child.getAttribute('titleChanged') == 'true';
+            titlechanged |= child.getAttribute('titlechanged') == 'true';
         }
         
         _overflowDecorator.setAttribute('unread', unread == true);
         _overflowDecorator.setAttribute('selected', selected == true);
-        _overflowDecorator.setAttribute('titleChanged', titleChanged == true);
+        _overflowDecorator.setAttribute('titlechanged', titlechanged == true);
     };
 
     return {

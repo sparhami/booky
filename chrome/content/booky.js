@@ -184,7 +184,7 @@ com.sppad.Booky = (function() {
         },
         
         onTabTitleChange: function(aTab) {
-            aTab.com_sppad_booky_titleChanged = true;
+            aTab.com_sppad_booky_titlechanged = true;
             if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
                 com.sppad.Resizer.onTabTitleChange(aTab);
@@ -192,7 +192,7 @@ com.sppad.Booky = (function() {
         },
         
         onTabTitleChangeCleared: function(aTab) {
-            aTab.com_sppad_booky_titleChanged = false;
+            aTab.com_sppad_booky_titlechanged = false;
             if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
                 com.sppad.Resizer.onTabTitleChangeCleared(aTab);

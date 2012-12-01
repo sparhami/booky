@@ -29,3 +29,8 @@
 .quickLaunchArea {
 	margin-right: 4px;
 }
+
+#com_sppad_booky_container menu,
+#com_sppad_booky_container menuitem {
+	max-width: 20em !important;
+}
