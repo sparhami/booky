@@ -16,6 +16,8 @@
 <!ENTITY com_sppad_booky_remove.label "Delete">
 <!ENTITY com_sppad_booky_remove.accesskey "D">
 
+<!ENTITY preference.window.title "Booky Preferences">
+
 <!ENTITY preference.overflowMode.label "Maximum Space Taken">
 <!ENTITY preference.maxWidth.label "Max width (percentage)">
 <!ENTITY preference.maxIcons.label "Max number of icons">

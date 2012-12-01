@@ -9,7 +9,7 @@
 %mainDTD;
 ]>
 
-<prefwindow title="Unread Tab Tracker Preferences" id="booky-preferences-window"
+<prefwindow title="&preference.window.title;" id="booky-preferences-window"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script src="config.js" type="application/javascript" />

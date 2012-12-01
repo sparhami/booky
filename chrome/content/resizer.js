@@ -44,8 +44,7 @@ com.sppad.Resizer = (function() {
         let hideLaunchersWithoutTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
         let groupOpenTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'groupOpenTabs';
         
-        let launchersSizePercentage = Math.min(com.sppad.CurrentPrefs['maxWidth'], 100) / 100;
-        let maxWidth = windowSize * launchersSizePercentage;
+        let maxWidth = windowSize * (com.sppad.CurrentPrefs['maxWidth'] / 100);
         let maxIcons = com.sppad.CurrentPrefs['maxIcons'];
         
         _launchers.maxWidth = overflowIcons == true ? windowSize : maxWidth;
@@ -54,15 +53,14 @@ com.sppad.Resizer = (function() {
         let children = _launchers.children;
         
         let overflowCount = 0;
-        let openLaunchers = 0;
-        let openLaunchersEncountered = 0;
+        let remainingOpenLaunchers = 0;
+        let remainingSlots = maxIcons;
         
         // Get the total number of open launchers
         for (let i=0; i < children.length; i++) {
-            let child = children[i];
-            let isOpen = child.getAttribute('hasSingle') == 'true';
-            if(isOpen)
-                openLaunchers++;
+            if(children[i].getAttribute('hasSingle') == 'true') {
+                remainingOpenLaunchers++;
+            }
         }
         
         // For each node, need to evaluate if it overflows or not
@@ -71,39 +69,32 @@ com.sppad.Resizer = (function() {
             let child = children[i];
             let isOpen = child.getAttribute('hasSingle') == 'true';
             
-            if(isOpen)
-                openLaunchersEncountered++;
-            
-            // Always set closed tabs when hideLaunchersWithoutTabs to overflow
-            if(hideLaunchersWithoutTabs && !isOpen)
+            // Always hide closed launchers when hideLaunchersWithoutTabs
+            if(hideLaunchersWithoutTabs && !isOpen) {
                 overflow = true;
-                
-            // Now to check if we have exceeded maxWidth or maxIcons
-            if(overflowIcons) {
-                if(groupOpenTabs) {
-                    let remainingOpenLaunchers = openLaunchers - openLaunchersEncountered;
-                    let remainingSlots = maxIcons - (i - overflowCount);
-                    
-                    /*
-                     * If there are no open slots, then everyone overflows.
-                     * Otherwise, if the launcher is closed, check if the
-                     * remaining slots will be taken by open launchers.
-                     */
-                    if(remainingSlots == 0)
-                        overflow = true;
-                    else if(!isOpen && remainingOpenLaunchers >= remainingSlots)
-                        overflow = true;
-                } else if(hideLaunchersWithoutTabs) {
-                    overflow |= openLaunchersEncountered > maxIcons;
-                } else {
-                    overflow |= ((i > (maxIcons - 1)) == true);
-                }
+            // Overflow when out of slots. Also when encountering a closed
+            // launcher that
+            // would take the slot of an open one when groupOpenTabs is set.
+            } else if(overflowIcons) {
+                overflow = remainingSlots <= 0;
+                overflow |= groupOpenTabs && !isOpen && (remainingOpenLaunchers >= remainingSlots);
+            // Just overflow based on the right edge. Note: don't use
+            // child.getBoundingClientRect().right as the nodes may be
+            // collapsed, causing right to be the same as left.
             } else {
-                overflow |= (((child.getBoundingClientRect().left + ITEM_WIDTH) > boxEnd) == true);
+                let childEnd = child.getBoundingClientRect().left + ITEM_WIDTH;
+                overflow = childEnd > boxEnd;
             }
             
-            if(overflow)
+            if(isOpen) {
+                remainingOpenLaunchers--;
+            }
+     
+            if(overflow) {
                 overflowCount++;
+            } else {
+                remainingSlots--; 
+            }
             
             child.js.setOverflow(overflow == true);
         }
