@@ -237,10 +237,7 @@ com.sppad.Booky = (function() {
             _selectedTab = gBrowser.selectedTab;
             
             com.sppad.TabEvents.addListener(this);
-            com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_ADD_BOOKMARK);
-            com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_MOV_BOOKMARK);
-            com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_DEL_BOOKMARK);
-            com.sppad.Bookmarks.addListener(this, com.sppad.Bookmarks.EVENT_LOAD_BOOKMARK);
+            com.sppad.Bookmarks.addListener(this);
             
             this.updateBookmarksCount(0);
             com.sppad.Bookmarks.loadBookmarks();
@@ -251,10 +248,7 @@ com.sppad.Booky = (function() {
             com.sppad.Preferences.removeListener(this, com.sppad.Preferences.EVENT_PREFERENCE_CHANGED);
             
             com.sppad.TabEvents.removeListener(this);
-            com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_ADD_BOOKMARK);
-            com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_MOV_BOOKMARK);
-            com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_DEL_BOOKMARK);
-            com.sppad.Bookmarks.removeListener(this, com.sppad.Bookmarks.EVENT_LOAD_BOOKMARK);
+            com.sppad.Bookmarks.removeListener(this);
             
             com.sppad.TabEvents.cleanup();
         },
@@ -290,5 +284,20 @@ window.addEventListener("load", function() {
     var anchor = document.getElementById('tabbrowser-tabs');
     toolbar.insertItem(id, anchor);
 
+    // Add ourselves to the default set (for now). Want to make it a toolbar
+    // button soon.
+    let defaultsetItems = toolbar.getAttribute('defaultset').split(',');
+    let defaultset = '';
+    
+    for(let i=0; i<defaultsetItems.length; i++) {
+        if(defaultsetItems[i] == 'tabbrowser-tabs')
+            defaultset += id + ',';
+        
+        defaultset += defaultsetItems[i] + ',';
+    }
+    
+    toolbar.setAttribute("defaultset", defaultset);
+    // document.persist(toolbar.id, "defaultset");
+    
     com.sppad.Booky.setup();
 }, false);
