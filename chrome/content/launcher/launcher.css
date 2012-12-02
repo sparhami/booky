@@ -32,8 +32,9 @@ launcher .tabdock-item > label {
 	display: none;
 }
 
+#TabsToolbar[com_sppad_booky_hideLauncherStrategy="groupOpenTabs"] .menulauncher:not([hasSingle="true"]),
 .launcher_menupopup_bookmarks > * {
-	-moz-box-ordinal-group: 2147483647;
+	-moz-box-ordinal-group: 22147483647;
 }
 
 .launcher_menupopup_bookmarks > menuitem[bookmark] {

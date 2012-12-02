@@ -15,29 +15,6 @@ com.sppad.Resizer = (function() {
 
     var _doResize = function() {
         
-        /*
-         * If you don't do this, bad things will occur. The only time resize
-         * should be getting called is when the menu is supposed to be closed
-         * anyway.
-         * 
-         * The issue observed is when 'hideLauncherStrategy' is 'groupOpenTabs'
-         * and a bookmark is opened from a submenu. The tab getting added to the
-         * launcher causes this function to be called.
-         * 
-         * However, it seems that modifying the menu or submenus while open
-         * causes it to not open again correctly when pressed again.
-         * Specifically, the onpopuphiding function never gets called, so it
-         * seems the menu does not close correctly. If you resize the window for
-         * a bit it might end up calling the onpopuphiding, etc. and open as
-         * expected.
-         * 
-         * It might make more sense to check if _overflowToolbarButton is open,
-         * then set a timeout to check again when it is closed. However,
-         * checking open returns false here. Not sure why setting open to false
-         * would have any effect in that case, but it seems to work.
-         */
-        _overflowToolbarButton.open = false;
-        
         let windowSize = window.innerWidth;
         
         let overflowIcons = com.sppad.CurrentPrefs['overflowMode'] === 'maxIcons';
@@ -74,7 +51,8 @@ com.sppad.Resizer = (function() {
                 ordinalOffset = 0;
             }
 
-            child.js.setAttribute('ordinal', + i + ordinalOffset);
+            // Don't set ordinal for the menu node since it is extremely buggy.
+            child.js.setOrdinal(i + ordinalOffset);
         }
         
         // For each node, need to evaluate if it overflows or not

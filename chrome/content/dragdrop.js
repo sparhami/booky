@@ -82,7 +82,7 @@ com.sppad.DragDrop = (function() {
             
             _toolbarIndicator.collapsed = false;
 
-            let ps = obj.previousSibling;
+            let ps = obj.boxObject.previousSibling;
             let locX = 0, locY = 0;
             let rect = obj.getBoundingClientRect();
 
@@ -122,10 +122,10 @@ com.sppad.DragDrop = (function() {
             
             _menuIndicator.collapsed = false;
             
-            let ps = obj.previousSibling;
+            let ps = obj.boxObject.previousSibling;
             let locX = 0, locY = 0;
             let rect = obj.getBoundingClientRect();
-
+            
             if (event.clientY > (rect.top + rect.bottom) / 2) {
                 locY = rect.top;
                 _insertPoint = obj;

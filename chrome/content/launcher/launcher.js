@@ -20,6 +20,27 @@ com.sppad.Launcher = function(aID) {
     
     this.openTab = function(aUri) {     
         gBrowser.selectedTab = gBrowser.addTab(aUri || this.bookmarks[0]);
+        
+        /*
+         * If you don't do this, bad things will occur. The only time resize
+         * should be getting called is when the menu is supposed to be closed
+         * anyway.
+         * 
+         * The issue observed is when 'hideLauncherStrategy' is 'groupOpenTabs'
+         * and a bookmark is opened from a submenu. The tab getting added to the
+         * launcher causes this function to be called.
+         * 
+         * The onpopuphiding function never gets called, so it seems the menu
+         * does not close correctly. If you resize the window for a bit it might
+         * end up calling the onpopuphiding, etc. and open as expected.
+         * 
+         * It might make more sense to check if _overflowToolbarButton is open,
+         * then set a timeout to check again when it is closed. However,
+         * checking open returns false here. Not sure why setting open to false
+         * would have any effect in that case, but it seems to work.
+         */
+        let overflowButton = document.getElementById('com_sppad_booky_launchers_overflow_button');
+        overflowButton.open = false;
     };       
     
     this.switchTo = function(openIfClosed, next, reverse) {
@@ -126,12 +147,8 @@ com.sppad.Launcher = function(aID) {
         this.setAttribute('image', anImage || 'chrome://mozapps/skin/places/defaultFavicon.png');
     };
     
-    /**
-     * Sets the overflow status, indicating that this launcher doesn't fit in
-     * the quick launch area,
-     */
-    this.setOverflow = function(overflow) {
-        this.setAttribute('overflow', overflow);
+    this.setOrdinal = function(ordinal) {
+        this.node.setAttribute('ordinal', ordinal);
     };
     
     this.placeTab = function(aTab, launcherMoving) {

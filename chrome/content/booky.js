@@ -110,6 +110,8 @@ com.sppad.Booky = (function() {
                     launcher.addTab(tabs[i]);
             
             this.updateBookmarksCount(1);
+            
+            com.sppad.Resizer.onResize();
         },
         
         onBookmarkRemoved: function(event) {
@@ -124,9 +126,13 @@ com.sppad.Booky = (function() {
             
             launcher.removeBookmark(node.itemId);
             this.updateBookmarksCount(-1);
+            
+            com.sppad.Resizer.onResize();
         },
         
         onBookmarkMoved: function(event) {
+            com.sppad.Utils.dump('onBookmarkMoved\n');
+            
             let node = event.node;
             let nodeNext = event.nodeNext;
             
@@ -140,11 +146,11 @@ com.sppad.Booky = (function() {
         },
         
         onTabMove: function(aTab) {
-            com.sppad.Utils.dump('Tab moved\n');
+            com.sppad.Utils.dump('onTabMove\n');
         },
         
         onTabOpen: function(aTab) {
-            com.sppad.Utils.dump('Tab opened\n');
+            com.sppad.Utils.dump('onTabOpen\n');
             this.onTabAttrChange(aTab);
         },
         
