@@ -298,7 +298,7 @@ com.sppad.Booky.waitForLoad = function() {
     if(document.getElementById('com_sppad_booky_container')) {
         com.sppad.Resizer.setup();
         com.sppad.TabEvents.setup();
-        com.sppad.dd.setup();
+        com.sppad.DragDrop.setup();
         com.sppad.Booky.setup();
     }
     else {
