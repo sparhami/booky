@@ -103,8 +103,11 @@ com.sppad.Utils = (function() {
  * the handleEvent function is called, bound to the object itself.
  */
 com.sppad.EventSupport = function() {
-    let _typeSpecificListeners = {};
-    let _allTypeListeners = [];
+    
+    let self = this;
+    
+    self._typeSpecificListeners = {};
+    self._allTypeListeners = [];
 	
     this._fireForListeners = function(event, listeners) {
         for (let i=0; i < listeners.length; i++) {
@@ -129,9 +132,9 @@ com.sppad.EventSupport = function() {
 	    
     this._getListeners = function(type) {
         if(type)
-            return _typeSpecificListeners[type] = _typeSpecificListeners[type] || [];
+            return self._typeSpecificListeners[type] = self._typeSpecificListeners[type] || [];
         else
-            return _allTypeListeners;
+            return self._allTypeListeners;
     };
 };
 

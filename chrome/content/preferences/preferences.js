@@ -86,18 +86,20 @@ com.sppad.PrefListener.prototype.unregister = function() {
 
 com.sppad.CurrentPrefs = {};
 
-com.sppad.Preferences = (function() {
+com.sppad.Preferences = new function() {
     
-    let _eventSupport = new com.sppad.EventSupport();
-    let _EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
+    let self = this;
+    
+    self._eventSupport = new com.sppad.EventSupport();
+    self._EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
     
     /** Listens for prefs changes in order to record them, fire event */
-    let _myListener = new com.sppad.PrefListener(com.sppad.PREF_BRANCH,  
-            function(branch, name) {  
-                com.sppad.CurrentPrefs[name] = _getPreference(branch, name);
-                  
-                _eventSupport.fire( { 'name' : name, 'value' : com.sppad.CurrentPrefs[name] }, _EVENT_PREFERENCE_CHANGED);
-            });  
+    self._myListener = new com.sppad.PrefListener(com.sppad.PREF_BRANCH,  
+        function(branch, name) {  
+            com.sppad.CurrentPrefs[name] = _getPreference(branch, name);
+              
+            self._eventSupport.fire( { 'name' : name, 'value' : com.sppad.CurrentPrefs[name] }, self._EVENT_PREFERENCE_CHANGED);
+        });  
     
     /**
      * Sets the current preferences for a given branch.
@@ -172,14 +174,14 @@ com.sppad.Preferences = (function() {
     };
 
     // No need to unregister, taken care of by unloading the module.
-    _myListener.register(true);
+    self._myListener.register(true);
     
     // Set the default preferences.
     _setDefaultPrefBranch(com.sppad.PREF_BRANCH, com.sppad.PREFS);
     
     return {
         
-        EVENT_PREFERENCE_CHANGED:        _EVENT_PREFERENCE_CHANGED,
+        EVENT_PREFERENCE_CHANGED:        self._EVENT_PREFERENCE_CHANGED,
         
         /**
          * Sets a preference to the given value
@@ -236,7 +238,7 @@ com.sppad.Preferences = (function() {
 	      	this._preferencesWindow.focus();  
 	    },  
 
-	    addListener: function(listener, type) { _eventSupport.addListener(listener, type); },
-	    removeListener: function(listener, type) { _eventSupport.removeListener(listener, type); },
+	    addListener: function(listener, type) { self._eventSupport.addListener(listener, type); },
+	    removeListener: function(listener, type) { self._eventSupport.removeListener(listener, type); },
     }
-})();
+};

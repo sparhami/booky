@@ -5,19 +5,21 @@ if (typeof com == "undefined") {
     };
 }
 
-com.sppad.Resizer = (function() {
+com.sppad.Resizer = new function() {
 
     const RESIZE_PERIOD = 100;
     const ITEM_WIDTH = 24;
     
-    let _launchers;
-    let _overflowDecorator;
-    let _overflowToolbarButton;
+    let self = this;
     
-    let _lastResizeTime;
-    let _resizeEventId = null;
+    self._launchers;
+    self._overflowDecorator;
+    self._overflowToolbarButton;
+    
+    self._lastResizeTime;
+    self._resizeEventId = null;
 
-    let _doResize = function() {
+    self._doResize = function() {
         
         let windowSize = window.innerWidth;
         
@@ -28,10 +30,10 @@ com.sppad.Resizer = (function() {
         let maxWidth = windowSize * (com.sppad.CurrentPrefs['maxWidth'] / 100);
         let maxIcons = com.sppad.CurrentPrefs['maxIcons'];
         
-        _launchers.maxWidth = overflowIcons == true ? windowSize : maxWidth;
+        self._launchers.maxWidth = overflowIcons == true ? windowSize : maxWidth;
         
-        let boxEnd = _launchers.getBoundingClientRect().left + maxWidth;
-        let children = _launchers.children;
+        let boxEnd = self._launchers.getBoundingClientRect().left + maxWidth;
+        let children = self._launchers.children;
         
         let overflowCount = 0;
         let remainingOpenLaunchers = 0;
@@ -95,17 +97,17 @@ com.sppad.Resizer = (function() {
             child.js.setAttribute('overflow', overflow == true);
         }
             
-        _overflowToolbarButton.setAttribute('overflow', (overflowCount > 0) == true);
-        _updateAttributes();
-        _lastResizeTime = Date.now();
+        self._overflowToolbarButton.setAttribute('overflow', (overflowCount > 0) == true);
+        self._updateAttributes();
+        self._lastResizeTime = Date.now();
     };
     
-    let _updateAttributes = function() {
+    self._updateAttributes = function() {
         let selected = false;
         let unread = false;
         let titlechanged = false;
         
-        let children = _launchers.children;
+        let children = self._launchers.children;
         for (let i=0; i < children.length; i++) {
             let child = children[i];
             
@@ -117,50 +119,49 @@ com.sppad.Resizer = (function() {
             titlechanged |= child.getAttribute('titlechanged') == 'true';
         }
         
-        _overflowDecorator.setAttribute('unread', unread == true);
-        _overflowDecorator.setAttribute('selected', selected == true);
-        _overflowDecorator.setAttribute('titlechanged', titlechanged == true);
+        self._overflowDecorator.setAttribute('unread', unread == true);
+        self._overflowDecorator.setAttribute('selected', selected == true);
+        self._overflowDecorator.setAttribute('titlechanged', titlechanged == true);
     };
 
     return {
 
         onResize : function() {
-            window.clearTimeout(_resizeEventId);
+            window.clearTimeout(self._resizeEventId);
 
             // Resize at most once every 100 ms
-            let timeSinceResize = Date.now() - _lastResizeTime;
+            let timeSinceResize = Date.now() - self._lastResizeTime;
             if (timeSinceResize > RESIZE_PERIOD)
-                _doResize();
+                self._doResize();
             else
-                _resizeEventId = window.setTimeout( function() { _doResize(); }, RESIZE_PERIOD - timeSinceResize);
+                self._resizeEventId = window.setTimeout( function() { self._doResize(); }, RESIZE_PERIOD - timeSinceResize);
         },
         
         onTabClose : function(aTab) {
-            _updateAttributes();
+            self._updateAttributes();
         },
         
         onTabSelect : function(aTab) {
-            _updateAttributes();
+            self._updateAttributes();
         },
         
         onTabTitleChange : function(aTab) {
-            _updateAttributes();
+            self._updateAttributes();
         },
         
         onTabTitleChangeCleared : function(aTab) {
-            _updateAttributes();
+            self._updateAttributes();
         },
-        
         
         setup : function() {
             
-            _launchers = window.document.getElementById('com_sppad_booky_launchers');
-            _overflowDecorator = window.document.getElementById('com_sppad_booky_launchers_overflow_decorator');
-            _overflowToolbarButton = window.document.getElementById('com_sppad_booky_launchers_overflow_button');
+            self._launchers = window.document.getElementById('com_sppad_booky_launchers');
+            self._overflowDecorator = window.document.getElementById('com_sppad_booky_launchers_overflow_decorator');
+            self._overflowToolbarButton = window.document.getElementById('com_sppad_booky_launchers_overflow_button');
             window.addEventListener('resize', this.onResize, false);
 
-            _doResize();
+            self._doResize();
         },
 
     }
-})();
+};

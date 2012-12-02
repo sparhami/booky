@@ -8,7 +8,7 @@ if (typeof com == "undefined") {
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
-// An nsINavBookmarkO_bserver
+// An nsINavBookmarkObserver
 com.sppad.BookmarksListener = {
         
 	onBeginUpdateBatch: function() {},
@@ -46,24 +46,26 @@ com.sppad.BookmarksListener = {
 		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
 	},
 	
-	QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsINavBookmarkO_bserver])
+	QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsINavBookmarkObserver])
 };
 
-com.sppad.Bookmarks = (function() {
+com.sppad.Bookmarks = new function() {
+    
+    let self = this;
 
-    let _bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
-    let _historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
+    self._bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
+    self._historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
     
-    let _options = _historyService.getNewQueryOptions();
-    let _query = _historyService.getNewQuery();
+    self._options = self._historyService.getNewQueryOptions();
+    self._query = self._historyService.getNewQuery();
     
-	let _getFolder = function(aFolderId) {
-	    _query.setFolders([aFolderId], 1);
-	    return _historyService.executeQuery(_query, _options).root;
+	self._getFolder = function(aFolderId) {
+	    self._query.setFolders([aFolderId], 1);
+	    return self._historyService.executeQuery(self._query, self._options).root;
 	};
 	
-	let _getQuicklaunchFolder = function() {
-	     let folder = _getFolder(_bs.bookmarksMenuFolder);
+	self._getQuicklaunchFolder = function() {
+	     let folder = self._getFolder(self._bs.bookmarksMenuFolder);
          
          try {
              folder.containerOpen = true;
@@ -75,21 +77,21 @@ com.sppad.Bookmarks = (function() {
                      return node.itemId;
              }
              
-             return _bs.createFolder(_bs.bookmarksMenuFolder, "QuickLaunchBar", _bs.DEFAULT_INDEX);
+             return self._bs.createFolder(self._bs.bookmarksMenuFolder, "QuickLaunchBar", self._bs.DEFAULT_INDEX);
          }
          finally {
              folder.containerOpen = false;
          }
 	};
 	
-    let _eventSupport = new com.sppad.EventSupport();
-	let _folderId = _getQuicklaunchFolder();
+    self._eventSupport = new com.sppad.EventSupport();
+	self._folderId = self._getQuicklaunchFolder();
 	
-    _bs.addObserver(com.sppad.BookmarksListener, false);
+    self._bs.addObserver(com.sppad.BookmarksListener, false);
     
     return {
-    	bookmarkFolder:			     _folderId,
-    	bookmarksService:            _bs,
+    	bookmarkFolder:			     self._folderId,
+    	bookmarksService:            self._bs,
     	
     	// event types
     	EVENT_ADD_BOOKMARK: 		'EVENT_ADD_BOOKMARK',
@@ -98,22 +100,22 @@ com.sppad.Bookmarks = (function() {
     	EVENT_LOAD_BOOKMARK: 		'EVENT_LOAD_BOOKMARK',
     	
     	cleanup: function() {
-    		_bs.removeObbserver(BookmarksListener);
+    		self._bs.removeObbserver(BookmarksListener);
     	},
     	
     	moveBookmarkGroupBefore: function(prevBookmarkIDs, bookmarkIDs) {
-    		let targetIndex = prevBookmarkIDs ? _bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
+    		let targetIndex = prevBookmarkIDs ? self._bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
     		
     		for(let i=0; i<bookmarkIDs.length; i++) {
     			if(i != 0)
-    				targetIndex = _bs.getItemIndex(bookmarkIDs[i-1]) + 1;
+    				targetIndex = self._bs.getItemIndex(bookmarkIDs[i-1]) + 1;
     			
-    			_bs.moveItem(bookmarkIDs[i], this.bookmarkFolder, targetIndex);
+    			self._bs.moveItem(bookmarkIDs[i], this.bookmarkFolder, targetIndex);
     		}
     	},
     	
       	bookmarkAdded: function(aItemId, aFolderId, aIndex) {
-            let folder = _getFolder(aFolderId);
+            let folder = self._getFolder(aFolderId);
       	    
       		try {
       		    folder.containerOpen = true;
@@ -125,7 +127,7 @@ com.sppad.Bookmarks = (function() {
                  */
                 let node = folder.getChild(aIndex);
 		    	if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
-		    		_eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_BOOKMARK);
+		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_BOOKMARK);
 		    	
 	    	} finally {
 	    	    folder.containerOpen = false;
@@ -133,14 +135,14 @@ com.sppad.Bookmarks = (function() {
     	},
     	
     	bookmarkRemoved: function(aItemId, aFolderId, aIndex) {
-            let folder = _getFolder(aFolderId);
+            let folder = self._getFolder(aFolderId);
             
     		try {
                 folder.containerOpen = true;
                 
                 let node = folder.getChild(aIndex);
 		    	if(node.type == node.RESULT_TYPE_URI)
-		    		_eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_BOOKMARK);
+		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_BOOKMARK);
 	
 	    	} finally {
 	    	    folder.containerOpen = false;
@@ -148,7 +150,7 @@ com.sppad.Bookmarks = (function() {
     	},
     	
     	bookmarkMoved: function(aItemId, aFolderId, aIndex) {
-            let folder = _getFolder(aFolderId);
+            let folder = self._getFolder(aFolderId);
     	    
     		try {
                 folder.containerOpen = true;
@@ -165,7 +167,7 @@ com.sppad.Bookmarks = (function() {
     	  	  	}
     	  	
     	    	if(node.type == node.RESULT_TYPE_URI)
-    	  	  		_eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_BOOKMARK);
+    	  	  		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_BOOKMARK);
     	    	
     		} finally {
     	  	  	folder.containerOpen = false;
@@ -181,11 +183,11 @@ com.sppad.Bookmarks = (function() {
          * @return The bookmark id of the added bookmark.
          */
     	addBookmark : function(aUriString) {
-    	    // Always call _getQuicklaunchFolder in case it has been deleted
+    	    // Always call self._getQuicklaunchFolder in case it has been deleted
     	    dump("aUriString " + aUriString + "\n");   
-    	    let folder = _getQuicklaunchFolder();
+    	    let folder = self._getQuicklaunchFolder();
             let uri = Services.io.newURI(aUriString, null, null);
-    	    return _bs.insertBookmark(folder, uri, _bs.DEFAULT_INDEX, "");
+    	    return self._bs.insertBookmark(folder, uri, self._bs.DEFAULT_INDEX, "");
     	},
     	
         /**
@@ -195,7 +197,7 @@ com.sppad.Bookmarks = (function() {
          *            The id of the item to remove
          */
         removeBookmark : function(aItemId) {
-            return _bs.removeItem(aItemId);
+            return self._bs.removeItem(aItemId);
         },
     	
     	/**
@@ -203,7 +205,7 @@ com.sppad.Bookmarks = (function() {
          * EVENT_LOAD_BOOKMARK event for each one.
          */
     	loadBookmarks: function() {
-            let folder = _getFolder(this.bookmarkFolder);
+            let folder = self._getFolder(this.bookmarkFolder);
     	    
     		try {
                 folder.containerOpen = true;
@@ -214,7 +216,7 @@ com.sppad.Bookmarks = (function() {
                     // Only bookmarks supported so far
                     switch(node.type) {
                         case node.RESULT_TYPE_URI:
-                            _eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_BOOKMARK);
+                            self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_BOOKMARK);
                             break;
                     }
 	        	}
@@ -224,8 +226,8 @@ com.sppad.Bookmarks = (function() {
         	}
         },
         
-        addListener: function(listener, type) { _eventSupport.addListener(listener, type); },
-        removeListener: function(listener, type) { _eventSupport.removeListener(listener, type); },
+        addListener: function(listener, type) { self._eventSupport.addListener(listener, type); },
+        removeListener: function(listener, type) { self._eventSupport.removeListener(listener, type); },
     }
-})();
+};
 

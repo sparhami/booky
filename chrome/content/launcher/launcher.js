@@ -10,7 +10,7 @@ com.sppad.Launcher = function(aID) {
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
     let self = this;
-    let _selectedIndex = 0;
+    this._selectedIndex = 0;
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;
@@ -64,7 +64,7 @@ com.sppad.Launcher = function(aID) {
     };
     
     this.getNextIndex = function(direction, reverse) {
-        let index = _selectedIndex;
+        let index = self._selectedIndex;
         let count = direction > 0 ? +1 :
                     direction < 0 ? -1 :
                     0;
@@ -90,7 +90,7 @@ com.sppad.Launcher = function(aID) {
             titlechanged |= tab.com_sppad_booky_titlechanged == true;
             
             if(tab == gBrowser.selectedTab)
-                _selectedIndex = i;
+                self._selectedIndex = i;
         }
         
         for(let i=0; i<this.tabs.length; i++)
@@ -229,7 +229,7 @@ com.sppad.Launcher = function(aID) {
         aTab.removeAttribute('com_sppad_booky_hasLauncher');
         
         this.updateAttributes();
-        _selectedIndex = Math.max(_selectedIndex, this.tabs.length - 1);
+        self._selectedIndex = Math.max(self._selectedIndex, this.tabs.length - 1);
     };
     
     /**

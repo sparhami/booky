@@ -8,13 +8,15 @@ if (typeof com == "undefined") {
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
-com.sppad.Booky = (function() {
+com.sppad.Booky = new function() {
     
-    let _connectingString = null;
-    let _newTabString = null;
-    let _selectedTab = null;
+    let self = this;
     
-    let bookmarkCount = 0;
+    self._connectingString = null;
+    self._newTabString = null;
+    self._selectedTab = null;
+    
+    self._bookmarkCount = 0;
     
     return {
         
@@ -25,8 +27,8 @@ com.sppad.Booky = (function() {
         },
         
         updateBookmarksCount: function(count) {
-            bookmarkCount += count;
-            document.getElementById('com_sppad_booky_container').setAttribute('bookmarkCount', bookmarkCount);
+            self._bookmarkCount += count;
+            document.getElementById('com_sppad_booky_container').setAttribute('self._bookmarkCount', self._bookmarkCount);
         },
         
         handleEvent : function(aEvent) {
@@ -159,16 +161,16 @@ com.sppad.Booky = (function() {
         },
         
         onTabSelect: function(aTab) {
-            if(_selectedTab.com_sppad_booky_launcher)
-                _selectedTab.com_sppad_booky_launcher.updateTab(_selectedTab);
+            if(self._selectedTab.com_sppad_booky_launcher)
+                self._selectedTab.com_sppad_booky_launcher.updateTab(self._selectedTab);
             
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
             
-            if(_selectedTab.com_sppad_booky_launcher || aTab.com_sppad_booky_launcher)
+            if(self._selectedTab.com_sppad_booky_launcher || aTab.com_sppad_booky_launcher)
                 com.sppad.Resizer.onTabSelect(aTab);
             
-            _selectedTab = aTab;
+            self._selectedTab = aTab;
         },
         
         onTabClose: function(aTab) {
@@ -184,12 +186,12 @@ com.sppad.Booky = (function() {
             let oldId = aTab.com_sppad_booky_id;
             
             // If the tab hasn't loaded yet, use the label for the id
-            if(newId === "about:blank" && aTab.label != _newTabString && aTab.label != "")
+            if(newId === "about:blank" && aTab.label != self._newTabString && aTab.label != "")
                 newId = this.getIdFromUriString(aTab.label);
 
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
-            if(aTab.label != _connectingString && (newId != oldId || !aTab.com_sppad_booky_launcher)) {
+            if(aTab.label != self._connectingString && (newId != oldId || !aTab.com_sppad_booky_launcher)) {
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
                 
@@ -256,10 +258,10 @@ com.sppad.Booky = (function() {
             this.loadPreferences();
             
             let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
-            _connectingString = tabStringBundle.getString("tabs.connecting");
-            _newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
+            self._connectingString = tabStringBundle.getString("tabs.connecting");
+            self._newTabString = tabStringBundle.getString("tabs.emptyTabTitle");
             
-            _selectedTab = gBrowser.selectedTab;
+            self._selectedTab = gBrowser.selectedTab;
             
             com.sppad.TabEvents.addListener(this);
             com.sppad.Bookmarks.addListener(this);
@@ -278,7 +280,7 @@ com.sppad.Booky = (function() {
             com.sppad.TabEvents.cleanup();
         },
     }
-})();
+};
 
 com.sppad.Booky.getIdFromTab = function(tab) {
     let currentUri = gBrowser.getBrowserForTab(tab).currentURI;

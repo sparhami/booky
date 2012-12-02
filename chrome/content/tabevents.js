@@ -8,33 +8,35 @@ if (typeof com == "undefined") {
 /**
  * Wrapper around browser tab events.
  */
-com.sppad.TabEvents = (function() {
+com.sppad.TabEvents = new function() {
+    
+    let self = this;
     
     /** For firing tab events */
-    let _eventSupport = new com.sppad.EventSupport();
+    self._eventSupport = new com.sppad.EventSupport();
     
     /** Keeps track of the previous title for each tab */
-    let _tabTitleMap = new WeakMap();
+    self._tabTitleMap = new WeakMap();
     
     /** The tabs that have a title changed event */
-    let _tabTitleChangedMap = new WeakMap();
+    self._tabTitleChangedMap = new WeakMap();
     
     /** All the tabs that are unread (really a set) */
-    let _tabUnreadMap = new WeakMap();
+    self._tabUnreadMap = new WeakMap();
     
     /** The tabs that are busy */
-    let _tabBusyMap = new WeakMap();
+    self._tabBusyMap = new WeakMap();
     
-    let _connectingString = null;
+    self._connectingString = null;
     
     /** Number of tabs that have a title change event */
-    let titleChangedTabsCount = 0;
+    self._titleChangedTabsCount = 0;
     
     /** Number of tabs that have an unread event */
-    let unreadTabsCount = 0;
+    self._unreadTabsCount = 0;
     
     /** Number of tabs that have a busy event */
-    let busyTabsCount = 0;
+    self._busyTabsCount = 0;
 
     
     return {
@@ -52,83 +54,83 @@ com.sppad.TabEvents = (function() {
         EVENT_TAB_BUSY_CLEARED: 'EVENT_TAB_BUSY_CLEARED',
         
         isTitleChanged: function(aTab) {
-            return _tabTitleChangedMap.has(aTab);
+            return self._tabTitleChangedMap.has(aTab);
         },
         
         isUnread: function(aTab) {
-            return _tabUnreadMap.has(aTab);
+            return self._tabUnreadMap.has(aTab);
         },
         
         setTitleChange: function(aTab) {
             
-            let oldLabel = _tabTitleMap.get(aTab);
+            let oldLabel = self._tabTitleMap.get(aTab);
             
             if(!aTab.selected
                 && aTab.label != oldLabel
-                && !_tabTitleChangedMap.has(aTab)
-                && aTab.label != _connectingString
-                && oldLabel != _connectingString
+                && !self._tabTitleChangedMap.has(aTab)
+                && aTab.label != self._connectingString
+                && oldLabel != self._connectingString
                 && oldLabel != undefined)
             {
-                titleChangedTabsCount++;
+                self._titleChangedTabsCount++;
             
-                _tabTitleChangedMap.set(aTab, "");
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_CHANGED);
+                self._tabTitleChangedMap.set(aTab, "");
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_CHANGED);
             }
             
         },
         
         clearTitleChange: function(aTab) {
             
-            if(_tabTitleChangedMap.has(aTab)) {
-                titleChangedTabsCount--;
+            if(self._tabTitleChangedMap.has(aTab)) {
+                self._titleChangedTabsCount--;
                 
-                _tabTitleChangedMap.delete(aTab);
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_CHANGED_CLEARED);
+                self._tabTitleChangedMap.delete(aTab);
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_CHANGED_CLEARED);
             }
             
         },
         
         setUnread: function(aTab) {
             
-            if(!aTab.selected && !_tabUnreadMap.has(aTab)) {
-                unreadTabsCount++;
+            if(!aTab.selected && !self._tabUnreadMap.has(aTab)) {
+                self._unreadTabsCount++;
                 
-                _tabUnreadMap.set(aTab, aTab.label);
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_UNREAD);
+                self._tabUnreadMap.set(aTab, aTab.label);
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_UNREAD);
             }
             
         },
         
         clearUnread: function(aTab) {
             
-            if(_tabUnreadMap.has(aTab)) {
-                unreadTabsCount--;
+            if(self._tabUnreadMap.has(aTab)) {
+                self._unreadTabsCount--;
                 
-                _tabUnreadMap.delete(aTab);
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_UNREAD_CLEARED);
+                self._tabUnreadMap.delete(aTab);
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_UNREAD_CLEARED);
             }
             
         },
         
         setBusy: function(aTab) {
             
-            if(aTab.hasAttribute("busy") && !_tabBusyMap.has(aTab)) {
-                busyTabsCount++;
+            if(aTab.hasAttribute("busy") && !self._tabBusyMap.has(aTab)) {
+                self._busyTabsCount++;
                 
-                _tabBusyMap.set(aTab, aTab.label);
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_BUSY);
+                self._tabBusyMap.set(aTab, aTab.label);
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_BUSY);
             }
             
         },
         
         clearBusy: function(aTab) {
             
-            if(!aTab.hasAttribute("busy") && _tabBusyMap.has(aTab)) {
-                busyTabsCount--;
+            if(!aTab.hasAttribute("busy") && self._tabBusyMap.has(aTab)) {
+                self._busyTabsCount--;
                 
-                _tabBusyMap.delete(aTab);
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_BUSY_CLEARED);
+                self._tabBusyMap.delete(aTab);
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_BUSY_CLEARED);
             }
             
         },
@@ -138,29 +140,29 @@ com.sppad.TabEvents = (function() {
             if(aTab.closed)
                 return;
           
-            let oldLabel = _tabTitleMap.get(aTab);
+            let oldLabel = self._tabTitleMap.get(aTab);
             
             if(aTab.label != oldLabel) {
-                _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_UPDATED);
+                self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_TITLE_UPDATED);
             }
             
             this.setBusy(aTab);
             this.clearBusy(aTab);
             this.setTitleChange(aTab);
-            _tabTitleMap.set(aTab, aTab.label); 
+            self._tabTitleMap.set(aTab, aTab.label); 
             
-            _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_ATTR_CHANGED);
+            self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_ATTR_CHANGED);
         },
         
         onTabOpen: function(aTab) {
-            _tabTitleMap.set(aTab, aTab.label);
-            _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_OPENED);
+            self._tabTitleMap.set(aTab, aTab.label);
+            self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_OPENED);
             
             this.setUnread(aTab);
         },
         
         onTabMove: function(aTab) {
-            _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_MOVED);
+            self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_MOVED);
         },
         
         onTabSelect: function(aTab)  {
@@ -171,7 +173,7 @@ com.sppad.TabEvents = (function() {
             this.clearUnread(aTab);
             this.clearTitleChange(aTab);
             
-            _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_SELECTED);
+            self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_SELECTED);
         },
         
         onTabClose: function(aTab) {
@@ -181,7 +183,7 @@ com.sppad.TabEvents = (function() {
             this.clearUnread(aTab);
             this.clearTitleChange(aTab);
             
-            _eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_CLOSED);
+            self._eventSupport.fire( { 'tab' : aTab }, this.EVENT_TAB_CLOSED);
         },
         
         handleEvent: function(aEvent) {
@@ -205,7 +207,7 @@ com.sppad.TabEvents = (function() {
         
         setup: function() {
             let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
-            _connectingString = tabStringBundle.getString("tabs.connecting");
+            self._connectingString = tabStringBundle.getString("tabs.connecting");
             
             let container = window.gBrowser.tabContainer;
 
@@ -216,7 +218,7 @@ com.sppad.TabEvents = (function() {
             container.addEventListener("TabAttrModified", this, false);
         },
         
-        addListener: function(listener, type) { _eventSupport.addListener(listener, type); },
-        removeListener: function(listener, type) { _eventSupport.removeListener(listener, type); },
+        addListener: function(listener, type) { self._eventSupport.addListener(listener, type); },
+        removeListener: function(listener, type) { self._eventSupport.removeListener(listener, type); },
     }
-})();
+};
