@@ -1,5 +1,9 @@
-var com = com || {};
-com.sppad = com.sppad || {};
+if (typeof com == "undefined") {
+  var com = {};
+  if (typeof com.sppad == "undefined") {
+      com.sppad = {};
+    };
+}
 
 /**
  * A dreaded utils class, which contains odds and ends. Since we're not supposed

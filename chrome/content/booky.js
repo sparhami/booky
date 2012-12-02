@@ -1,5 +1,9 @@
-var com = com || {};
-com.sppad = com.sppad || {};
+if (typeof com == "undefined") {
+  var com = {};
+  if (typeof com.sppad == "undefined") {
+      com.sppad = {};
+    };
+}
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');

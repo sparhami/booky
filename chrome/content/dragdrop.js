@@ -1,5 +1,9 @@
-var com = com || {};
-com.sppad = com.sppad || {};
+if (typeof com == "undefined") {
+  var com = {};
+  if (typeof com.sppad == "undefined") {
+      com.sppad = {};
+    };
+}
 
 com.sppad.DragDrop = (function() {
     /** The current insert point, used when dropping */
