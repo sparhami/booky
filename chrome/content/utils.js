@@ -12,7 +12,7 @@ if (typeof com == "undefined") {
  */
 com.sppad.Utils = (function() {
 	
-	var debugEnabled = true;
+	let debugEnabled = true;
 	
 	return {
 		
@@ -74,7 +74,7 @@ com.sppad.Utils = (function() {
          *            The object to remove from the array
          */
 		removeFromArray: function(array,  obj) {
-			for( var i = 0; i < array.length; i++)
+			for(let i = 0; i < array.length; i++)
 				if (array[i] == obj)
 					return array.splice(i, 1);
 			
@@ -88,7 +88,7 @@ com.sppad.Utils = (function() {
          *            The object to locate.
          */
 		getIndexInArray: function(array, obj) {
-	          for(var i = 0; i < array.length; i++)
+	          for(let i = 0; i < array.length; i++)
 	              if (array[i] == obj)
                       return i;
               
@@ -103,8 +103,8 @@ com.sppad.Utils = (function() {
  * the handleEvent function is called, bound to the object itself.
  */
 com.sppad.EventSupport = function() {
-	var _typeSpecificListeners = {};
-	var _allTypeListeners = [];
+    let _typeSpecificListeners = {};
+    let _allTypeListeners = [];
 	
     this._fireForListeners = function(event, listeners) {
         for (let i=0; i < listeners.length; i++) {

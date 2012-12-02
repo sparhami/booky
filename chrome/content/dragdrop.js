@@ -7,18 +7,18 @@ if (typeof com == "undefined") {
 
 com.sppad.DragDrop = (function() {
     /** The current insert point, used when dropping */
-    var _insertPoint = null;
-    var _insertValid = false;
-    var _menuIndicator = null;
-    var _toolbarIndicator = null;
-    var _overflowMenuCloseEventId = null;
+    let _insertPoint = null;
+    let _insertValid = false;
+    let _menuIndicator = null;
+    let _toolbarIndicator = null;
+    let _overflowMenuCloseEventId = null;
     
-    var _overflowButton = null;
-    var _launcherContainer = null;
-    var _overflowContainer = null;
-    var _noLaunchersContainer = null;
+    let _overflowButton = null;
+    let _launcherContainer = null;
+    let _overflowContainer = null;
+    let _noLaunchersContainer = null;
     
-    var canDrop = function(event) {
+    let canDrop = function(event) {
         let dt = event.dataTransfer;
         let mozUrl = dt.getData('text/x-moz-url');
         let uriList = dt.getData('text/uri-list');
@@ -31,7 +31,7 @@ com.sppad.DragDrop = (function() {
             return false;
     };
     
-    var getUris = function(event) {
+    let getUris = function(event) {
         
         let dt = event.dataTransfer;
         let mozUrl = dt.getData('text/x-moz-url');
@@ -61,7 +61,7 @@ com.sppad.DragDrop = (function() {
         return uris;
     };
     
-    var _closeOverflowMenu = function() {
+    let _closeOverflowMenu = function() {
         _overflowButton.open = false;
     };
     

@@ -51,7 +51,7 @@ com.sppad.PREFS = {
 com.sppad.PrefListener = function(branch_name, callback) {  
   // Keeping a reference to the observed preference branch or it will get
   // garbage collected.
-  var prefService = Components.classes["@mozilla.org/preferences-service;1"]  
+  let prefService = Components.classes["@mozilla.org/preferences-service;1"]  
     .getService(Components.interfaces.nsIPrefService);  
   this._branch = prefService.getBranch(branch_name);  
   this._branch.QueryInterface(Components.interfaces.nsIPrefBranch2);  
@@ -88,11 +88,11 @@ com.sppad.CurrentPrefs = {};
 
 com.sppad.Preferences = (function() {
     
-    var _eventSupport = new com.sppad.EventSupport();
-    var _EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
+    let _eventSupport = new com.sppad.EventSupport();
+    let _EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
     
     /** Listens for prefs changes in order to record them, fire event */
-    var _myListener = new com.sppad.PrefListener(com.sppad.PREF_BRANCH,  
+    let _myListener = new com.sppad.PrefListener(com.sppad.PREF_BRANCH,  
             function(branch, name) {  
                 com.sppad.CurrentPrefs[name] = _getPreference(branch, name);
                   
@@ -109,7 +109,7 @@ com.sppad.Preferences = (function() {
      *            preferences and their values. Objects and their keys/values
      *            map to sub-branches.
      */
-    var _setPrefBranch = function(prefBranch, prefs) {
+    let _setPrefBranch = function(prefBranch, prefs) {
         let branch = Services.prefs.getBranch(prefBranch);
         for (let [key, val] in Iterator(prefs)) {
             switch (typeof val) {
@@ -139,7 +139,7 @@ com.sppad.Preferences = (function() {
      *            preferences and their values. Objects and their keys/values
      *            map to sub-branches.
      */
-    var _setDefaultPrefBranch = function(prefBranch, prefs) {
+    let _setDefaultPrefBranch = function(prefBranch, prefs) {
         let branch = Services.prefs.getDefaultBranch(prefBranch);
         for (let [key, val] in Iterator(prefs)) {
             switch (typeof val) {
@@ -159,7 +159,7 @@ com.sppad.Preferences = (function() {
         }
     };
 
-    var _getPreference = function(branch, preference) {
+    let _getPreference = function(branch, preference) {
         
         switch (branch.getPrefType(preference)) {
             case Services.prefs.PREF_BOOL:

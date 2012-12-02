@@ -10,11 +10,11 @@ Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 com.sppad.Booky = (function() {
     
-    var _connectingString = null;
-    var _newTabString = null;
-    var _selectedTab = null;
+    let _connectingString = null;
+    let _newTabString = null;
+    let _selectedTab = null;
     
-    var bookmarkCount = 0;
+    let bookmarkCount = 0;
     
     return {
         
@@ -320,9 +320,9 @@ com.sppad.Booky.waitForLoad = function() {
 window.addEventListener("load", function() {
     
     function installButton() {
-        var id = "com_sppad_booky_container";
-        var toolbar = document.getElementById('TabsToolbar');
-        var anchor = document.getElementById('tabbrowser-tabs');
+        let id = "com_sppad_booky_container";
+        let toolbar = document.getElementById('TabsToolbar');
+        let anchor = document.getElementById('tabbrowser-tabs');
 
         toolbar.insertItem(id, anchor);
         toolbar.setAttribute("currentset", toolbar.currentSet);

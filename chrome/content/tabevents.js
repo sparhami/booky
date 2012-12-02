@@ -11,30 +11,30 @@ if (typeof com == "undefined") {
 com.sppad.TabEvents = (function() {
     
     /** For firing tab events */
-    var _eventSupport = new com.sppad.EventSupport();
+    let _eventSupport = new com.sppad.EventSupport();
     
     /** Keeps track of the previous title for each tab */
-    var _tabTitleMap = new WeakMap();
+    let _tabTitleMap = new WeakMap();
     
     /** The tabs that have a title changed event */
-    var _tabTitleChangedMap = new WeakMap();
+    let _tabTitleChangedMap = new WeakMap();
     
     /** All the tabs that are unread (really a set) */
-    var _tabUnreadMap = new WeakMap();
+    let _tabUnreadMap = new WeakMap();
     
     /** The tabs that are busy */
-    var _tabBusyMap = new WeakMap();
+    let _tabBusyMap = new WeakMap();
     
-    var _connectingString = null;
+    let _connectingString = null;
     
     /** Number of tabs that have a title change event */
-    var titleChangedTabsCount = 0;
+    let titleChangedTabsCount = 0;
     
     /** Number of tabs that have an unread event */
-    var unreadTabsCount = 0;
+    let unreadTabsCount = 0;
     
     /** Number of tabs that have a busy event */
-    var busyTabsCount = 0;
+    let busyTabsCount = 0;
 
     
     return {

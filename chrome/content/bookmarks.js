@@ -51,18 +51,18 @@ com.sppad.BookmarksListener = {
 
 com.sppad.Bookmarks = (function() {
 
-    var _bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
-    var _historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
+    let _bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
+    let _historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
     
-    var _options = _historyService.getNewQueryOptions();
-    var _query = _historyService.getNewQuery();
+    let _options = _historyService.getNewQueryOptions();
+    let _query = _historyService.getNewQuery();
     
-	var _getFolder = function(aFolderId) {
+	let _getFolder = function(aFolderId) {
 	    _query.setFolders([aFolderId], 1);
 	    return _historyService.executeQuery(_query, _options).root;
 	};
 	
-	var _getQuicklaunchFolder = function() {
+	let _getQuicklaunchFolder = function() {
 	     let folder = _getFolder(_bs.bookmarksMenuFolder);
          
          try {
@@ -82,8 +82,8 @@ com.sppad.Bookmarks = (function() {
          }
 	};
 	
-    var _eventSupport = new com.sppad.EventSupport();
-	var _folderId = _getQuicklaunchFolder();
+    let _eventSupport = new com.sppad.EventSupport();
+	let _folderId = _getQuicklaunchFolder();
 	
     _bs.addObserver(com.sppad.BookmarksListener, false);
     

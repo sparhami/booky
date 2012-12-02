@@ -9,8 +9,8 @@ com.sppad.Launcher = function(aID) {
     
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
-    var self = this;
-    var _selectedIndex = 0;
+    let self = this;
+    let _selectedIndex = 0;
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;

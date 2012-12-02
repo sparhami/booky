@@ -10,14 +10,14 @@ com.sppad.Resizer = (function() {
     const RESIZE_PERIOD = 100;
     const ITEM_WIDTH = 24;
     
-    var _launchers;
-    var _overflowDecorator;
-    var _overflowToolbarButton;
+    let _launchers;
+    let _overflowDecorator;
+    let _overflowToolbarButton;
     
-    var _lastResizeTime;
-    var _resizeEventId = null;
+    let _lastResizeTime;
+    let _resizeEventId = null;
 
-    var _doResize = function() {
+    let _doResize = function() {
         
         let windowSize = window.innerWidth;
         
@@ -100,7 +100,7 @@ com.sppad.Resizer = (function() {
         _lastResizeTime = Date.now();
     };
     
-    var _updateAttributes = function() {
+    let _updateAttributes = function() {
         let selected = false;
         let unread = false;
         let titlechanged = false;
