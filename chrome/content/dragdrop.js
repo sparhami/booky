@@ -149,7 +149,7 @@ com.sppad.DragDrop = (function() {
         
         dragexitMenuLaunchers : function(event) {
             window.clearTimeout(_overflowMenuCloseEventId);
-            _overflowMenuCloseEventId = window.setTimeout(_closeOverflowMenu, 650);
+            _overflowMenuCloseEventId = window.setTimeout( function() { _closeOverflowMenu(); } , 650);
            
             _menuIndicator.collapsed = true;
         },

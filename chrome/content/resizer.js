@@ -132,7 +132,7 @@ com.sppad.Resizer = (function() {
             if (timeSinceResize > RESIZE_PERIOD)
                 _doResize();
             else
-                _resizeEventId = window.setTimeout(_doResize, RESIZE_PERIOD - timeSinceResize);
+                _resizeEventId = window.setTimeout( function() { _doResize(); }, RESIZE_PERIOD - timeSinceResize);
         },
         
         onTabClose : function(aTab) {

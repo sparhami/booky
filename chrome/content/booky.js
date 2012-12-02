@@ -313,9 +313,8 @@ com.sppad.Booky.waitForLoad = function() {
         com.sppad.Booky.setup();
     }
     else {
-        window.setTimeout(com.sppad.Booky.waitForLoad, 1000);
+        window.setTimeout( function() { com.sppad.Booky.waitForLoad(); } , 1000);
     }
-
 };
 
 window.addEventListener("load", function() {
