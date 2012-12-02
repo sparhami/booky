@@ -10,10 +10,10 @@ if (typeof com == "undefined") {
  * Preferences code:
  * http://starkravingfinkle.org/blog/2011/01/restartless-add-ons-%E2%80%93-default-preferences/
  */
-const PREF_WINDOW_FILE = "chrome://booky/content/preferences/config.xul";
-const PREF_WINDOW_ID =  "booky-preferences-window"; 
-const PREF_BRANCH = "extensions.booky.";
-const PREFS = {
+com.sppad.PREF_WINDOW_FILE = "chrome://booky/content/preferences/config.xul";
+com.sppad.PREF_WINDOW_ID =  "booky-preferences-window"; 
+com.sppad.PREF_BRANCH = "extensions.booky.";
+com.sppad.PREFS = {
   
   // internal only
   debug: false,
@@ -48,7 +48,7 @@ const PREFS = {
  * @param {Function}
  *            callback must have the following arguments: branch, pref_leaf_name
  */  
-function PrefListener(branch_name, callback) {  
+com.sppad.PrefListener = function(branch_name, callback) {  
   // Keeping a reference to the observed preference branch or it will get
   // garbage collected.
   var prefService = Components.classes["@mozilla.org/preferences-service;1"]  
@@ -58,7 +58,7 @@ function PrefListener(branch_name, callback) {
   this._callback = callback;  
 }  
   
-PrefListener.prototype.observe = function(subject, topic, data) {  
+com.sppad.PrefListener.prototype.observe = function(subject, topic, data) {  
   if (topic == 'nsPref:changed')  
     this._callback(this._branch, data);  
 };  
@@ -68,7 +68,7 @@ PrefListener.prototype.observe = function(subject, topic, data) {
  *            trigger if true triggers the registered function on registration,
  *            that is, when this method is called.
  */  
-PrefListener.prototype.register = function(trigger) {  
+com.sppad.PrefListener.prototype.register = function(trigger) {  
   this._branch.addObserver('', this, false);  
   if (trigger) {  
     let that = this;  
@@ -78,7 +78,7 @@ PrefListener.prototype.register = function(trigger) {
   }  
 };  
   
-PrefListener.prototype.unregister = function() {  
+com.sppad.PrefListener.prototype.unregister = function() {  
   if (this._branch)  
     this._branch.removeObserver('', this);  
 };  
@@ -92,7 +92,7 @@ com.sppad.Preferences = (function() {
     var _EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
     
     /** Listens for prefs changes in order to record them, fire event */
-    var _myListener = new PrefListener(PREF_BRANCH,  
+    var _myListener = new com.sppad.PrefListener(com.sppad.PREF_BRANCH,  
             function(branch, name) {  
                 com.sppad.CurrentPrefs[name] = _getPreference(branch, name);
                   
@@ -175,7 +175,7 @@ com.sppad.Preferences = (function() {
     _myListener.register(true);
     
     // Set the default preferences.
-    _setDefaultPrefBranch(PREF_BRANCH, PREFS);
+    _setDefaultPrefBranch(com.sppad.PREF_BRANCH, com.sppad.PREFS);
     
     return {
         
@@ -193,7 +193,7 @@ com.sppad.Preferences = (function() {
             let obj = {};
             obj[preference] = value;
             
-            _setPrefBranch(PREF_BRANCH, obj );
+            _setPrefBranch(com.sppad.PREF_BRANCH, obj );
         },
         
         /**
@@ -203,7 +203,7 @@ com.sppad.Preferences = (function() {
          *            The preference to get
          */
         getPreference : function(preference) {
-            let branch = Services.prefs.getBranch(PREF_BRANCH);
+            let branch = Services.prefs.getBranch(com.sppad.PREF_BRANCH);
             return _getPreference(branch, preference);
         },
         
@@ -230,7 +230,7 @@ com.sppad.Preferences = (function() {
 	    	if (this._preferencesWindow == null || this._preferencesWindow.closed) {  
                 let instantApply = _getPreference(Services.prefs.getBranch('browser.preferences.'), 'instantApply');
 		        let features = "chrome,titlebar,toolbar,centerscreen" + (instantApply ? ",dialog=no" : ",modal");  
-		        this._preferencesWindow = aWindow.openDialog(PREF_WINDOW_FILE, PREF_WINDOW_ID, features);  
+		        this._preferencesWindow = aWindow.openDialog(com.sppad.PREF_WINDOW_FILE, com.sppad.PREF_WINDOW_ID, features);  
 		    }  
 		      
 	      	this._preferencesWindow.focus();  
