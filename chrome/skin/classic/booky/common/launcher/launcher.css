@@ -23,17 +23,17 @@ launcher[titlechanged="true"] .launcher-countindicators {
 
 #com_sppad_booky_launchers_overflow_decorator[unread="true"],
 launcher[unread="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 3px);
+	background-image: linear-gradient(to top, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 3px);
 }
 
 #com_sppad_booky_launchers_overflow_decorator[titlechanged="true"],
 launcher[titlechanged="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px);
+	background-image: linear-gradient(to top, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px);
 }
 
 #com_sppad_booky_launchers_overflow_decorator[selected="true"],
 launcher[selected="true"] {
-	background-image: -moz-linear-gradient(bottom, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 3px);
+	background-image: linear-gradient(to top, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 3px);
 }
 	
 .com_sppad_booky_tab > .menu-iconic-left,
@@ -43,15 +43,15 @@ launcher[selected="true"] {
 
 .com_sppad_booky_tab[unread="true"] > .menu-iconic-left,
 .menulauncher[unread="true"] > .menu-iconic-left {
-	background-image: -moz-linear-gradient(left, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 4px);
+	background-image: linear-gradient(to right, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 4px);
 }
 
 .com_sppad_booky_tab[titlechanged="true"] > .menu-iconic-left,
 .menulauncher[titlechanged="true"] > .menu-iconic-left{
-	background-image: -moz-linear-gradient(left, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 4px);
+	background-image: linear-gradient(to right, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 4px);
 }	
 
 .com_sppad_booky_tab[selected="true"] > .menu-iconic-left,
 .menulauncher[selected="true"] > .menu-iconic-left {
-	background-image: -moz-linear-gradient(left, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 4px);
+	background-image: linear-gradient(to right, rgba(224, 192, 0, 1) 3px, rgba(224, 192, 0, 0) 4px);
 }				

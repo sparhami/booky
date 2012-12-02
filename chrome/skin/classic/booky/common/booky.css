@@ -26,7 +26,7 @@
 }
 
 #com_sppad_booky_noLaunchersArea {
-	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px);
+	background-image: linear-gradient(to top, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px);
 	
 	padding: 3px 3px 4px 3px;
 }
