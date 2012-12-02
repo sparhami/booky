@@ -28,7 +28,7 @@ com.sppad.Booky = new function() {
         
         updateBookmarksCount: function(count) {
             self._bookmarkCount += count;
-            document.getElementById('com_sppad_booky_container').setAttribute('self._bookmarkCount', self._bookmarkCount);
+            document.getElementById('com_sppad_booky_container').setAttribute('bookmarkCount', self._bookmarkCount);
         },
         
         handleEvent : function(aEvent) {
