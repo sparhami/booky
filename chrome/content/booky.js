@@ -144,6 +144,7 @@ com.sppad.Booky = (function() {
         },
         
         onTabOpen: function(aTab) {
+            com.sppad.Utils.dump('Tab opened\n');
             this.onTabAttrChange(aTab);
         },
         
@@ -178,7 +179,7 @@ com.sppad.Booky = (function() {
 
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
-            if(aTab.label != _connectingString && newId != oldId) {
+            if(aTab.label != _connectingString && (newId != oldId || !aTab.com_sppad_booky_launcher)) {
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
                 

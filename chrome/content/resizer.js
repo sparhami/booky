@@ -58,26 +58,40 @@ com.sppad.Resizer = (function() {
         
         // Get the total number of open launchers
         for (let i=0; i < children.length; i++) {
-            if(children[i].getAttribute('hasSingle') == 'true') {
+            let ordinalOffset = 65536;
+            let child = children[i];
+            let open = child.getAttribute('hasSingle') == 'true';
+            
+            if(open) {
                 remainingOpenLaunchers++;
             }
+            
+            // Need to set offset from js because sharing the same ordinal using
+            // CSS does not leave the items in the right order. Do this before
+            // doing overflow checks because it may be done doing width, so they
+            // need to be in the right order.
+            if((hideLaunchersWithoutTabs || groupOpenTabs) && open) {
+                ordinalOffset = 0;
+            }
+
+            child.js.setAttribute('ordinal', + i + ordinalOffset);
         }
         
         // For each node, need to evaluate if it overflows or not
         for (let i=0; i < children.length; i++) {
             let overflow = false;
             let child = children[i];
-            let isOpen = child.getAttribute('hasSingle') == 'true';
+            let open = child.getAttribute('hasSingle') == 'true';
             
             // Always hide closed launchers when hideLaunchersWithoutTabs
-            if(hideLaunchersWithoutTabs && !isOpen) {
+            if(hideLaunchersWithoutTabs && !open) {
                 overflow = true;
             // Overflow when out of slots. Also when encountering a closed
             // launcher that
             // would take the slot of an open one when groupOpenTabs is set.
             } else if(overflowIcons) {
                 overflow = remainingSlots <= 0;
-                overflow |= groupOpenTabs && !isOpen && (remainingOpenLaunchers >= remainingSlots);
+                overflow |= groupOpenTabs && !open && (remainingOpenLaunchers >= remainingSlots);
             // Just overflow based on the right edge. Note: don't use
             // child.getBoundingClientRect().right as the nodes may be
             // collapsed, causing right to be the same as left.
@@ -86,7 +100,7 @@ com.sppad.Resizer = (function() {
                 overflow = childEnd > boxEnd;
             }
             
-            if(isOpen) {
+            if(open) {
                 remainingOpenLaunchers--;
             }
      
@@ -96,7 +110,7 @@ com.sppad.Resizer = (function() {
                 remainingSlots--; 
             }
             
-            child.js.setOverflow(overflow == true);
+            child.js.setAttribute('overflow', overflow == true);
         }
             
         _overflowToolbarButton.setAttribute('overflow', (overflowCount > 0) == true);

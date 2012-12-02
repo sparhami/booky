@@ -33,20 +33,11 @@ launcher .tabdock-item > label {
 }
 
 .launcher_menupopup_bookmarks > * {
-	-moz-box-ordinal-group: 2;
+	-moz-box-ordinal-group: 2147483647;
 }
 
 .launcher_menupopup_bookmarks > menuitem[bookmark] {
 	-moz-box-ordinal-group: 1;
-}
-
-
-#TabsToolbar[com_sppad_booky_hideLauncherStrategy="groupOpenTabs"] launcher[hasSingle="true"] {
-	-moz-box-ordinal-group: 1;
-}
-
-#TabsToolbar[com_sppad_booky_hideLauncherStrategy="groupOpenTabs"] launcher[hasSingle="false"] {
-	-moz-box-ordinal-group: 2;
 }
 
 launcher[overflow="true"] {
