@@ -17,8 +17,8 @@
 	<script type="application/x-javascript" src="resizer.js" />
 	<script type="application/x-javascript" src="dragdrop.js" />
 
-	<toolbar id="TabsToolbar">
-		<hbox id="com_sppad_booky_container">
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbaritem id="com_sppad_booky_container" label="&com.sppad.booky.ToolbarButton.label;">
 			<hbox class="quickLaunchArea">
 				<label id="com_sppad_booky_noLaunchersArea" tooltip="noLaunchersTooltip"
 					value="&com_sppad_booky_noLaunchersArea.label;" />
@@ -36,14 +36,13 @@
 				</hbox>
 
 				<scrollbox id="com_sppad_booky_launchers" />
-				<stack>
+				<stack id="com_sppad_booky_launchers_overflow_stack">
 					<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
 						type="menu">
 						<menupopup id="com_sppad_booky_launchers_overflow_menu" />
 					</toolbarbutton>
 					<box id="com_sppad_booky_launchers_overflow_decorator" />
 				</stack>
-
 
 				<tooltip id="com_sppad_booky_tooltip">
 					<label id="com_sppad_booky_tooltip_label" inherits="value" />
@@ -83,7 +82,7 @@
 				<stringbundle id="com_sppad_booky_tabstrings"
 					src="chrome://browser/locale/tabbrowser.properties" />
 			</stringbundleset>
-		</hbox>
-	</toolbar>
+		</toolbaritem>
+	</toolbarpalette>
 
 </overlay>

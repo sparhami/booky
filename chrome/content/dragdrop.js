@@ -234,8 +234,3 @@ com.sppad.dd = (function() {
         },
     }
 })();
-
-
-window.addEventListener("load", function() {
-    com.sppad.dd.setup();
-}, false);

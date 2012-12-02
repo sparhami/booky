@@ -9,3 +9,4 @@ skin	 	booky-platform 	classic/1.0		chrome/skin/classic/booky/win/ 				os=WINNT
 skin	 	booky-platform	classic/1.0		chrome/skin/classic/booky/mac/ 				os=Darwin
 
 overlay chrome://browser/content/browser.xul chrome://booky/content/booky.xul
+style chrome://global/content/customizeToolbar.xul chrome://booky/content/booky.css

@@ -168,7 +168,3 @@ com.sppad.Resizer = (function() {
 
     }
 })();
-
-window.addEventListener("load", function() {
-    com.sppad.Resizer.setup();
-}, false);

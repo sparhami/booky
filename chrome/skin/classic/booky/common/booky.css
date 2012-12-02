@@ -20,6 +20,11 @@
 	-moz-margin-end: 0 !important;
 }
 
+#com_sppad_booky_launchers_overflow_stack > * {
+	margin-bottom: 2px !important;
+	margin-top: 4px !important;
+}
+
 #com_sppad_booky_noLaunchersArea {
 	background-image: -moz-linear-gradient(bottom, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px);
 	

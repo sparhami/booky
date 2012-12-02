@@ -216,7 +216,3 @@ com.sppad.TabEvents = (function() {
         removeListener: function(listener, type) { _eventSupport.removeListener(listener, type); },
     }
 })();
-
-window.addEventListener("load", function() {
-    com.sppad.TabEvents.setup();
-}, false);

@@ -291,21 +291,43 @@ com.sppad.Booky.getIdFromUriString = function(uriString) {
     }
 };
 
-window.addEventListener("load", function() {
-    // Workaround: overlaying TabsToolbar with insertbefore doesn't work.
-    var id = "com_sppad_booky_container";
-    var toolbar = document.getElementById('TabsToolbar');
-    var anchor = document.getElementById('tabbrowser-tabs');
-    toolbar.insertItem(id, anchor);
-
-    /*
-     * Do not persist, since we may be uninstalled. Only want this since we
-     * aren't a proper toolbar button. This prevents the add-on from being
-     * removed from the GUI when the user presses the restore default set button
-     * in customize toolbar.
-     */
-    let defaultset = toolbar.getAttribute('defaultset') + id + ',';
-    toolbar.setAttribute("defaultset", defaultset);
+com.sppad.Booky.waitForLoad = function() {
     
-    com.sppad.Booky.setup();
+    // Keep waiting for Booky to load....
+    // Not sure how to initialize while acting as a toolbaritem otherwise
+    if(document.getElementById('com_sppad_booky_container')) {
+        com.sppad.Resizer.setup();
+        com.sppad.TabEvents.setup();
+        com.sppad.dd.setup();
+        com.sppad.Booky.setup();
+    }
+    else {
+        window.setTimeout(com.sppad.Booky.waitForLoad, 1000);
+    }
+
+};
+
+window.addEventListener("load", function() {
+    
+    function installButton() {
+        var id = "com_sppad_booky_container";
+        var toolbar = document.getElementById('TabsToolbar');
+        var anchor = document.getElementById('tabbrowser-tabs');
+
+        toolbar.insertItem(id, anchor);
+        toolbar.setAttribute("currentset", toolbar.currentSet);
+        document.persist(toolbar.id, "currentset");
+    }
+
+    function firstRun(extensions) {
+        if (extensions.get("booky@com.sppad").firstRun)
+            installButton();
+    }
+
+    if (Application.extensions)
+        firstRun(Application.extensions);
+    else
+        Application.getExtensions(firstRun);
+    
+    com.sppad.Booky.waitForLoad();
 }, false);
