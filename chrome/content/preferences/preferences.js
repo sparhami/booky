@@ -1,19 +1,19 @@
 if (typeof com == "undefined") {
   var com = {};
-  if (typeof com.sppad == "undefined") {
-      com.sppad = {};
-    };
 }
+
+com.sppad = com.sppad || {};
+com.sppad.booky = com.sppad.booky || {};
 
 /**
  * The default prefs code in here modified from Mark Finkle's Default
  * Preferences code:
  * http://starkravingfinkle.org/blog/2011/01/restartless-add-ons-%E2%80%93-default-preferences/
  */
-com.sppad.PREF_WINDOW_FILE = "chrome://booky/content/preferences/config.xul";
-com.sppad.PREF_WINDOW_ID =  "booky-preferences-window"; 
-com.sppad.PREF_BRANCH = "extensions.booky.";
-com.sppad.PREFS = {
+com.sppad.booky.PREF_WINDOW_FILE = "chrome://booky/content/preferences/config.xul";
+com.sppad.booky.PREF_WINDOW_ID =  "booky-preferences-window"; 
+com.sppad.booky.PREF_BRANCH = "extensions.booky.";
+com.sppad.booky.PREFS = {
   
   // internal only
   debug: false,
@@ -48,7 +48,7 @@ com.sppad.PREFS = {
  * @param {Function}
  *            callback must have the following arguments: branch, pref_leaf_name
  */  
-com.sppad.PrefListener = function(branch_name, callback) {  
+com.sppad.booky.PrefListener = function(branch_name, callback) {  
   // Keeping a reference to the observed preference branch or it will get
   // garbage collected.
   let prefService = Components.classes["@mozilla.org/preferences-service;1"]  
@@ -58,7 +58,7 @@ com.sppad.PrefListener = function(branch_name, callback) {
   this._callback = callback;  
 }  
   
-com.sppad.PrefListener.prototype.observe = function(subject, topic, data) {  
+com.sppad.booky.PrefListener.prototype.observe = function(subject, topic, data) {  
   if (topic == 'nsPref:changed')  
     this._callback(this._branch, data);  
 };  
@@ -68,7 +68,7 @@ com.sppad.PrefListener.prototype.observe = function(subject, topic, data) {
  *            trigger if true triggers the registered function on registration,
  *            that is, when this method is called.
  */  
-com.sppad.PrefListener.prototype.register = function(trigger) {  
+com.sppad.booky.PrefListener.prototype.register = function(trigger) {  
   this._branch.addObserver('', this, false);  
   if (trigger) {  
     let that = this;  
@@ -78,27 +78,27 @@ com.sppad.PrefListener.prototype.register = function(trigger) {
   }  
 };  
   
-com.sppad.PrefListener.prototype.unregister = function() {  
+com.sppad.booky.PrefListener.prototype.unregister = function() {  
   if (this._branch)  
     this._branch.removeObserver('', this);  
 };  
   
 
-com.sppad.CurrentPrefs = {};
+com.sppad.booky.CurrentPrefs = {};
 
-com.sppad.Preferences = new function() {
+com.sppad.booky.Preferences = new function() {
     
     let self = this;
     
-    self._eventSupport = new com.sppad.EventSupport();
+    self._eventSupport = new com.sppad.booky.EventSupport();
     self._EVENT_PREFERENCE_CHANGED = 'EVENT_PREFERENCE_CHANGED';
     
     /** Listens for prefs changes in order to record them, fire event */
-    self._myListener = new com.sppad.PrefListener(com.sppad.PREF_BRANCH,  
+    self._myListener = new com.sppad.booky.PrefListener(com.sppad.booky.PREF_BRANCH,  
         function(branch, name) {  
-            com.sppad.CurrentPrefs[name] = _getPreference(branch, name);
+            com.sppad.booky.CurrentPrefs[name] = _getPreference(branch, name);
               
-            self._eventSupport.fire( { 'name' : name, 'value' : com.sppad.CurrentPrefs[name] }, self._EVENT_PREFERENCE_CHANGED);
+            self._eventSupport.fire( { 'name' : name, 'value' : com.sppad.booky.CurrentPrefs[name] }, self._EVENT_PREFERENCE_CHANGED);
         });  
     
     /**
@@ -177,7 +177,7 @@ com.sppad.Preferences = new function() {
     self._myListener.register(true);
     
     // Set the default preferences.
-    _setDefaultPrefBranch(com.sppad.PREF_BRANCH, com.sppad.PREFS);
+    _setDefaultPrefBranch(com.sppad.booky.PREF_BRANCH, com.sppad.booky.PREFS);
     
     return {
         
@@ -195,7 +195,7 @@ com.sppad.Preferences = new function() {
             let obj = {};
             obj[preference] = value;
             
-            _setPrefBranch(com.sppad.PREF_BRANCH, obj );
+            _setPrefBranch(com.sppad.booky.PREF_BRANCH, obj );
         },
         
         /**
@@ -205,7 +205,7 @@ com.sppad.Preferences = new function() {
          *            The preference to get
          */
         getPreference : function(preference) {
-            let branch = Services.prefs.getBranch(com.sppad.PREF_BRANCH);
+            let branch = Services.prefs.getBranch(com.sppad.booky.PREF_BRANCH);
             return _getPreference(branch, preference);
         },
         
@@ -232,7 +232,7 @@ com.sppad.Preferences = new function() {
 	    	if (this._preferencesWindow == null || this._preferencesWindow.closed) {  
                 let instantApply = _getPreference(Services.prefs.getBranch('browser.preferences.'), 'instantApply');
 		        let features = "chrome,titlebar,toolbar,centerscreen" + (instantApply ? ",dialog=no" : ",modal");  
-		        this._preferencesWindow = aWindow.openDialog(com.sppad.PREF_WINDOW_FILE, com.sppad.PREF_WINDOW_ID, features);  
+		        this._preferencesWindow = aWindow.openDialog(com.sppad.booky.PREF_WINDOW_FILE, com.sppad.booky.PREF_WINDOW_ID, features);  
 		    }  
 		      
 	      	this._preferencesWindow.focus();  

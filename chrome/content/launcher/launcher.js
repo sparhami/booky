@@ -1,11 +1,11 @@
 if (typeof com == "undefined") {
   var com = {};
-  if (typeof com.sppad == "undefined") {
-      com.sppad = {};
-    };
 }
 
-com.sppad.Launcher = function(aID) {
+com.sppad = com.sppad || {};
+com.sppad.booky = com.sppad.booky || {};
+
+com.sppad.booky.Launcher = function(aID) {
     
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
@@ -195,7 +195,7 @@ com.sppad.Launcher = function(aID) {
      */
     this.addTab = function(aTab) {
         if(aTab.com_sppad_booky_launcher === this) {
-            com.sppad.Utils.dump('WW - This tab is already in this launcher.\n');
+            com.sppad.booky.Utils.dump('WW - This tab is already in this launcher.\n');
             return;
         }
         
@@ -218,13 +218,13 @@ com.sppad.Launcher = function(aID) {
      */
     this.removeTab = function(aTab) {
         if(aTab.com_sppad_booky_launcher !== this) {
-            com.sppad.Utils.dump('WW - This tab is not in this launcher.\n');
+            com.sppad.booky.Utils.dump('WW - This tab is not in this launcher.\n');
             return;
         }
         
         this.tabsUpdateTime = Date.now();
         
-        com.sppad.Utils.removeFromArray(this.tabs, aTab);
+        com.sppad.booky.Utils.removeFromArray(this.tabs, aTab);
         delete aTab.com_sppad_booky_launcher;
         aTab.removeAttribute('com_sppad_booky_hasLauncher');
         
@@ -247,7 +247,7 @@ com.sppad.Launcher = function(aID) {
         
         this.bookmarkIDs.push(aBookmarkId);
         this.bookmarks.push(aUri);
-        com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId] = this;
+        com.sppad.booky.Launcher.bookmarkIDToLauncher[aBookmarkId] = this;
         
         this.setImage(anImage);
     };
@@ -261,11 +261,11 @@ com.sppad.Launcher = function(aID) {
     this.removeBookmark = function(aBookmarkId) {
         this.bookmarksUpdateTime = Date.now();
         
-        let index = com.sppad.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
+        let index = com.sppad.booky.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
         this.bookmarkIDs.splice(index, 1);
         this.bookmarks.splice(index, 1);
         
-        delete com.sppad.Launcher.bookmarkIDToLauncher[aBookmarkId];
+        delete com.sppad.booky.Launcher.bookmarkIDToLauncher[aBookmarkId];
         
         if(this.bookmarkIDs.length == 0) {
             let container = document.getElementById('com_sppad_booky_launchers');
@@ -274,8 +274,8 @@ com.sppad.Launcher = function(aID) {
             for(let i=0; i<this.tabs.length; i++)
                 this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
            
-            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launchers, this);
-            com.sppad.Utils.removeFromArray(com.sppad.Launcher.launcherIDs, this.id);
+            com.sppad.booky.Utils.removeFromArray(com.sppad.booky.Launcher.launchers, this);
+            com.sppad.booky.Utils.removeFromArray(com.sppad.booky.Launcher.launcherIDs, this.id);
         }
     };
     
@@ -317,11 +317,11 @@ com.sppad.Launcher = function(aID) {
     this.node.js = self;
     this.menuNode.js = self;
     
-    com.sppad.Launcher.launchers.push(this);
-    com.sppad.Launcher.launcherIDs.push(this.id);
+    com.sppad.booky.Launcher.launchers.push(this);
+    com.sppad.booky.Launcher.launcherIDs.push(this.id);
 }
 
-com.sppad.Launcher.prototype.mouseenter = function() {
+com.sppad.booky.Launcher.prototype.mouseenter = function() {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     let tooltipLabel = document.getElementById('com_sppad_booky_tooltip_label');
 
@@ -336,12 +336,12 @@ com.sppad.Launcher.prototype.mouseenter = function() {
     tooltip.openPopup(this.node, 'after_start', xOffset, yOffset, false, false);
 };
 
-com.sppad.Launcher.prototype.mouseleave = function() {
+com.sppad.booky.Launcher.prototype.mouseleave = function() {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.hidePopup();
 };      
 
-com.sppad.Launcher.prototype.dragstart = function(event) {
+com.sppad.booky.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
     dt.setData('text/uri-list', this.bookmarks[0]);
     dt.addElement(event.target);
@@ -353,16 +353,16 @@ com.sppad.Launcher.prototype.dragstart = function(event) {
     }
 };
 
-com.sppad.Launcher.prototype.dragend = function(event) {
+com.sppad.booky.Launcher.prototype.dragend = function(event) {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.setAttribute('hidden', false);
 };
 
-com.sppad.Launcher.prototype.command = function(event) {
+com.sppad.booky.Launcher.prototype.command = function(event) {
     gBrowser.selectedTab = event.target.tab;
 };
 
-com.sppad.Launcher.prototype.click = function(event) {
+com.sppad.booky.Launcher.prototype.click = function(event) {
     
     if(event.button == 0)
         this.switchTo(true, true, event.shiftKey);
@@ -373,12 +373,12 @@ com.sppad.Launcher.prototype.click = function(event) {
     
 };
 
-com.sppad.Launcher.prototype.scroll = function(event) {
+com.sppad.booky.Launcher.prototype.scroll = function(event) {
     dump("scroll " + event.detail + " shift? " + event.shiftKey + "\n");
     this.switchTo(false, event.detail < 0, event.shiftKey);  
 };
 
-com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
+com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
     let node = event.target;
     if(node.bookmarksUpdateTime != this.bookmarksUpdateTime) {
         // Remove all items that are bookmarks, not others (such as open all
@@ -407,7 +407,7 @@ com.sppad.Launcher.prototype.bookmarksPopupShowing = function(event) {
     }
 };
 
-com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
+com.sppad.booky.Launcher.prototype.tabsPopupShowing = function(event) {
     let node = event.target;
     if(node.tabsUpdateTime != this.tabsUpdateTime)
     {
@@ -438,33 +438,33 @@ com.sppad.Launcher.prototype.tabsPopupShowing = function(event) {
     }
 };
 
-com.sppad.Launcher.prototype.contextShowing = function(event) {
+com.sppad.booky.Launcher.prototype.contextShowing = function(event) {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.setAttribute('hidden', true);
     
     this.disableMenuItems(this.node);
 };
 
-com.sppad.Launcher.prototype.contextHiding = function(event) {
+com.sppad.booky.Launcher.prototype.contextHiding = function(event) {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     tooltip.setAttribute('hidden', false);
 };
 
-com.sppad.Launcher.prototype.overflowMenuShowing = function(event) {
+com.sppad.booky.Launcher.prototype.overflowMenuShowing = function(event) {
     this.disableMenuItems(this.menuNode);
 };
 
-com.sppad.Launcher.prototype.close = function(event) {
+com.sppad.booky.Launcher.prototype.close = function(event) {
     while(this.tabs.length > 0)
         gBrowser.removeTab(this.tabs.pop());
 };
 
-com.sppad.Launcher.prototype.reload = function(event) {
+com.sppad.booky.Launcher.prototype.reload = function(event) {
     for(let i=0; i<this.tabs.length; i++)
         gBrowser.reloadTab(this.tabs[i]);
 };
 
-com.sppad.Launcher.prototype.remove = function(event) {
+com.sppad.booky.Launcher.prototype.remove = function(event) {
     /*
      * Bookmark event firing actually removes the bookmark. Don't use a while
      * loop since if things go bad, could get stuck. Note that we only ever
@@ -473,10 +473,10 @@ com.sppad.Launcher.prototype.remove = function(event) {
      */
     let count = this.bookmarkIDs.length;
     for(let i=0; i<count; i++)
-        com.sppad.Bookmarks.removeBookmark(this.bookmarkIDs[0]);
+        com.sppad.booky.Bookmarks.removeBookmark(this.bookmarkIDs[0]);
 };
 
-com.sppad.Launcher.prototype.openAllBookmarks = function(event) {
+com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
     let count = this.bookmarkIDs.length;
     for(let i=0; i<count; i++)
         this.openTab(this.bookmarks[i]);
@@ -484,19 +484,19 @@ com.sppad.Launcher.prototype.openAllBookmarks = function(event) {
 
 
 /** Maps bookmark ids to Launchers */
-com.sppad.Launcher.bookmarkIDToLauncher = {};
+com.sppad.booky.Launcher.bookmarkIDToLauncher = {};
 /** Maps ids to Launchers */
-com.sppad.Launcher.launchers = new Array();
-com.sppad.Launcher.launcherIDs = new Array();
-com.sppad.Launcher.getLauncher = function(aID) {
-    let index = com.sppad.Utils.getIndexInArray(this.launcherIDs, aID);
-    return (index >=  0) ? this.launchers[index] : new com.sppad.Launcher(aID);
+com.sppad.booky.Launcher.launchers = new Array();
+com.sppad.booky.Launcher.launcherIDs = new Array();
+com.sppad.booky.Launcher.getLauncher = function(aID) {
+    let index = com.sppad.booky.Utils.getIndexInArray(this.launcherIDs, aID);
+    return (index >=  0) ? this.launchers[index] : new com.sppad.booky.Launcher(aID);
 };
 
-com.sppad.Launcher.hasLauncher = function(aID) {
-    return com.sppad.Utils.getIndexInArray(this.launcherIDs, aID) >= 0;
+com.sppad.booky.Launcher.hasLauncher = function(aID) {
+    return com.sppad.booky.Utils.getIndexInArray(this.launcherIDs, aID) >= 0;
 };
 
-com.sppad.Launcher.getLauncherFromBookmarkId = function(aBookmarkId) {
+com.sppad.booky.Launcher.getLauncherFromBookmarkId = function(aBookmarkId) {
     return this.bookmarkIDToLauncher[aBookmarkId];
 }

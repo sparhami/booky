@@ -1,11 +1,11 @@
 if (typeof com == "undefined") {
   var com = {};
-  if (typeof com.sppad == "undefined") {
-      com.sppad = {};
-    };
 }
 
-com.sppad.Resizer = new function() {
+com.sppad = com.sppad || {};
+com.sppad.booky = com.sppad.booky || {};
+
+com.sppad.booky.Resizer = new function() {
 
     const RESIZE_PERIOD = 100;
     const ITEM_WIDTH = 24;
@@ -23,12 +23,12 @@ com.sppad.Resizer = new function() {
         
         let windowSize = window.innerWidth;
         
-        let overflowIcons = com.sppad.CurrentPrefs['overflowMode'] === 'maxIcons';
-        let hideLaunchersWithoutTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
-        let groupOpenTabs = com.sppad.CurrentPrefs['hideLauncherStrategy'] === 'groupOpenTabs';
+        let overflowIcons = com.sppad.booky.CurrentPrefs['overflowMode'] === 'maxIcons';
+        let hideLaunchersWithoutTabs = com.sppad.booky.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
+        let groupOpenTabs = com.sppad.booky.CurrentPrefs['hideLauncherStrategy'] === 'groupOpenTabs';
         
-        let maxWidth = windowSize * (com.sppad.CurrentPrefs['maxWidth'] / 100);
-        let maxIcons = com.sppad.CurrentPrefs['maxIcons'];
+        let maxWidth = windowSize * (com.sppad.booky.CurrentPrefs['maxWidth'] / 100);
+        let maxIcons = com.sppad.booky.CurrentPrefs['maxIcons'];
         
         self._launchers.maxWidth = overflowIcons == true ? windowSize : maxWidth;
         

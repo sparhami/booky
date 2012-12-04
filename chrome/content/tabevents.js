@@ -1,19 +1,19 @@
 if (typeof com == "undefined") {
   var com = {};
-  if (typeof com.sppad == "undefined") {
-      com.sppad = {};
-    };
 }
+
+com.sppad = com.sppad || {};
+com.sppad.booky = com.sppad.booky || {};
 
 /**
  * Wrapper around browser tab events.
  */
-com.sppad.TabEvents = new function() {
+com.sppad.booky.TabEvents = new function() {
     
     let self = this;
     
     /** For firing tab events */
-    self._eventSupport = new com.sppad.EventSupport();
+    self._eventSupport = new com.sppad.booky.EventSupport();
     
     /** Keeps track of the previous title for each tab */
     self._tabTitleMap = new WeakMap();

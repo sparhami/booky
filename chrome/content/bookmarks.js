@@ -1,55 +1,55 @@
 if (typeof com == "undefined") {
   var com = {};
-  if (typeof com.sppad == "undefined") {
-      com.sppad = {};
-    };
 }
+
+com.sppad = com.sppad || {};
+com.sppad.booky = com.sppad.booky || {};
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 // An nsINavBookmarkObserver
-com.sppad.BookmarksListener = {
+com.sppad.booky.BookmarksListener = {
         
 	onBeginUpdateBatch: function() {},
 	onEndUpdateBatch: function() {},
 	
 	onItemAdded: function(aItemId, aFolder, aIndex) {
-		if(aFolder === com.sppad.Bookmarks.bookmarkFolder) {
-		    com.sppad.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
-		    com.sppad.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
+		if(aFolder === com.sppad.booky.Bookmarks.bookmarkFolder) {
+		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
+		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
 		}
 	},
 	onItemRemoved: function(aItemId, aFolder, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
-		if(aParentId === com.sppad.Bookmarks.bookmarkFolder) {
-		    let index = com.sppad.Bookmarks.bookmarksService.getItemIndex(aItemId);
-		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
+		if(aParentId === com.sppad.booky.Bookmarks.bookmarkFolder) {
+		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
+		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		}
 	},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
-		if(aProperty === "uri" && aParentId === com.sppad.Bookmarks.bookmarkFolder) {
-		    let index = com.sppad.Bookmarks.bookmarksService.getItemIndex(aItemId);
-		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
-		    com.sppad.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
-		    com.sppad.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
+		if(aProperty === "uri" && aParentId === com.sppad.booky.Bookmarks.bookmarkFolder) {
+		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
+		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
+		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
+		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
 		}
 	},
 	onItemVisited: function(aBookmarkId, aVisitID, time) {},
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
-		if(aNewParent === aOldParent && aNewParent === com.sppad.Bookmarks.bookmarkFolder)
-		    com.sppad.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
-		else if(aNewParent === com.sppad.Bookmarks.bookmarkFolder)
-		    com.sppad.Bookmarks.bookmarkAdded(aItemId, aNewParent, aNewIndex);
-		else if(aOldParent === com.sppad.Bookmarks.bookmarkFolder)
-		    com.sppad.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
+		if(aNewParent === aOldParent && aNewParent === com.sppad.booky.Bookmarks.bookmarkFolder)
+		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
+		else if(aNewParent === com.sppad.booky.Bookmarks.bookmarkFolder)
+		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aNewParent, aNewIndex);
+		else if(aOldParent === com.sppad.booky.Bookmarks.bookmarkFolder)
+		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
 	},
 	
 	QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsINavBookmarkObserver])
 };
 
-com.sppad.Bookmarks = new function() {
+com.sppad.booky.Bookmarks = new function() {
     
     let self = this;
 
@@ -84,10 +84,10 @@ com.sppad.Bookmarks = new function() {
          }
 	};
 	
-    self._eventSupport = new com.sppad.EventSupport();
+    self._eventSupport = new com.sppad.booky.EventSupport();
 	self._folderId = self._getQuicklaunchFolder();
 	
-    self._bs.addObserver(com.sppad.BookmarksListener, false);
+    self._bs.addObserver(com.sppad.booky.BookmarksListener, false);
     
     return {
     	bookmarkFolder:			     self._folderId,
