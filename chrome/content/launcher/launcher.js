@@ -205,6 +205,9 @@ com.sppad.booky.Launcher = function(aID) {
         aTab.com_sppad_booky_launcher = this;
         aTab.com_sppad_booky_launcherId = this.id;
         aTab.setAttribute('com_sppad_booky_hasLauncher', true);
+        // If a tab is dragged into the quicklaunch area, it might get stuck
+        // part way with a transformX.
+        aTab.style.transform = 0;   
         
         this.updateAttributes();
         this.placeTab(aTab, false);
