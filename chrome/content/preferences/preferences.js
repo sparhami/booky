@@ -33,10 +33,11 @@ com.sppad.booky.PREFS = {
   // One of overflowOnly, noOpenTabs, groupOpenTabs
   hideLauncherStrategy: 'overflowOnly',
 
-  // How many history menu items to display
+  // How many days to display for the history menu
+  historyMenuDays: 7,
+  
+  // Man number of items to display for the history menu
   historyMenuItems: 15,
-  
-  
   
   // True or false
   grayoutInactiveIcons: true,

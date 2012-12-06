@@ -10,21 +10,21 @@ Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 com.sppad.booky.History = new function() {
     
+    const DAY_IN_MICROSECONDS = 24 * 60 * 60 * 1000000;
+    
     let self = this;
     
     self.hs = Components.classes["@mozilla.org/browser/nav-history-service;1"]
         .getService(Components.interfaces.nsINavHistoryService);
     
-    this.queryHistory = function(domain, maxResults) {
-        
-        dump("querying history for " + domain + "\n");
+    this.queryHistory = function(domain, numberOfDays, maxResults) {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
         
         let query = self.hs.getNewQuery();
         query.beginTimeReference = query.TIME_RELATIVE_NOW;
-        query.beginTime = 7 * -24 * 60 * 60 * 1000000; // 24 hours ago in microseconds
+        query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
         query.endTimeReference = query.TIME_RELATIVE_NOW;
         query.endTime = 0; // now
         query.domain = domain;

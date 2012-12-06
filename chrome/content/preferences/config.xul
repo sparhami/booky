@@ -88,6 +88,8 @@
 		<preferences>
 			<preference id="extensions.booky.historyMenuItems" name="extensions.booky.historyMenuItems"
 				type="int" />
+			<preference id="extensions.booky.historyMenuDays" name="extensions.booky.historyMenuDays"
+				type="int" />
 		</preferences>
 
 		<groupbox>
@@ -100,11 +102,18 @@
 						<caption label="&preference.historyMenu.label;" />
 					</row>
 					<row>
-						<hbox align="center">
-							<label value="&preference.historyMenuItems.label;" />
-							<textbox id="com_sppad_booky_preference_historyMenuItems" type="number"
-								min="0" max="100" preference="extensions.booky.historyMenuItems" />
-						</hbox>
+						<vbox>
+							<hbox align="center">
+								<label value="&preference.historyMenuDays.label;" flex="1"/>
+								<textbox id="com_sppad_booky_preference_historyMenuDays" type="number"
+									min="0" max="365" preference="extensions.booky.historyMenuDays" />
+							</hbox>
+							<hbox align="center">
+								<label value="&preference.historyMenuItems.label;" flex="1"/>
+								<textbox id="com_sppad_booky_preference_historyMenuItems" type="number"
+									min="0" max="100" preference="extensions.booky.historyMenuItems" />
+							</hbox>
+						</vbox>
 					</row>
 				</rows>
 			</grid>

@@ -41,6 +41,7 @@
 <!ENTITY preference.hideLauncherStrategy.groupOpenTabs.label "Group those with open tabs to the left">
 
 <!ENTITY preference.historyMenu.label "History Menu Options">
+<!ENTITY preference.historyMenuDays.label "Number of days of history to display">
 <!ENTITY preference.historyMenuItems.label "Maximum number of items to display">
 
 

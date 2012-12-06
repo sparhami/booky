@@ -391,8 +391,10 @@ com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
     while(node.firstChild)
         node.removeChild(node.firstChild);
     
+    
+    let numberOfDays = com.sppad.booky.CurrentPrefs['historyMenuDays'];
     let maxResults = com.sppad.booky.CurrentPrefs['historyMenuItems'];
-    let results = com.sppad.booky.History.queryHistory(this.id, maxResults);
+    let results = com.sppad.booky.History.queryHistory(this.id, numberOfDays, maxResults);
     
     for(let i=0; i<results.length; i++) {
         let result = results[i];
