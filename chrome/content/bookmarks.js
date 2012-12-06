@@ -160,7 +160,6 @@ com.sppad.booky.Bookmarks = new function() {
                 let nodeNext = null;
     	  	  	for(let i=aIndex+1; i<folder.childCount; i++) {
     	  	  		if(folder.getChild(i).type === node.type) {
-    	  	  		    dump("node next at index " + i + "\n");
     	  	  		    nodeNext = folder.getChild(i);
     	  	  			break;
     	  	  		}	
@@ -184,7 +183,6 @@ com.sppad.booky.Bookmarks = new function() {
          */
     	addBookmark : function(aUriString) {
     	    // Always call self._getQuicklaunchFolder in case it has been deleted
-    	    dump("aUriString " + aUriString + "\n");   
     	    let folder = self._getQuicklaunchFolder();
             let uri = Services.io.newURI(aUriString, null, null);
     	    return self._bs.insertBookmark(folder, uri, self._bs.DEFAULT_INDEX, "");

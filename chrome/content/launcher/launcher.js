@@ -374,15 +374,51 @@ com.sppad.booky.Launcher.prototype.click = function(event) {
 };
 
 com.sppad.booky.Launcher.prototype.scroll = function(event) {
-    dump("scroll " + event.detail + " shift? " + event.shiftKey + "\n");
     this.switchTo(false, event.detail < 0, event.shiftKey);  
 };
 
+/**
+ * Fills out the history menu in either the launcher context or overflow menus.
+ * Cleans out all existing items and performs a new query to add all relevant
+ * items.
+ */
+com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
+    let node = event.target;
+    
+    while(node.firstChild)
+        node.removeChild(node.firstChild);
+    
+    let maxResults = com.sppad.booky.CurrentPrefs['historyMenuItems'];
+    let results = com.sppad.booky.History.queryHistory(this.id, maxResults);
+    
+    for(let i=0; i<results.length; i++) {
+        let result = results[i];
+        
+        let menuitem = document.createElement('menuitem');
+        menuitem.setAttribute('label', result.title);
+        menuitem.setAttribute('image', result.icon);
+        menuitem.setAttribute('tooltiptext', result.uri);
+        menuitem.addEventListener('command', function(event) { this.openTab(result.uri); }.bind(this) );
+        
+        node.appendChild(menuitem);
+    }
+
+    if(results.length == 0) {
+        let menuitem = document.getElementById('com_sppad_booky_noHistoryMenuItem').cloneNode(false);
+        node.appendChild(menuitem);
+    }
+}
+
+/**
+ * Fills out the bookmarks menu in either the launcher context or overflow
+ * menus. Checks if any new bookmarks have been added since the last time the
+ * menu has been opened. If so, it cleans out all existing items and adds all
+ * the bookmarks to the menu.
+ */
 com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
     let node = event.target;
     if(node.bookmarksUpdateTime != this.bookmarksUpdateTime) {
-        // Remove all items that are bookmarks, not others (such as open all
-        // bookmarks menu item).
+        // Do not remove nodes that are not bookmarks
         let toRemove = new Array();
         let children = node.childNodes;
         for(let i=0; i<children.length; i++)
@@ -407,6 +443,15 @@ com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
     }
 };
 
+/**
+ * Fills out the tabs menu in either the launcher context or overflow menus.
+ * Checks if any new tabs have been added since the last time the menu has been
+ * opened. If so, it cleans out all existing items and adds all the tabs to the
+ * menu.
+ * 
+ * Whether or not there have been any new tabs added, the properties for the
+ * menu item are updated based on the tab attributes.
+ */
 com.sppad.booky.Launcher.prototype.tabsPopupShowing = function(event) {
     let node = event.target;
     if(node.tabsUpdateTime != this.tabsUpdateTime)
@@ -468,7 +513,7 @@ com.sppad.booky.Launcher.prototype.remove = function(event) {
     /*
      * Bookmark event firing actually removes the bookmark. Don't use a while
      * loop since if things go bad, could get stuck. Note that we only ever
-     * remove the 0th index. Also don't want to check length everythime since it
+     * remove the 0th index. Also don't want to check length everytime since it
      * will be modified.
      */
     let count = this.bookmarkIDs.length;

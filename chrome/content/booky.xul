@@ -8,14 +8,23 @@
 <overlay id="booky"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+	<script type="application/x-javascript" src="chrome://browser/content/places/history-panel.js" />
+
 	<script type="application/x-javascript" src="utils.js" />
 	<script type="application/x-javascript" src="bookmarks.js" />
+	<script type="application/x-javascript" src="history.js" />
 	<script type="application/x-javascript" src="tabevents.js" />
 	<script type="application/x-javascript" src="launcher/launcher.js" />
 	<script type="application/x-javascript" src="preferences/preferences.js" />
 	<script type="application/x-javascript" src="booky.js" />
 	<script type="application/x-javascript" src="resizer.js" />
 	<script type="application/x-javascript" src="dragdrop.js" />
+
+	<window>
+		<stringbundleset>
+			<stringbundle id="com_sppad_booky_tabstrings" src="chrome://browser/locale/tabbrowser.properties" />
+		</stringbundleset>
+	</window>
 
 	<toolbarpalette id="BrowserToolbarPalette">
 		<toolbaritem id="com_sppad_booky_container" label="&com.sppad.booky.ToolbarButton.label;">
@@ -67,6 +76,12 @@
 								</menupopup>
 							</menu>
 
+							<menu class="launcher_menu_history" label="&com_sppad_booky_history.label;"
+								accesskey="&com_sppad_booky_history.accesskey;">
+								<menupopup class="launcher_menupopup_history" onpopupshowing="js.historyPopupShowing(event);">
+								</menupopup>
+							</menu>
+
 							<menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
 								accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
 							<menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
@@ -75,13 +90,10 @@
 								accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
 						</menupopup>
 					</menu>
+					
+					<menuitem id="com_sppad_booky_noHistoryMenuItem" label="&com_sppad_booky_noHistoryMenuItem.label;" disabled="true"/>
 				</box>
 			</hbox>
-
-			<stringbundleset>
-				<stringbundle id="com_sppad_booky_tabstrings"
-					src="chrome://browser/locale/tabbrowser.properties" />
-			</stringbundleset>
 		</toolbaritem>
 	</toolbarpalette>
 

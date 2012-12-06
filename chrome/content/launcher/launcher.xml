@@ -50,6 +50,12 @@
 					</xul:menupopup>
 				</xul:menu>
 
+				<xul:menu class="launcher_menu_history" label="&com_sppad_booky_history.label;"
+					accesskey="&com_sppad_booky_history.accesskey;">
+					<xul:menupopup class="launcher_menupopup_history" onpopupshowing="js.historyPopupShowing(event);">
+					</xul:menupopup>
+				</xul:menu>
+
 				<xul:menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
 					accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
 				<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"

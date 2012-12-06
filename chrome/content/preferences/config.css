@@ -1,5 +1,6 @@
 #com_sppad_booky_preference_maxWidth,
-#com_sppad_booky_preference_maxIcons {
+#com_sppad_booky_preference_maxIcons,
+#com_sppad_booky_preference_historyMenuItems {
 	min-width: 3.5em;
 	max-width: 3.5em;
 }
