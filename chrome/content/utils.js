@@ -86,6 +86,9 @@ com.sppad.booky.Utils = (function() {
          * 
          * @param obj
          *            The object to locate.
+         * 
+         * @return -1 if the object does not exist in the array, the index it
+         *         occurs at otherwise
          */
 		getIndexInArray: function(array, obj) {
 	          for(let i = 0; i < array.length; i++)

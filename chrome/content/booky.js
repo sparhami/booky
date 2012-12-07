@@ -14,12 +14,26 @@ com.sppad.booky.Booky = new function() {
     
     self._connectingString = null;
     self._newTabString = null;
+    
+    /**
+     * The currently selected tab. Used to set the launcher to not selected when
+     * a new tab is selected.
+     */
     self._selectedTab = null;
     
+    /**
+     * Keeps track of the number of bookmarks to show the drag hint area when
+     * there are none.
+     */
     self._bookmarkCount = 0;
     
     return {
         
+        /**
+         * Loads existing tabs when the addon is initially activated. Some tabs
+         * may be open due to a session restore or the addon being in the
+         * customize toolbar on application startup.
+         */
         loadTabs: function() {
             let container = gBrowser.tabContainer;
             for(let i = 0; i < container.itemCount; i++)
@@ -55,10 +69,6 @@ com.sppad.booky.Booky = new function() {
                     return this.onTabTitleChange(aEvent.tab);
                 case com.sppad.booky.TabEvents.EVENT_TAB_TITLE_CHANGED_CLEARED:
                     return this.onTabTitleChangeCleared(aEvent.tab);
-                case com.sppad.booky.TabEvents.EVENT_TAB_UNREAD:
-                    return this.onTabUnread(aEvent.tab);
-                case com.sppad.booky.TabEvents.EVENT_TAB_UNREAD_CLEARED:
-                    return this.onTabUnreadCleared(aEvent.tab);
                 case com.sppad.booky.TabEvents.EVENT_TAB_BUSY:
                     return this.onTabBusy(aEvent.tab);
                 case com.sppad.booky.TabEvents.EVENT_TAB_BUSY_CLEARED:
@@ -96,10 +106,19 @@ com.sppad.booky.Booky = new function() {
             }
         },
         
+        /**
+         * Applies an attribute to a DOM node, prefixed with com_sppad_booky_ to
+         * avoid clashing with other addons.
+         * 
+         * @param id
+         *            The ID of the DOM node to apply the attribute on
+         * @param name
+         *            The attribute name
+         * @param value
+         *            The attribute value
+         */
         applyAttribute: function(id, name, value) {
             document.getElementById(id).setAttribute("com_sppad_booky_" + name, value);
-            // Force resize so things are hidden / shown appropriately.
-            com.sppad.booky.Resizer.onResize();
         },
         
         onBookmarkAdded: function(event) {
@@ -137,8 +156,6 @@ com.sppad.booky.Booky = new function() {
         },
         
         onBookmarkMoved: function(event) {
-            com.sppad.booky.Utils.dump('onBookmarkMoved\n');
-            
             let node = event.node;
             let nodeNext = event.nodeNext;
             
@@ -152,11 +169,11 @@ com.sppad.booky.Booky = new function() {
         },
         
         onTabMove: function(aTab) {
-            com.sppad.booky.Utils.dump('onTabMove\n');
+            // com.sppad.booky.Utils.dump('onTabMove\n');
+            // TODO - Implement tab move code to reorder things appropriately
         },
         
         onTabOpen: function(aTab) {
-            com.sppad.booky.Utils.dump('onTabOpen\n');
             this.onTabAttrChange(aTab);
         },
         
@@ -226,13 +243,6 @@ com.sppad.booky.Booky = new function() {
             }
         },
         
-        onTabUnread: function(aTab) {
-
-        },
-        
-        onTabUnreadCleared: function(aTab) {
-
-        },
         
         onTabBusy: function(aTab) {
             aTab.com_sppad_booky_busy = true;
@@ -270,20 +280,19 @@ com.sppad.booky.Booky = new function() {
             com.sppad.booky.Bookmarks.loadBookmarks();
             this.loadTabs();
         },
-        
-        cleanup: function() {
-            com.sppad.booky.Preferences.removeListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
-            
-            com.sppad.booky.TabEvents.removeListener(this);
-            com.sppad.booky.Bookmarks.removeListener(this);
-            
-            com.sppad.booky.TabEvents.cleanup();
-        },
     }
 };
 
-com.sppad.booky.Booky.getIdFromTab = function(tab) {
-    let currentUri = gBrowser.getBrowserForTab(tab).currentURI;
+/**
+ * Gets the launcher ID for a given tab. Currently this is based off the
+ * hostname only.
+ * 
+ * @param aTab
+ *            A browser tab
+ * @return The id for the launcher for aTab
+ */
+com.sppad.booky.Booky.getIdFromTab = function(aTab) {
+    let currentUri = gBrowser.getBrowserForTab(aTab).currentURI;
     
     try {
         return currentUri.host || currentUri.asciiSpec;
@@ -291,11 +300,19 @@ com.sppad.booky.Booky.getIdFromTab = function(tab) {
         try {
             return currentUri.asciiSpec;
         } catch(err) {
-            return tab.label;
+            return aTab.label;
         }
     }
 };
 
+/**
+ * Gets the launcher ID for a given URI. Currently this is based off the
+ * hostname only.
+ * 
+ * @param uriString
+ *            A string representing a URI
+ * @return The id for the launcher for uriString
+ */
 com.sppad.booky.Booky.getIdFromUriString = function(uriString) {
     try {
         return Services.io.newURI(uriString, null, null).host || uriString;
@@ -304,23 +321,36 @@ com.sppad.booky.Booky.getIdFromUriString = function(uriString) {
     }
 };
 
+/*
+ * Keep waiting for Booky to load. Not sure how to initialize while acting as a
+ * toolbaritem otherwise. A toolbar button has an onload event, but not a
+ * toolbaritem.
+ */
 com.sppad.booky.Booky.waitForLoad = function() {
     
-    // Keep waiting for Booky to load....
-    // Not sure how to initialize while acting as a toolbaritem otherwise
+    // Can find DOM node, therefore loaded
     if(document.getElementById('com_sppad_booky_container')) {
         com.sppad.booky.Resizer.setup();
         com.sppad.booky.TabEvents.setup();
         com.sppad.booky.DragDrop.setup();
         com.sppad.booky.Booky.setup();
     }
+    /*
+     * Not loaded, need to wait to be loaded again.
+     * 
+     * TODO - This can extend through the lifecycle of the application if the
+     * user puts the add-on into the customize toolbar and forgets about us.
+     */
     else {
         window.setTimeout( function() { com.sppad.booky.Booky.waitForLoad(); } , 1000);
     }
 };
 
-window.addEventListener("load", function() {
-    
+/**
+ * Check for first run and initialize location if we are being loaded for the
+ * first time.
+ */
+com.sppad.booky.Booky.checkFirstRun = function() {
     function installButton() {
         let id = "com_sppad_booky_container";
         let toolbar = document.getElementById('TabsToolbar');
@@ -340,6 +370,9 @@ window.addEventListener("load", function() {
         firstRun(Application.extensions);
     else
         Application.getExtensions(firstRun);
-    
+}
+
+window.addEventListener("load", function() {
+    com.sppad.booky.Booky.checkFirstRun();
     com.sppad.booky.Booky.waitForLoad();
 }, false);

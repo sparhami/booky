@@ -7,7 +7,16 @@ com.sppad.booky = com.sppad.booky || {};
 
 com.sppad.booky.Resizer = new function() {
 
+    /*
+     * Minimum amount of time, in milliseconds, between subsequent calls to
+     * _doResize
+     */
     const RESIZE_PERIOD = 100;
+    
+    /*
+     * Width of an item in pixels. Hard coded for now. Needed to determine where
+     * the right edge of a collapsed icon would be, were it not collapsed.
+     */
     const ITEM_WIDTH = 24;
     
     let self = this;
@@ -16,30 +25,35 @@ com.sppad.booky.Resizer = new function() {
     self._overflowDecorator;
     self._overflowToolbarButton;
     
+    // Used to prevent resizing too often
     self._lastResizeTime;
+    // Tracks timeout event for resize
     self._resizeEventId = null;
 
     self._doResize = function() {
         
         let windowSize = window.innerWidth;
         
-        let overflowIcons = com.sppad.booky.CurrentPrefs['overflowMode'] === 'maxIcons';
+        let overflowByIcons = com.sppad.booky.CurrentPrefs['overflowMode'] === 'maxIcons';
         let hideLaunchersWithoutTabs = com.sppad.booky.CurrentPrefs['hideLauncherStrategy'] === 'noOpenTabs';
         let groupOpenTabs = com.sppad.booky.CurrentPrefs['hideLauncherStrategy'] === 'groupOpenTabs';
         
         let maxWidth = windowSize * (com.sppad.booky.CurrentPrefs['maxWidth'] / 100);
         let maxIcons = com.sppad.booky.CurrentPrefs['maxIcons'];
         
-        self._launchers.maxWidth = overflowIcons == true ? windowSize : maxWidth;
+        // If overflowing by icons, then maxWidth should be the window size
+        self._launchers.maxWidth = overflowByIcons == true ? windowSize : maxWidth;
         
+        // Setting size lets us find the ending pixel of the space we have
         let boxEnd = self._launchers.getBoundingClientRect().left + maxWidth;
-        let children = self._launchers.children;
         
+        let children = self._launchers.children;
         let overflowCount = 0;
         let remainingOpenLaunchers = 0;
         let remainingSlots = maxIcons;
         
-        // Get the total number of open launchers
+        // Get the number of open launchers. Also set the ordinal when
+        // appropriate.
         for (let i=0; i < children.length; i++) {
             let ordinalOffset = 65536;
             let child = children[i];
@@ -49,15 +63,17 @@ com.sppad.booky.Resizer = new function() {
                 remainingOpenLaunchers++;
             }
             
-            // Need to set offset from js because sharing the same ordinal using
-            // CSS does not leave the items in the right order. Do this before
-            // doing overflow checks because it may be done doing width, so they
-            // need to be in the right order.
+            /*
+             * Need to set offset from Javascript because sharing the same
+             * ordinal using CSS does not leave the items in the right order. Do
+             * this before doing overflow checks because it may be done doing
+             * width, so they need to be in the right order.
+             */
             if((hideLaunchersWithoutTabs || groupOpenTabs) && open) {
                 ordinalOffset = 0;
             }
 
-            // Don't set ordinal for the menu node since it is extremely buggy.
+            // Don't set ordinal for the menu node since it is buggy.
             child.js.setOrdinal(i + ordinalOffset);
         }
         
@@ -70,16 +86,22 @@ com.sppad.booky.Resizer = new function() {
             // Always hide closed launchers when hideLaunchersWithoutTabs
             if(hideLaunchersWithoutTabs && !open) {
                 overflow = true;
-            // Overflow when out of slots. Also when encountering a closed
-            // launcher that
-            // would take the slot of an open one when groupOpenTabs is set.
-            } else if(overflowIcons) {
+            } 
+            /*
+             * Overflow when out of slots. Also when encountering a closed
+             * launcher that would take the slot of an open one when
+             * groupOpenTabs is set.
+             */
+            else if(overflowByIcons) {
                 overflow = remainingSlots <= 0;
                 overflow |= groupOpenTabs && !open && (remainingOpenLaunchers >= remainingSlots);
-            // Just overflow based on the right edge. Note: don't use
-            // child.getBoundingClientRect().right as the nodes may be
-            // collapsed, causing right to be the same as left.
-            } else {
+            }
+            /*
+             * Just overflow based on the right edge. Note: don't use
+             * child.getBoundingClientRect().right as the nodes may be
+             * collapsed, causing right to be the same as left.
+             */
+            else {
                 let childEnd = child.getBoundingClientRect().left + ITEM_WIDTH;
                 overflow = childEnd > boxEnd;
             }
@@ -102,6 +124,11 @@ com.sppad.booky.Resizer = new function() {
         self._lastResizeTime = Date.now();
     };
     
+    /*
+     * Updates the attributes for the overflow decorator, which styles the
+     * overflow icon. Checks all overflowed nodes to see if they have a status
+     * that the user needs to know about.
+     */
     self._updateAttributes = function() {
         let selected = false;
         let unread = false;
@@ -126,6 +153,10 @@ com.sppad.booky.Resizer = new function() {
 
     return {
 
+        /*
+         * Handles any situation where the items displayed for the launchers may
+         * change, such as the screen resizing or a new bookmark being added,
+         */
         onResize : function() {
             window.clearTimeout(self._resizeEventId);
 

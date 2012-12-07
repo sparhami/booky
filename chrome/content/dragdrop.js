@@ -9,18 +9,36 @@ com.sppad.booky.DragDrop = new function() {
     
     let self = this;
     
-    /** The current insert point, used when dropping */
-    self._insertPoint = null;
+    /**
+     * Whether or not what is going to potentially be dropped is a valid thing
+     * to drop. Also used to prevent the last drop location from being used for
+     * extremely short drags.
+     */
     self._insertValid = false;
-    self._menuIndicator = null;
-    self._toolbarIndicator = null;
+    
+    /**
+     * Used to track delay for closing overflow menu during drag/drop when the
+     * mouse leaves the overflow menu.
+     */
     self.overflowMenuCloseEventId = null;
     
+    // DOM nodes
     self._overflowButton = null;
     self._launcherContainer = null;
     self._overflowContainer = null;
     self._noLaunchersContainer = null;
+    self._menuIndicator = null;
+    self._toolbarIndicator = null;
     
+    /** The current insert point, used when dropping */
+    self._insertPoint = null;
+    
+    /**
+     * Checks if the given drag event has something that can be dropped.
+     * 
+     * @param event
+     *            A drag event containing a dataTransfer object
+     */
     self._canDrop = function(event) {
         let dt = event.dataTransfer;
         let mozUrl = dt.getData('text/x-moz-url');
@@ -34,6 +52,15 @@ com.sppad.booky.DragDrop = new function() {
             return false;
     };
     
+    /**
+     * Gets the URIs from a drop event. Used to drop all the things that need to
+     * be dropped.
+     * 
+     * @param event
+     *            A drag event containing a dataTransfer object
+     * 
+     * @return An array of strings representing the URIs to drop.
+     */
     self._getUris = function(event) {
         
         let dt = event.dataTransfer;
@@ -71,9 +98,12 @@ com.sppad.booky.DragDrop = new function() {
     return {
         /**
          * Sets the insertion point for a subsequent drop event along with the
-         * tab drop location ind. This code checks to see if the mouse is either
-         * before or past the midway point of a given tab and positions the ind
-         * before or after, respectively.
+         * tab drop location indicator. This code checks to see if the mouse is
+         * either before or past the midway point of a given tab and positions
+         * the indicator before or after, respectively.
+         * 
+         * @param event
+         *            A drag event
          */
         dragoverLaunchers : function(event) {
             if(!self._canDrop(event))
@@ -112,6 +142,15 @@ com.sppad.booky.DragDrop = new function() {
             self._insertValid = true;
         },
         
+        /**
+         * Sets the insertion point for a subsequent drop event along with the
+         * tab drop location indicator. This code checks to see if the mouse is
+         * either before or past the midway point of a given tab and positions
+         * the indicator before or after, respectively.
+         * 
+         * @param event
+         *            A drag event
+         */
         dragoverMenuLaunchers : function(event) {
             if(self.overflowMenuCloseEventId)
                 window.clearTimeout(self.overflowMenuCloseEventId);
@@ -137,6 +176,8 @@ com.sppad.booky.DragDrop = new function() {
                 locY = rect.top;
                 self._insertPoint = obj;
             } else {
+                // May not have a previous sibling, in which case need to
+                // position accordingly
                 locY = ps ? ps.getBoundingClientRect().top : rect.top
                         - rect.height;
                 self._insertPoint = ps;
@@ -150,6 +191,13 @@ com.sppad.booky.DragDrop = new function() {
             self._insertValid = true;
         },
         
+        /**
+         * Handles the mouse leaving the overflow menu during a drag event. Sets
+         * a timeout to close the menu if they leave for too long.
+         * 
+         * @param event
+         *            A drag event
+         */
         dragexitMenuLaunchers : function(event) {
             window.clearTimeout(self.overflowMenuCloseEventId);
             self.overflowMenuCloseEventId = window.setTimeout( function() { self._closeOverflowMenu(); } , 650);
@@ -158,6 +206,13 @@ com.sppad.booky.DragDrop = new function() {
         },
   
         
+        /**
+         * Handles the mouse hovering over the overflow menu button during a
+         * drag event. Opens the overflow menu.
+         * 
+         * @param event
+         *            A drag event
+         */
         dragoverMenuButton : function(event) {
             if(self.overflowMenuCloseEventId)
                 window.clearTimeout(self.overflowMenuCloseEventId);
@@ -172,11 +227,25 @@ com.sppad.booky.DragDrop = new function() {
             self._overflowButton.open = true;
         },
         
+        /**
+         * Used for dragging over the hint area when there are no launchers.
+         * 
+         * @param event
+         *            A drag event
+         */
         dragoverNoLaunchers : function(event) {
             event.preventDefault();
             self._insertValid = true;
         },
         
+        /**
+         * Handles a drop event, if it is valid. Goes through all the URIs from
+         * the drop event and adds bookmarks if needed. The bookmarks for the
+         * new or existing launcher are then moved to the correct location.
+         * 
+         * @param event
+         *            A drop event
+         */
         drop : function(event) {
             if(!self._insertValid) {
                 com.sppad.booky.Utils.dump("Not a valid target to drop.\n");
@@ -199,11 +268,12 @@ com.sppad.booky.DragDrop = new function() {
                 let bookmarkIDs = launcher.bookmarkIDs;
                 let prevBookmarkIDs = self._insertPoint && self._insertPoint.js.bookmarkIDs;
 
+                // Move the bookmarks, which will cause the launchers to be moved appropriately.
                 com.sppad.booky.Bookmarks.moveBookmarkGroupBefore(prevBookmarkIDs, bookmarkIDs);
             }
             
             self._insertPoint = null;
-            self._insertValid = true;
+            self._insertValid = false;
         },
         
         dragend : function(event) {
@@ -215,6 +285,7 @@ com.sppad.booky.DragDrop = new function() {
             self._toolbarIndicator.collapsed = true;
         },
 
+        /** Registers event listeners and gets DOM nodes */
         setup: function() {
             self._menuIndicator = document.getElementById('com_sppad_booky_menuDropmarker');
             self._toolbarIndicator = document.getElementById('com_sppad_booky_toolbarDropmarker');

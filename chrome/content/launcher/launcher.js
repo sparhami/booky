@@ -74,7 +74,11 @@ com.sppad.booky.Launcher = function(aID) {
     };
     
     /**
-     * Updates the attributes applied to the DOM nodes for this launcher.
+     * Updates the attributes applied (busy, unread, selected, titlechanged,
+     * label, hasSingle, hasMultiple to the DOM nodes for this launcher.
+     * 
+     * If any tab in the launcher the selected tab, then all tabs in the
+     * launcher are set as being in the active group.
      */
     this.updateAttributes = function() {
         let busy = false;
@@ -146,11 +150,21 @@ com.sppad.booky.Launcher = function(aID) {
 
     /**
      * Sets the image for the launcher or the default icon if none is specified.
+     * 
+     * @param anImage
+     *            The URI for the image to set as the launcher icon
      */
     this.setImage = function(anImage) {
         this.setAttribute('image', anImage || 'chrome://mozapps/skin/places/defaultFavicon.png');
     };
     
+    /**
+     * Sets the ordinal on the launcher node. Note that it does not set it on
+     * the overflow node as that appears to be rather buggy at the moment.
+     * 
+     * @param ordinal
+     *            The ordinal of the launcher
+     */
     this.setOrdinal = function(ordinal) {
         this.node.setAttribute('ordinal', ordinal);
     };
@@ -324,6 +338,10 @@ com.sppad.booky.Launcher = function(aID) {
     com.sppad.booky.Launcher.launcherIDs.push(this.id);
 }
 
+/**
+ * Shows a tooltip when hovering over a launcher. The tooltip is centered
+ * horizontally, below the launcher.
+ */
 com.sppad.booky.Launcher.prototype.mouseenter = function() {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
     let tooltipLabel = document.getElementById('com_sppad_booky_tooltip_label');
@@ -361,10 +379,16 @@ com.sppad.booky.Launcher.prototype.dragend = function(event) {
     tooltip.setAttribute('hidden', false);
 };
 
+/**
+ * Handles a click event on a launcher or overflow launcher.
+ */
 com.sppad.booky.Launcher.prototype.command = function(event) {
     gBrowser.selectedTab = event.target.tab;
 };
 
+/**
+ * Handles a click event on a launcher.
+ */
 com.sppad.booky.Launcher.prototype.click = function(event) {
     
     if(event.button == 0)
@@ -376,6 +400,9 @@ com.sppad.booky.Launcher.prototype.click = function(event) {
     
 };
 
+/**
+ * Handles a mouse scroll event on a launcher.
+ */
 com.sppad.booky.Launcher.prototype.scroll = function(event) {
     this.switchTo(false, event.detail < 0, event.shiftKey);  
 };
@@ -504,16 +531,25 @@ com.sppad.booky.Launcher.prototype.overflowMenuShowing = function(event) {
     this.disableMenuItems(this.menuNode);
 };
 
+/**
+ * Closes all the tabs in the launcher.
+ */
 com.sppad.booky.Launcher.prototype.close = function(event) {
     while(this.tabs.length > 0)
         gBrowser.removeTab(this.tabs.pop());
 };
 
+/**
+ * Reloads all the tabs in the launcher.
+ */
 com.sppad.booky.Launcher.prototype.reload = function(event) {
     for(let i=0; i<this.tabs.length; i++)
         gBrowser.reloadTab(this.tabs[i]);
 };
 
+/**
+ * Removes the launcher, removing all the associated bookmarks.
+ */
 com.sppad.booky.Launcher.prototype.remove = function(event) {
     /*
      * Bookmark event firing actually removes the bookmark. Don't use a while
@@ -526,6 +562,9 @@ com.sppad.booky.Launcher.prototype.remove = function(event) {
         com.sppad.booky.Bookmarks.removeBookmark(this.bookmarkIDs[0]);
 };
 
+/**
+ * Opens all the bookmarks in the launcher.
+ */
 com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
     let count = this.bookmarkIDs.length;
     for(let i=0; i<count; i++)

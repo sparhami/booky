@@ -64,6 +64,11 @@ com.sppad.booky.Bookmarks = new function() {
 	    return self._historyService.executeQuery(self._query, self._options).root;
 	};
 	
+	/**
+     * Gets the quick launch bookmark folder, creating it if it does not exist.
+     * 
+     * @return The quick launch folder
+     */
 	self._getQuicklaunchFolder = function() {
 	     let folder = self._getFolder(self._bs.bookmarksMenuFolder);
          
@@ -182,7 +187,8 @@ com.sppad.booky.Bookmarks = new function() {
          * @return The bookmark id of the added bookmark.
          */
     	addBookmark : function(aUriString) {
-    	    // Always call self._getQuicklaunchFolder in case it has been deleted
+    	    // Always call self._getQuicklaunchFolder in case it has been
+            // deleted
     	    let folder = self._getQuicklaunchFolder();
             let uri = Services.io.newURI(aUriString, null, null);
     	    return self._bs.insertBookmark(folder, uri, self._bs.DEFAULT_INDEX, "");

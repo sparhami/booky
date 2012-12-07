@@ -17,6 +17,18 @@ com.sppad.booky.History = new function() {
     self.hs = Components.classes["@mozilla.org/browser/nav-history-service;1"]
         .getService(Components.interfaces.nsINavHistoryService);
     
+    /**
+     * A convenience method for performing a history query.
+     * 
+     * @param domain
+     *            The domain to get history results for,
+     * @param numberOfDays
+     *            How many days in the past to search.
+     * @param maxResults
+     *            The maximum number of results to return.
+     * 
+     * @return An array of results
+     */
     this.queryHistory = function(domain, numberOfDays, maxResults) {
         
         let options = self.hs.getNewQueryOptions();
@@ -47,18 +59,6 @@ com.sppad.booky.History = new function() {
         }
         
         return resultArray;
-    }
-    
-    this.searchHistory = function(key) {
-        
-        toggleSidebar('viewHistorySidebar', true);
-        
-        window.setTimeout(function() {
-            
-            //HistorySidebarInit();
-            //searchHistory(this.id);
-        }, 100);
-        
     }
     
 };
