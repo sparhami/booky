@@ -8,8 +8,6 @@
 <overlay id="booky"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-	<script type="application/x-javascript" src="chrome://browser/content/places/history-panel.js" />
-
 	<script type="application/x-javascript" src="utils.js" />
 	<script type="application/x-javascript" src="bookmarks.js" />
 	<script type="application/x-javascript" src="history.js" />
@@ -20,8 +18,8 @@
 	<script type="application/x-javascript" src="resizer.js" />
 	<script type="application/x-javascript" src="dragdrop.js" />
 
-	<window>
-		<stringbundleset>
+	<window id="main-window">
+		<stringbundleset id="stringbundleset">
 			<stringbundle id="com_sppad_booky_tabstrings" src="chrome://browser/locale/tabbrowser.properties" />
 		</stringbundleset>
 	</window>
