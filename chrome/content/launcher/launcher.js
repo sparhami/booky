@@ -22,29 +22,22 @@ com.sppad.booky.Launcher = function(aID) {
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
     
+    /*
+     * This is needed to force close the overflow menu in some situations. The
+     * issue is that the menu does not properly close, causing it to not show
+     * when opened the next time.
+     * 
+     * TODO - Fix underlying issue.
+     */
+    this.forceCloseOverflowMenu = function() {
+        let overflowButton = document.getElementById('com_sppad_booky_launchers_overflow_button');
+        overflowButton.open = false;
+    }
+    
     this.openTab = function(aUri) {     
         gBrowser.selectedTab = gBrowser.addTab(aUri || this.bookmarks[0]);
         
-        /*
-         * If you don't do this, bad things will occur. The only time resize
-         * should be getting called is when the menu is supposed to be closed
-         * anyway.
-         * 
-         * The issue observed is when 'hideLauncherStrategy' is 'groupOpenTabs'
-         * and a bookmark is opened from a submenu. The tab getting added to the
-         * launcher causes this function to be called.
-         * 
-         * The onpopuphiding function never gets called, so it seems the menu
-         * does not close correctly. If you resize the window for a bit it might
-         * end up calling the onpopuphiding, etc. and open as expected.
-         * 
-         * It might make more sense to check if _overflowToolbarButton is open,
-         * then set a timeout to check again when it is closed. However,
-         * checking open returns false here. Not sure why setting open to false
-         * would have any effect in that case, but it seems to work.
-         */
-        let overflowButton = document.getElementById('com_sppad_booky_launchers_overflow_button');
-        overflowButton.open = false;
+        this.forceCloseOverflowMenu();
     };       
     
     this.switchTo = function(openIfClosed, next, reverse) {
@@ -287,12 +280,17 @@ com.sppad.booky.Launcher = function(aID) {
         if(this.bookmarkIDs.length == 0) {
             let container = document.getElementById('com_sppad_booky_launchers');
             container.removeChild(this.node);
+            
+            let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
+            overflowContainer.removeChild(this.menuNode);
            
             for(let i=0; i<this.tabs.length; i++)
                 this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
            
             com.sppad.booky.Utils.removeFromArray(com.sppad.booky.Launcher.launchers, this);
             com.sppad.booky.Utils.removeFromArray(com.sppad.booky.Launcher.launcherIDs, this.id);
+            
+            this.forceCloseOverflowMenu();
         }
     };
     
