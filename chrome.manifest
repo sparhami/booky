@@ -1,5 +1,4 @@
 content 	booky 					chrome/content/
-resource    booky     				modules/
 	
 locale 		booky 	en-US 			chrome/locale/en-US/
 
