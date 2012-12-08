@@ -33,6 +33,7 @@ com.sppad.booky.History = new function() {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
+        options.sortingMode = options.SORT_BY_DATE_DESCENDING;
         
         let query = self.hs.getNewQuery();
         query.beginTimeReference = query.TIME_RELATIVE_NOW;
