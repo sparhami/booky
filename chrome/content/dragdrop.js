@@ -44,7 +44,8 @@ com.sppad.booky.DragDrop = new function() {
         let mozUrl = dt.getData('text/x-moz-url');
         let uriList = dt.getData('text/uri-list');
         let plain = dt.getData('text/plain');
-        let internal = dt.getData('text/x-moz-text-internal');
+        // Disable allowing drop from tabs due to bugs
+        //let internal = dt.getData('text/x-moz-text-internal');
         
         if(mozUrl || uriList || plain || internal)
             return true;
