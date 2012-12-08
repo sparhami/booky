@@ -5,3 +5,7 @@
 	min-width: 3.5em;
 	max-width: 3.5em;
 }
+
+prefpane groupbox > vbox:not(:last-child) {
+	margin-bottom: .4em;
+}

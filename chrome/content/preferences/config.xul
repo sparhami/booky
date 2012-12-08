@@ -29,58 +29,40 @@
 		</preferences>
 
 		<groupbox>
-			<grid>
-				<columns>
-					<column />
-					<column />
-				</columns>
-				<rows>
-					<row>
-						<vbox>
-							<caption label="&preference.overflowMode.label;" />
-							<radiogroup preference="extensions.booky.overflowMode" orient="vertical">
-								<hbox>
-									<radio value="maxWidth" label="&preference.maxWidth.label;" flex="1" />
-									<textbox id="com_sppad_booky_preference_maxWidth" type="number"
-										min="0" max="100" preference="extensions.booky.maxWidth" />
-								</hbox>
-								<hbox>
-									<radio value="maxIcons" label="&preference.maxIcons.label;" flex="1" />
-									<textbox id="com_sppad_booky_preference_maxIcons" type="number"
-										min="0" max="999" preference="extensions.booky.maxIcons" />
-								</hbox>
-							</radiogroup>
-						</vbox>
-					</row>
-					<row>
-						<vbox>
-							<caption label="&preference.hideLauncherStrategy.label;" />
+			<caption label="&preference.overflowMode.label;" />
+			
+			<radiogroup preference="extensions.booky.overflowMode" orient="vertical">
+				<hbox>
+					<radio value="maxWidth" label="&preference.maxWidth.label;" flex="1" />
+					<textbox id="com_sppad_booky_preference_maxWidth" type="number"
+						min="0" max="100" preference="extensions.booky.maxWidth" />
+				</hbox>
+				<hbox>
+					<radio value="maxIcons" label="&preference.maxIcons.label;" flex="1" />
+					<textbox id="com_sppad_booky_preference_maxIcons" type="number"
+						min="0" max="999" preference="extensions.booky.maxIcons" />
+				</hbox>
+			</radiogroup>
+		</groupbox>
+		<groupbox>
+			<caption label="&preference.hideLauncherStrategy.label;" />
 
-							<radiogroup preference="extensions.booky.hideLauncherStrategy"
-								orient="vertical">
-								<radio value="overflowOnly"
-									label="&preference.hideLauncherStrategy.overflowOnly.label;" />
-								<radio value="noOpenTabs" label="&preference.hideLauncherStrategy.noOpenTabs.label;" />
-								<radio value="groupOpenTabs"
-									label="&preference.hideLauncherStrategy.groupOpenTabs.label;" />
-							</radiogroup>
-						</vbox>
-					</row>
-					<row>
-						<vbox>
-							<caption label="&preference.hideTabStrategy.label;" />
+			<radiogroup preference="extensions.booky.hideLauncherStrategy"
+				orient="vertical">
+				<radio value="overflowOnly" label="&preference.hideLauncherStrategy.overflowOnly.label;" />
+				<radio value="noOpenTabs" label="&preference.hideLauncherStrategy.noOpenTabs.label;" />
+				<radio value="groupOpenTabs" label="&preference.hideLauncherStrategy.groupOpenTabs.label;" />
+			</radiogroup>
+		</groupbox>
+		<groupbox>
+			<caption label="&preference.hideTabStrategy.label;" />
 
-							<radiogroup preference="extensions.booky.hideTabStrategy"
-								orient="vertical">
-								<radio value="hideAllTabs" label="&preference.hideTabStrategy.hideAllTabs.label;" />
-								<radio value="showActiveTab" label="&preference.hideTabStrategy.showActiveTab.label;" />
-								<radio value="showActiveGroup" label="&preference.hideTabStrategy.showActiveGroup.label;" />
-								<radio value="hideNoTabs" label="&preference.hideTabStrategy.hideNoTabs.label;" />
-							</radiogroup>
-						</vbox>
-					</row>
-				</rows>
-			</grid>
+			<radiogroup preference="extensions.booky.hideTabStrategy" orient="vertical">
+				<radio value="hideAllTabs" label="&preference.hideTabStrategy.hideAllTabs.label;" />
+				<radio value="showActiveTab" label="&preference.hideTabStrategy.showActiveTab.label;" />
+				<radio value="showActiveGroup" label="&preference.hideTabStrategy.showActiveGroup.label;" />
+				<radio value="hideNoTabs" label="&preference.hideTabStrategy.hideNoTabs.label;" />
+			</radiogroup>
 		</groupbox>
 	</prefpane>
 
@@ -93,30 +75,17 @@
 		</preferences>
 
 		<groupbox>
-			<grid>
-				<columns>
-					<column />
-				</columns>
-				<rows>
-					<row>
-						<caption label="&preference.historyMenu.label;" />
-					</row>
-					<row>
-						<vbox>
-							<hbox align="center">
-								<label value="&preference.historyMenuDays.label;" flex="1"/>
-								<textbox id="com_sppad_booky_preference_historyMenuDays" type="number"
-									min="0" max="365" preference="extensions.booky.historyMenuDays" />
-							</hbox>
-							<hbox align="center">
-								<label value="&preference.historyMenuItems.label;" flex="1"/>
-								<textbox id="com_sppad_booky_preference_historyMenuItems" type="number"
-									min="0" max="100" preference="extensions.booky.historyMenuItems" />
-							</hbox>
-						</vbox>
-					</row>
-				</rows>
-			</grid>
+			<caption label="&preference.historyMenu.label;" />
+			<hbox align="center">
+				<label value="&preference.historyMenuDays.label;" flex="1" />
+				<textbox id="com_sppad_booky_preference_historyMenuDays" type="number"
+					min="0" max="365" preference="extensions.booky.historyMenuDays" />
+			</hbox>
+			<hbox align="center">
+				<label value="&preference.historyMenuItems.label;" flex="1" />
+				<textbox id="com_sppad_booky_preference_historyMenuItems" type="number"
+					min="0" max="100" preference="extensions.booky.historyMenuItems" />
+			</hbox>
 		</groupbox>
 	</prefpane>
 
@@ -128,19 +97,7 @@
 		</preferences>
 
 		<groupbox>
-			<grid>
-				<columns>
-					<column />
-				</columns>
-				<rows>
-					<row>
-						<box>
-							<checkbox preference="extensions.booky.grayoutInactiveIcons"
-								label="&preference.grayoutInactiveIcons.label;" />
-						</box>
-					</row>
-				</rows>
-			</grid>
+			<checkbox preference="extensions.booky.grayoutInactiveIcons" label="&preference.grayoutInactiveIcons.label;" />
 		</groupbox>
 	</prefpane>
 

@@ -35,7 +35,6 @@
 	margin-right: 4px;
 }
 
-#com_sppad_booky_container menu,
-#com_sppad_booky_container menuitem {
+#com_sppad_booky_launchers_overflow_menu > *  {
 	max-width: 20em !important;
 }
