@@ -48,7 +48,7 @@ launcher[titlechanged="true"] {
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab[selected],
 #com_sppad_booky_launchers_overflow_decorator[selected="true"],
 launcher[selected="true"] {
-	background-image: linear-gradient(to top, rgba(240, 12, 31, 1) 3px, transparent 3px) !important;
+	background-image: linear-gradient(to top, rgba(224, 12, 0, 1) 3px, transparent 3px) !important;
 }
 	
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:not(:last-child) {
