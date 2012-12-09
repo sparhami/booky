@@ -12,12 +12,6 @@ launcher[busy="true"] .launcher-icon {
 	display: none;
 }
 
-#TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] launcher[hasSingle="false"]:not(:hover) .launcher-icon,
-#TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
-	filter: url("chrome://booky/content/filters.svg#grayscale");
-	opacity: .55;
-}
-
 launcher .launcher-countindicator-two, 
 launcher .launcher-countindicator-one {
 	outline: solid 2px;

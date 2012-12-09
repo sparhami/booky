@@ -95,6 +95,7 @@ com.sppad.booky.Booky = new function() {
                   break;
               case "hideTabStrategy":
               case "grayoutInactiveIcons":
+              case "styleTabs":
                   this.applyAttribute('TabsToolbar', name, value);
                   break;
               case "hideLauncherStrategy":
@@ -261,6 +262,7 @@ com.sppad.booky.Booky = new function() {
             this.prefChanged("hideTabStrategy", com.sppad.booky.CurrentPrefs['hideTabStrategy']);
             this.prefChanged("hideLauncherStrategy", com.sppad.booky.CurrentPrefs['hideLauncherStrategy']);
             this.prefChanged("grayoutInactiveIcons", com.sppad.booky.CurrentPrefs['grayoutInactiveIcons']);
+            this.prefChanged("styleTabs", com.sppad.booky.CurrentPrefs['styleTabs']);
         }, 
         
         setup: function() {

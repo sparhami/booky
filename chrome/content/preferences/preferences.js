@@ -41,6 +41,9 @@ com.sppad.booky.PREFS = {
   
   // True or false
   grayoutInactiveIcons: true,
+  
+  // True or false
+  styleTabs: false,
 };
 
 

@@ -30,7 +30,7 @@
 
 		<groupbox>
 			<caption label="&preference.overflowMode.label;" />
-			
+
 			<radiogroup preference="extensions.booky.overflowMode" orient="vertical">
 				<hbox>
 					<radio value="maxWidth" label="&preference.maxWidth.label;" flex="1" />
@@ -94,10 +94,16 @@
 		<preferences>
 			<preference id="extensions.booky.grayoutInactiveIcons" name="extensions.booky.grayoutInactiveIcons"
 				type="bool" />
+			<preference id="extensions.booky.styleTabs" name="extensions.booky.styleTabs"
+				type="bool" />
 		</preferences>
 
 		<groupbox>
 			<checkbox preference="extensions.booky.grayoutInactiveIcons" label="&preference.grayoutInactiveIcons.label;" />
+		</groupbox>
+
+		<groupbox>
+			<checkbox preference="extensions.booky.styleTabs" label="&preference.styleTabs.label;" />
 		</groupbox>
 	</prefpane>
 
