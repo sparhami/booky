@@ -21,22 +21,34 @@ launcher[titlechanged="true"] .launcher-countindicators {
 	visibility: hidden;
 }
 
+#TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] launcher[hasSingle="false"]:not(:hover) .launcher-icon,
+#TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
+	filter: url("chrome://booky/content/filters.svg#grayscale");
+	opacity: .55;
+}
+
+
+
+#TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab {
+	background-image: linear-gradient(to top, rgba(120, 120, 120, 1) 3px, transparent 3px) !important;
+}
+
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab[unread],
 #com_sppad_booky_launchers_overflow_decorator[unread="true"],
 launcher[unread="true"] {
-	background-image: linear-gradient(to top, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 3px) !important;
+	background-image: linear-gradient(to top, rgba(66, 192, 32, 1) 3px, transparent 3px) !important;
 }
 
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab[titlechanged],
 #com_sppad_booky_launchers_overflow_decorator[titlechanged="true"],
 launcher[titlechanged="true"] {
-	background-image: linear-gradient(to top, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 3px) !important;
+	background-image: linear-gradient(to top, rgba(84, 140, 240, 1) 3px, transparent 3px) !important;
 }
 
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab[selected],
 #com_sppad_booky_launchers_overflow_decorator[selected="true"],
 launcher[selected="true"] {
-	background-image: linear-gradient(to top, rgba(224, 12, 0, 1) 3px, rgba(224, 12, 0, 0) 3px) !important;
+	background-image: linear-gradient(to top, rgba(240, 12, 31, 1) 3px, transparent 3px) !important;
 }
 	
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:not(:last-child) {
@@ -53,32 +65,27 @@ launcher[selected="true"] {
 	border-radius: 0px;
 }
 
-#TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab {
-	background-image: linear-gradient(to top, rgba(120, 120, 120, 1) 3px, rgba(120, 120, 120, 0) 3px) !important;
-}
-
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabs-newtab-button {
 	background-image: none !important;
 	margin-left: 4px;
 }
 
-#TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] launcher[hasSingle="false"]:not(:hover) .launcher-icon,
-#TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
-	filter: url("chrome://booky/content/filters.svg#grayscale");
-	opacity: .55;
-}
-
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:not([selected]) .tab-text {
 	opacity: 0.8;
-}
-	
-#TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab {
-	background-color: rgba(0, 0, 0, .03);
 }
 
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:hover,
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabs-newtab-button:hover {
-	background-color: rgba(0, 0, 0, .07);
+	background-color: rgba(120, 120, 120, .07);
+}
+
+#TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:-moz-lwtheme-darktext {
+	background-color: rgba(0, 0, 0, .03);
+}
+
+#TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:hover:-moz-lwtheme-darktext,
+#TabsToolbar[com_sppad_booky_styleTabs="true"] .tabs-newtab-button:hover:-moz-lwtheme-darktext {
+	background-color: rgba(0, 0, 0, .1);
 }
 	
 	
@@ -88,8 +95,11 @@ launcher[selected="true"] {
 
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab:hover:-moz-lwtheme-brighttext,
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabs-newtab-button:hover:-moz-lwtheme-brighttext {
-	background-color: rgba(255, 255, 255, .07);
+	background-color: rgba(255, 255, 255, .1);
 }
+
+
+
 
 	
 .com_sppad_booky_tab > .menu-iconic-left,
@@ -99,15 +109,15 @@ launcher[selected="true"] {
 
 .com_sppad_booky_tab[unread="true"] > .menu-iconic-left,
 .menulauncher[unread="true"] > .menu-iconic-left {
-	background-image: linear-gradient(to right, rgba(11, 205, 5, 1) 3px, rgba(11, 205, 5, 0) 4px);
+	background-image: linear-gradient(to right, rgba(11, 205, 5, 1) 3px, transparent 3px);
 }
 
 .com_sppad_booky_tab[titlechanged="true"] > .menu-iconic-left,
 .menulauncher[titlechanged="true"] > .menu-iconic-left{
-	background-image: linear-gradient(to right, rgba(84, 140, 240, 1) 3px, rgba(84, 140, 240, 0) 4px);
+	background-image: linear-gradient(to right, rgba(84, 140, 240, 1) 3px, transparent 3px);
 }	
 
 .com_sppad_booky_tab[selected="true"] > .menu-iconic-left,
 .menulauncher[selected="true"] > .menu-iconic-left {
-	background-image: linear-gradient(to right, rgba(224, 12, 0, 1) 3px, rgba(224, 12, 0, 0) 4px);
+	background-image: linear-gradient(to right, rgba(224, 12, 0, 1) 3px, transparent 3px);
 }				
