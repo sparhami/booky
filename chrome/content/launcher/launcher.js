@@ -390,9 +390,7 @@ com.sppad.booky.Launcher.prototype.click = function(event) {
         this.switchTo(true, true, event.shiftKey);
     else if(event.button == 1)
         this.openTab();
-    else if(event.button == 2)
-        this.node.contextMenu.openPopup(this.node, "after_start", 0, 0, false, false);
-    
+
 };
 
 /**

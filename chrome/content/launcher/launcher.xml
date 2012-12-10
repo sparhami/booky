@@ -11,7 +11,7 @@
 			<xul:toolbarbutton class="launcher" anonid="toolbarbutton"
 				image="chrome://mozapps/skin/places/defaultFavicon.png" container="true"
 				xbl:inherits="image,type" onmouseenter="js.mouseenter();" onmouseleave="js.mouseleave();"
-				style="-moz-user-focus: normal;" oncontextmenu="return false;" onclick="js.click(event);"
+				style="-moz-user-focus: normal;" context="_child" onclick="js.click(event);"
 				orient="vertical">
 
 				<xul:stack validate="always">
@@ -27,43 +27,44 @@
 					<xul:box class="launcher-countindicator-two" />
 					<xul:box class="launcher-countindicator-one" />
 				</xul:hbox>
+
+				<xul:menupopup anonid="contextMenu"
+					onpopupshowing="if(this == event.target) js.contextShowing(event);"
+					onpopuphiding="if(this == event.target) js.contextHiding(event);">
+
+					<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
+						accesskey="&com_sppad_booky_switchTo.accesskey;">
+						<xul:menupopup class="launcher_menupopup_switchTo"
+							onpopupshowing="js.tabsPopupShowing(event);" />
+					</xul:menu>
+
+					<xul:menu class="launcher_menu_bookmarks" label="&com_sppad_booky_bookmarks.label;"
+						accesskey="&com_sppad_booky_bookmarks.accesskey;">
+						<xul:menupopup class="launcher_menupopup_bookmarks"
+							onpopupshowing="js.bookmarksPopupShowing(event);">
+							<xul:menuseparator />
+							<xul:menuitem class="launcher_menu_bookmarks_openAll"
+								label="&com_sppad_booky_bookmarks_openAll.label;" accesskey="&com_sppad_booky_bookmarks_openAll.accesskey;"
+								oncommand="js.openAllBookmarks();" />
+						</xul:menupopup>
+					</xul:menu>
+
+					<xul:menu class="launcher_menu_history" label="&com_sppad_booky_history.label;"
+						accesskey="&com_sppad_booky_history.accesskey;">
+						<xul:menupopup class="launcher_menupopup_history"
+							onpopupshowing="js.historyPopupShowing(event);">
+						</xul:menupopup>
+					</xul:menu>
+
+					<xul:menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
+						accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
+					<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
+						accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
+					<xul:menuitem class="launcher_menu_remove" label="&com_sppad_booky_remove.label;"
+						accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
+
+				</xul:menupopup>
 			</xul:toolbarbutton>
-
-			<xul:menupopup anonid="contextMenu"
-				onpopupshowing="if(this == event.target) js.contextShowing(event);"
-				onpopuphiding="if(this == event.target) js.contextHiding(event);">
-
-				<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
-					accesskey="&com_sppad_booky_switchTo.accesskey;">
-					<xul:menupopup class="launcher_menupopup_switchTo"
-						onpopupshowing="js.tabsPopupShowing(event);" />
-				</xul:menu>
-
-				<xul:menu class="launcher_menu_bookmarks" label="&com_sppad_booky_bookmarks.label;"
-					accesskey="&com_sppad_booky_bookmarks.accesskey;">
-					<xul:menupopup class="launcher_menupopup_bookmarks"
-						onpopupshowing="js.bookmarksPopupShowing(event);">
-						<xul:menuseparator />
-						<xul:menuitem class="launcher_menu_bookmarks_openAll"
-							label="&com_sppad_booky_bookmarks_openAll.label;" accesskey="&com_sppad_booky_bookmarks_openAll.accesskey;"
-							oncommand="js.openAllBookmarks();" />
-					</xul:menupopup>
-				</xul:menu>
-
-				<xul:menu class="launcher_menu_history" label="&com_sppad_booky_history.label;"
-					accesskey="&com_sppad_booky_history.accesskey;">
-					<xul:menupopup class="launcher_menupopup_history" onpopupshowing="js.historyPopupShowing(event);">
-					</xul:menupopup>
-				</xul:menu>
-
-				<xul:menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
-					accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
-				<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
-					accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
-				<xul:menuitem class="launcher_menu_remove" label="&com_sppad_booky_remove.label;"
-					accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
-
-			</xul:menupopup>
 		</content>
 
 		<implementation>
