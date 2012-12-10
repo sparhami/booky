@@ -45,7 +45,7 @@
 				<scrollbox id="com_sppad_booky_launchers" />
 				<stack id="com_sppad_booky_launchers_overflow_stack">
 					<toolbarbutton id="com_sppad_booky_launchers_overflow_button"
-						type="menu">
+						type="menu" context="">
 						<menupopup id="com_sppad_booky_launchers_overflow_menu" />
 					</toolbarbutton>
 					<box id="com_sppad_booky_launchers_overflow_decorator" />
