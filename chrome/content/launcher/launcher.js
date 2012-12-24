@@ -18,6 +18,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.selected = false;
     this.bookmarks = [];
     this.bookmarkIDs= [];
+    this.bookmarkImages = [];
     this.node = document.createElement('launcher');
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
@@ -252,6 +253,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.addBookmark = function(aUri, anImage, aBookmarkId) {
         this.bookmarksUpdateTime = Date.now();
         
+        this.bookmarkImages.push(anImage);
         this.bookmarkIDs.push(aBookmarkId);
         this.bookmarks.push(aUri);
         com.sppad.booky.Launcher.bookmarkIDToLauncher[aBookmarkId] = this;
@@ -269,6 +271,7 @@ com.sppad.booky.Launcher = function(aID) {
         this.bookmarksUpdateTime = Date.now();
         
         let index = com.sppad.booky.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
+        this.bookmarkImages.splice(index, 1);
         this.bookmarkIDs.splice(index, 1);
         this.bookmarks.splice(index, 1);
         
@@ -455,10 +458,12 @@ com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
     
         for(let i=0; i<this.bookmarks.length; i++) {
             let bookmark = this.bookmarks[i];
+            let image = this.bookmarkImages[i];
             
             let menuitem = document.createElement('menuitem');
             menuitem.setAttribute('bookmark', true);
             menuitem.setAttribute('label', bookmark);
+            menuitem.setAttribute('image', image);
             menuitem.addEventListener('command', function(event) { this.openTab(bookmark); }.bind(this) );
             
             node.appendChild(menuitem);
