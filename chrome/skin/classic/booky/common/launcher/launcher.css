@@ -1,5 +1,3 @@
-@import url("chrome://booky-platform/skin/launcher/launcher.css");
-
 launcher .launcher-connector {
 	list-style-image: url("chrome://browser/skin/tabbrowser/loading.png") !important;
 }
