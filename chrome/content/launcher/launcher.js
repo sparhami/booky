@@ -43,12 +43,13 @@ com.sppad.booky.Launcher = function(aID) {
     
     this.switchTo = function(openIfClosed, next, reverse) {
         
-        if(openIfClosed && this.tabs.length == 0)
+        if(openIfClosed && this.tabs.length == 0) {
             this.openTab();
-        else {
+        } else if(this.tabs.length > 0) {
             let direction = this.selected ? (next == true ? 1 : -1) : 0;
             let index = this.getNextIndex(direction, reverse);
             
+            com.sppad.booky.Launcher.showIndexIndicator(index, this.tabs.length);
             gBrowser.selectedTab = this.tabs[index];
         }
     };
@@ -586,4 +587,32 @@ com.sppad.booky.Launcher.hasLauncher = function(aID) {
 
 com.sppad.booky.Launcher.getLauncherFromBookmarkId = function(aBookmarkId) {
     return this.bookmarkIDToLauncher[aBookmarkId];
+}
+
+com.sppad.booky.Launcher.showIndexIndicatorEvent;
+com.sppad.booky.Launcher.showIndexIndicator = function(index, count) {
+    let indexIndicator = document.getElementById('com_sppad_booky_scrollProgress_label');
+    indexIndicator.setAttribute('value', (index + 1) + "/" + count);
+    
+    let indexIndicatorWrapper = document.getElementById('com_sppad_booky_scrollProgress');
+    indexIndicatorWrapper.removeAttribute('fadeout');
+    
+    /**
+     * Use the bottom of navigator-toolbox rather than the y position of browser
+     * to handle Fullscreen Toolbar Hover addon.
+     */
+    let navbar = document.getElementById('navigator-toolbox');
+    let yOffset = navbar.boxObject.y + navbar.boxObject.height;
+    indexIndicatorWrapper.style.top = yOffset + "px";
+    
+    /*
+     * Want to make sure that the css rule for attribute removal (setting
+     * opacity to visible state) triggers. If calls are back to back, it does
+     * not work correctly. It appears to be okay when placed apart (a timing
+     * thing?), but want to make sure it works correctly
+     */
+    clearTimeout(this.showIndexIndicatorEvent);
+    this.showIndexIndicatorEvent = setTimeout(function() {
+        indexIndicatorWrapper.setAttribute('fadeout', 'true');    
+    }, 1);
 }

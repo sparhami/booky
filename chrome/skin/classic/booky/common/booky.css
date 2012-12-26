@@ -36,3 +36,26 @@
 #com_sppad_booky_launchers_overflow_menu > *  {
 	max-width: 20em !important;
 }
+
+#com_sppad_booky_scrollProgress {
+	color: rgb(90, 90, 90);
+	opacity: .8;
+
+	font-size: 400%;
+	font-weight: 900;
+	
+	transition-property: opacity;
+	transition-timing-function: ease-out;
+	
+	text-shadow:
+	-2px -2px 0 white,  
+    +2px -2px 0 white,
+    -2px +2px 0 white,
+    +2px +2px 0 white;
+}
+
+#com_sppad_booky_scrollProgress[fadeout] {
+	opacity: 0;
+	transition-duration: .8s;
+	transition-delay: 1.2s;
+}

@@ -88,11 +88,18 @@
 								accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
 						</menupopup>
 					</menu>
-					
-					<menuitem id="com_sppad_booky_noHistoryMenuItem" label="&com_sppad_booky_noHistoryMenuItem.label;" disabled="true"/>
+
+					<menuitem id="com_sppad_booky_noHistoryMenuItem" label="&com_sppad_booky_noHistoryMenuItem.label;"
+						disabled="true" />
 				</box>
 			</hbox>
 		</toolbaritem>
 	</toolbarpalette>
+
+	<hbox id="browser">
+		<hbox id="com_sppad_booky_scrollProgress">
+			<label id="com_sppad_booky_scrollProgress_label" />
+		</hbox>
+	</hbox>
 
 </overlay>

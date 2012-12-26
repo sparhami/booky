@@ -42,3 +42,9 @@
 	pointer-events: none;
 	margin-bottom: 2px;
 }
+
+#com_sppad_booky_scrollProgress {
+	position: fixed;
+	right: 0;
+	pointer-events: none;
+}
