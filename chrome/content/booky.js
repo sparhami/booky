@@ -388,4 +388,6 @@ window.addEventListener("load", function() {
 
 window.addEventListener('unload', function() {
     com.sppad.booky.Booky.cleanup();
-})
+    com.sppad.booky.Preferences.cleanup();
+    com.sppad.booky.Bookmarks.cleanup();
+}, false);

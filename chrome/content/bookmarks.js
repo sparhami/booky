@@ -104,10 +104,6 @@ com.sppad.booky.Bookmarks = new function() {
     	EVENT_MOV_BOOKMARK:			'EVENT_MOV_BOOKMARK',
     	EVENT_LOAD_BOOKMARK: 		'EVENT_LOAD_BOOKMARK',
     	
-    	cleanup: function() {
-    		self._bs.removeObbserver(BookmarksListener);
-    	},
-    	
     	moveBookmarkGroupBefore: function(prevBookmarkIDs, bookmarkIDs) {
     		let targetIndex = prevBookmarkIDs ? self._bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
     		
@@ -228,6 +224,10 @@ com.sppad.booky.Bookmarks = new function() {
         	finally {
         	    folder.containerOpen = false;
         	}
+        },
+        
+        cleanup : function() {
+            self._bs.removeObserver(com.sppad.booky.BookmarksListener);
         },
         
         addListener: function(listener, type) { self._eventSupport.addListener(listener, type); },
