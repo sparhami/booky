@@ -14,6 +14,7 @@
 	<script type="application/x-javascript" src="tabevents.js" />
 	<script type="application/x-javascript" src="launcher/launcher.js" />
 	<script type="application/x-javascript" src="preferences/preferences.js" />
+	<script type="application/x-javascript" src="groups.js" />
 	<script type="application/x-javascript" src="booky.js" />
 	<script type="application/x-javascript" src="resizer.js" />
 	<script type="application/x-javascript" src="dragdrop.js" />

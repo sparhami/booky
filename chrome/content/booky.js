@@ -124,7 +124,7 @@ com.sppad.booky.Booky = new function() {
         
         onBookmarkAdded: function(event) {
             let node = event.node;
-            let id = this.getIdFromUriString(node.uri);
+            let id = com.sppad.booky.Groups.getIdFromUriString(node.uri);
             
             let launcher = com.sppad.booky.Launcher.getLauncher(id);
             launcher.addBookmark(node.uri, node.icon, node.itemId);
@@ -132,7 +132,7 @@ com.sppad.booky.Booky = new function() {
             // Add all existing tabs in the launcher
             let tabs = gBrowser.tabs;
             for(let i=0; i<tabs.length; i++)
-                if(id == this.getIdFromTab(tabs[i]))
+                if(id == com.sppad.booky.Groups.getIdFromTab(tabs[i]))
                     launcher.addTab(tabs[i]);
             
             this.updateBookmarksCount(1);
@@ -160,8 +160,8 @@ com.sppad.booky.Booky = new function() {
             let node = event.node;
             let nodeNext = event.nodeNext;
             
-            let group = com.sppad.booky.Launcher.getLauncher(this.getIdFromUriString(node.uri));
-            let nextGroup = nodeNext ? com.sppad.booky.Launcher.getLauncher(this.getIdFromUriString(nodeNext.uri)) : null;
+            let group = com.sppad.booky.Launcher.getLauncher(com.sppad.booky.Groups.getIdFromUriString(node.uri));
+            let nextGroup = nodeNext ? com.sppad.booky.Launcher.getLauncher(com.sppad.booky.Groups.getIdFromUriString(nodeNext.uri)) : null;
             
             group.createBefore(nextGroup);
             
@@ -200,12 +200,12 @@ com.sppad.booky.Booky = new function() {
         },
         
         onTabAttrChange: function(aTab) {
-            let newId = this.getIdFromTab(aTab);
+            let newId = com.sppad.booky.Groups.getIdFromTab(aTab);
             let oldId = aTab.com_sppad_booky_id;
             
             // If the tab hasn't loaded yet, use the label for the id
             if(newId === "about:blank" && aTab.label != self._newTabString && aTab.label != "")
-                newId = this.getIdFromUriString(aTab.label);
+                newId = com.sppad.booky.Groups.getIdFromUriString(aTab.label);
 
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
@@ -285,43 +285,7 @@ com.sppad.booky.Booky = new function() {
     }
 };
 
-/**
- * Gets the launcher ID for a given tab. Currently this is based off the
- * hostname only.
- * 
- * @param aTab
- *            A browser tab
- * @return The id for the launcher for aTab
- */
-com.sppad.booky.Booky.getIdFromTab = function(aTab) {
-    let currentUri = gBrowser.getBrowserForTab(aTab).currentURI;
-    
-    try {
-        return currentUri.host || currentUri.asciiSpec;
-    } catch(err) {
-        try {
-            return currentUri.asciiSpec;
-        } catch(err) {
-            return aTab.label;
-        }
-    }
-};
 
-/**
- * Gets the launcher ID for a given URI. Currently this is based off the
- * hostname only.
- * 
- * @param uriString
- *            A string representing a URI
- * @return The id for the launcher for uriString
- */
-com.sppad.booky.Booky.getIdFromUriString = function(uriString) {
-    try {
-        return Services.io.newURI(uriString, null, null).host || uriString;
-    } catch(err) {
-        return uriString;
-    }
-};
 
 /*
  * Keep waiting for Booky to load. Not sure how to initialize while acting as a

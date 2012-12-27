@@ -266,7 +266,7 @@ com.sppad.booky.DragDrop = new function() {
                 for(let i=0; i<uris.length; i++) {
                     
                     let uri = uris[i];
-                    let id = com.sppad.booky.Booky.getIdFromUriString(uri);
+                    let id = com.sppad.booky.Groups.getIdFromUriString(uri);
     
                     let launcher = com.sppad.booky.Launcher.getLauncher(id);
                     if(com.sppad.booky.Utils.getIndexInArray(launcher.bookmarks, uri) < 0)
