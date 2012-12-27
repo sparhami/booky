@@ -266,6 +266,10 @@ com.sppad.booky.Booky = new function() {
         }, 
         
         setup: function() {
+            com.sppad.booky.Resizer.setup();
+            com.sppad.booky.TabEvents.setup();
+            com.sppad.booky.DragDrop.setup();
+            
             com.sppad.booky.Preferences.addListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
             this.loadPreferences();
             
@@ -281,6 +285,12 @@ com.sppad.booky.Booky = new function() {
             this.updateBookmarksCount(0);
             com.sppad.booky.Bookmarks.loadBookmarks();
             this.loadTabs();
+        },
+        
+        cleanup: function() {
+            com.sppad.booky.Preferences.removeListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
+            com.sppad.booky.TabEvents.removeListener(this);
+            com.sppad.booky.Bookmarks.removeListener(this);
         },
     }
 };
@@ -332,9 +342,6 @@ com.sppad.booky.Booky.waitForLoad = function() {
     
     // Can find DOM node, therefore loaded
     if(document.getElementById('com_sppad_booky_container')) {
-        com.sppad.booky.Resizer.setup();
-        com.sppad.booky.TabEvents.setup();
-        com.sppad.booky.DragDrop.setup();
         com.sppad.booky.Booky.setup();
     }
     /*
@@ -378,3 +385,7 @@ window.addEventListener("load", function() {
     com.sppad.booky.Booky.checkFirstRun();
     com.sppad.booky.Booky.waitForLoad();
 }, false);
+
+window.addEventListener('unload', function() {
+    com.sppad.booky.Booky.cleanup();
+})
