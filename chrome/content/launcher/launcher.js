@@ -49,7 +49,6 @@ com.sppad.booky.Launcher = function(aID) {
             let direction = this.selected ? (next == true ? 1 : -1) : 0;
             let index = this.getNextIndex(direction, reverse);
             
-            com.sppad.booky.Launcher.showIndexIndicator(index, this.tabs.length);
             gBrowser.selectedTab = this.tabs[index];
         }
     };
@@ -95,6 +94,11 @@ com.sppad.booky.Launcher = function(aID) {
         for(let i=0; i<this.tabs.length; i++)
             this.tabs[i].setAttribute("com_sppad_booky_activeGroup", selected == true);
 
+        if(selected && this.tabs.length > 1)
+            com.sppad.booky.Launcher.showIndexIndicator((self._selectedIndex + 1) + "/" + this.tabs.length); 
+        else
+            com.sppad.booky.Launcher.hideIndexIndicator();
+        
         this.selected = selected;
         
         this.setAttribute("busy", busy == true);
@@ -271,6 +275,17 @@ com.sppad.booky.Launcher = function(aID) {
     this.removeBookmark = function(aBookmarkId) {
         this.bookmarksUpdateTime = Date.now();
         
+        /**
+         * Handles the tab (in this launcher) having been selected.
+         * 
+         * @param aTab
+         *            A tab that has been selected.
+         */
+        this.selectTab = function(aTab) {
+            
+
+        };
+
         let index = com.sppad.booky.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
         this.bookmarkImages.splice(index, 1);
         this.bookmarkIDs.splice(index, 1);
@@ -304,7 +319,8 @@ com.sppad.booky.Launcher = function(aID) {
     this.updateTab = function(aTab) {
         this.updateAttributes();
     };
-
+    
+    
     /**
      * Moves the DOM node for the launcher.
      * 
@@ -587,15 +603,15 @@ com.sppad.booky.Launcher.hasLauncher = function(aID) {
 
 com.sppad.booky.Launcher.getLauncherFromBookmarkId = function(aBookmarkId) {
     return this.bookmarkIDToLauncher[aBookmarkId];
-}
+};
 
 com.sppad.booky.Launcher.showIndexIndicatorEvent;
-com.sppad.booky.Launcher.showIndexIndicator = function(index, count) {
-    let indexIndicator = document.getElementById('com_sppad_booky_scrollProgress_label');
-    indexIndicator.setAttribute('value', (index + 1) + "/" + count);
+com.sppad.booky.Launcher.showIndexIndicator = function(value) {
+    let indexIndicator = document.getElementById('com_sppad_booky_tabIndex_label');
+    indexIndicator.setAttribute('value', value);
     
-    let indexIndicatorWrapper = document.getElementById('com_sppad_booky_scrollProgress');
-    indexIndicatorWrapper.removeAttribute('fadeout');
+    let indexIndicatorWrapper = document.getElementById('com_sppad_booky_tabIndex');
+    indexIndicatorWrapper.removeAttribute('hide');
     
     /**
      * Use the bottom of navigator-toolbox rather than the y position of browser
@@ -613,6 +629,13 @@ com.sppad.booky.Launcher.showIndexIndicator = function(index, count) {
      */
     clearTimeout(this.showIndexIndicatorEvent);
     this.showIndexIndicatorEvent = setTimeout(function() {
-        indexIndicatorWrapper.setAttribute('fadeout', 'true');    
+        indexIndicatorWrapper.setAttribute('hide', 'fadeout');    
     }, 1);
-}
+};
+
+com.sppad.booky.Launcher.hideIndexIndicator = function() {
+    let indexIndicatorWrapper = document.getElementById('com_sppad_booky_tabIndex');
+    
+    clearTimeout(this.showIndexIndicatorEvent);
+    indexIndicatorWrapper.setAttribute('hide', 'now');
+};

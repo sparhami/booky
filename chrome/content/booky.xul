@@ -97,8 +97,8 @@
 	</toolbarpalette>
 
 	<hbox id="browser">
-		<hbox id="com_sppad_booky_scrollProgress">
-			<label id="com_sppad_booky_scrollProgress_label" />
+		<hbox id="com_sppad_booky_tabIndex">
+			<label id="com_sppad_booky_tabIndex_label" />
 		</hbox>
 	</hbox>
 
