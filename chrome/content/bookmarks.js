@@ -226,6 +226,10 @@ com.sppad.booky.Bookmarks = new function() {
         	}
         },
         
+        cleanup : function() {
+            self._bs.removeObserver(com.sppad.booky.BookmarksListener);
+        },
+        
         addListener: function(listener, type) { self._eventSupport.addListener(listener, type); },
         removeListener: function(listener, type) { self._eventSupport.removeListener(listener, type); },
     }

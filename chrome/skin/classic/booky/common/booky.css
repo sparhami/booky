@@ -37,7 +37,7 @@
 	max-width: 20em !important;
 }
 
-#com_sppad_booky_scrollProgress {
+#com_sppad_booky_tabIndex {
 	color: rgb(90, 90, 90);
 	opacity: .8;
 
@@ -54,8 +54,12 @@
     +2px +2px 0 white;
 }
 
-#com_sppad_booky_scrollProgress[fadeout] {
+#com_sppad_booky_tabIndex[hide="fadeout"] {
 	opacity: 0;
-	transition-duration: .8s;
-	transition-delay: 1.2s;
+	transition-duration: .6s;
+	transition-delay: 1.4s;
+}
+
+#com_sppad_booky_tabIndex[hide="now"] {
+	visibility: hidden;
 }
