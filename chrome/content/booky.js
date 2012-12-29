@@ -183,7 +183,7 @@ com.sppad.booky.Booky = new function() {
                 self._selectedTab.com_sppad_booky_launcher.updateTab(self._selectedTab);
             
             if(aTab.com_sppad_booky_launcher)
-                aTab.com_sppad_booky_launcher.updateTab(aTab);
+                aTab.com_sppad_booky_launcher.selectTab(aTab);
             
             if(self._selectedTab.com_sppad_booky_launcher || aTab.com_sppad_booky_launcher)
                 com.sppad.booky.Resizer.onTabSelect(aTab);

@@ -93,11 +93,6 @@ com.sppad.booky.Launcher = function(aID) {
         
         for(let i=0; i<this.tabs.length; i++)
             this.tabs[i].setAttribute("com_sppad_booky_activeGroup", selected == true);
-
-        if(selected && this.tabs.length > 1)
-            com.sppad.booky.Launcher.showIndexIndicator((self._selectedIndex + 1) + "/" + this.tabs.length); 
-        else
-            com.sppad.booky.Launcher.hideIndexIndicator();
         
         this.selected = selected;
         
@@ -109,6 +104,16 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.setAttribute("hasSingle", this.tabs.length > 0);
         this.setAttribute("hasMultiple", this.tabs.length > 1);
+    };
+    
+    /**
+     * Evaluates and shows the tab index indicator if the launcher is selected.
+     */
+    this.evaluateTabIndexIndicator = function() {
+        if(this.selected && this.tabs.length > 1)
+            com.sppad.booky.Launcher.showIndexIndicator((self._selectedIndex + 1) + "/" + this.tabs.length); 
+        else
+            com.sppad.booky.Launcher.hideIndexIndicator();
     };
     
     /**
@@ -243,6 +248,8 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.updateAttributes();
         self._selectedIndex = Math.max(self._selectedIndex, this.tabs.length - 1);
+        
+        this.evaluateTabIndexIndicator();
     };
     
     /**
@@ -274,17 +281,6 @@ com.sppad.booky.Launcher = function(aID) {
      */
     this.removeBookmark = function(aBookmarkId) {
         this.bookmarksUpdateTime = Date.now();
-        
-        /**
-         * Handles the tab (in this launcher) having been selected.
-         * 
-         * @param aTab
-         *            A tab that has been selected.
-         */
-        this.selectTab = function(aTab) {
-            
-
-        };
 
         let index = com.sppad.booky.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
         this.bookmarkImages.splice(index, 1);
@@ -320,6 +316,16 @@ com.sppad.booky.Launcher = function(aID) {
         this.updateAttributes();
     };
     
+    /**
+     * Updates this launcher to reflect changes made in a tab.
+     * 
+     * @param aTab
+     *            A tab that has changed
+     */
+    this.selectTab = function(aTab) {
+        this.updateAttributes();
+        this.evaluateTabIndexIndicator()
+    };
     
     /**
      * Moves the DOM node for the launcher.
