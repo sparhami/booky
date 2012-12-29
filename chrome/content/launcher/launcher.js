@@ -226,6 +226,8 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.updateAttributes();
         this.placeTab(aTab, false);
+        
+        this.evaluateTabIndexIndicator();
     };
     
     /**
