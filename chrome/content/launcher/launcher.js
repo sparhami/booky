@@ -425,7 +425,7 @@ com.sppad.booky.Launcher.prototype.click = function(event) {
  * Handles a mouse scroll event on a launcher.
  */
 com.sppad.booky.Launcher.prototype.scroll = function(event) {
-    this.switchTo(false, event.detail < 0, event.shiftKey);  
+    this.switchTo(false, event.detail > 0, event.shiftKey);  
 };
 
 /**
