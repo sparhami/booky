@@ -15,21 +15,33 @@ com.sppad.booky.BookmarksListener = {
 	onEndUpdateBatch: function() {},
 	
 	onItemAdded: function(aItemId, aFolder, aIndex) {
-		if(aFolder === com.sppad.booky.Bookmarks.bookmarkFolder) {
+	    
+	    dump("item added\n");
+	    let rootChild = com.sppad.booky.Bookmarks.isDescendant(aItemId, aFolder);
+	    
+		if(rootChild != null) {
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
 		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
 		}
 	},
 	onItemRemoved: function(aItemId, aFolder, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
-		if(aParentId === com.sppad.booky.Bookmarks.bookmarkFolder) {
+	    
+	    dump("item removed\n");
+	    com.sppad.booky.Bookmarks.isDescendant(aItemId, aFolder);
+	        
+		if(rootChild != null) {
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		}
 	},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
-		if(aProperty === "uri" && aParentId === com.sppad.booky.Bookmarks.bookmarkFolder) {
+	    
+	    dump("item changed\n");
+	    let rootChild = com.sppad.booky.Bookmarks.getRootFolderChildNode(aItemId, aParentId);
+	    
+		if(aProperty === "uri" && rootChild != null) {
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
@@ -38,11 +50,16 @@ com.sppad.booky.BookmarksListener = {
 	},
 	onItemVisited: function(aBookmarkId, aVisitID, time) {},
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
-		if(aNewParent === aOldParent && aNewParent === com.sppad.booky.Bookmarks.bookmarkFolder)
+	    
+	    dump("item moved\n");
+	    let oldRootChild = com.sppad.booky.Bookmarks.isDescendant(aItemId, aOldParent);
+	    let newRootChild = com.sppad.booky.Bookmarks.isDescendant(aItemId, aNewParent);
+	    
+		if(oldRootChild != null && newRootChild != null)
 		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
-		else if(aNewParent === com.sppad.booky.Bookmarks.bookmarkFolder)
+		else if(newRootChild != null)
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aNewParent, aNewIndex);
-		else if(aOldParent === com.sppad.booky.Bookmarks.bookmarkFolder)
+		else if(oldRootChild != null)
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
 	},
 	
@@ -95,8 +112,9 @@ com.sppad.booky.Bookmarks = new function() {
     self._bs.addObserver(com.sppad.booky.BookmarksListener, false);
     
     return {
-    	bookmarkFolder:			     self._folderId,
-    	bookmarksService:            self._bs,
+        rootFolder:                 self._folderId,                 
+    	bookmarkFolder:			    self._folderId,
+    	bookmarksService:           self._bs,
     	
     	// event types
     	EVENT_ADD_BOOKMARK: 		'EVENT_ADD_BOOKMARK',
@@ -104,11 +122,37 @@ com.sppad.booky.Bookmarks = new function() {
     	EVENT_MOV_BOOKMARK:			'EVENT_MOV_BOOKMARK',
     	EVENT_LOAD_BOOKMARK: 		'EVENT_LOAD_BOOKMARK',
     	
-        EVENT_ADD_FOLDER:         'EVENT_ADD_FOLDER',
-        EVENT_DEL_FOLDER:         'EVENT_DEL_FOLDER',
-        EVENT_MOV_FOLDER:         'EVENT_MOV_FOLDER',
-        EVENT_LOAD_FOLDER:        'EVENT_LOAD_FOLDER',
+        EVENT_ADD_FOLDER:           'EVENT_ADD_FOLDER',
+        EVENT_DEL_FOLDER:           'EVENT_DEL_FOLDER',
+        EVENT_MOV_FOLDER:           'EVENT_MOV_FOLDER',
+        EVENT_LOAD_FOLDER:          'EVENT_LOAD_FOLDER',
     	
+        /**
+         * Gets the child node of rootFolder that the item falls under. If the
+         * the item falls directly under the root folder, then it is a bookmark
+         * item. Otherwise, it is a folder that falls directly under the root
+         * folder.
+         * 
+         * @param aItem
+         *            A bookmarks item's id
+         * @param aFolderId
+         *            The id of the folder that contains aItem
+         * 
+         * @return Null if aItem is not a descendant of rootFolder; the id of
+         *         the child node otherwise.
+         */
+        getRootFolderChildNode: function(aItemId, aFolderId) {
+            
+            let childId = aItemId;
+            let parentId = aFolderId;
+            while(parent && parent != this.rootFolder) {
+                childId = parentId;
+                parentId = self._bs.getFolderIdForItem(parentId);
+            }
+     
+            return (parentId == this.rootFolder) ? child : null;
+        },
+        
     	moveBookmarkGroupBefore: function(prevBookmarkIDs, bookmarkIDs) {
     		let targetIndex = prevBookmarkIDs ? self._bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
     		
@@ -225,32 +269,36 @@ com.sppad.booky.Bookmarks = new function() {
          * EVENT_LOAD_BOOKMARK event for each one.
          */
     	loadBookmarks: function() {
-            let folder = self._getFolder(this.bookmarkFolder);
-    	    
-    		try {
+    	    this.loadFolder(this.bookmarkFolder);
+        },
+        
+        loadFolder: function(aFolderId) {
+            
+            let folder = self._getFolder(aFolderId);
+            try {
                 folder.containerOpen = true;
                 
-	        	for (let i = 0; i < folder.childCount; i ++) {
-	        	    let node = folder.getChild(i);
-	        	  
-                    // Only bookmarks supported so far
+                for (let i = 0; i < folder.childCount; i ++) {
+                    let node = folder.getChild(i);
+                  
                     switch(node.type) {
                         case node.RESULT_TYPE_URI:
                             self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_BOOKMARK);
                             break;
                         case node.RESULT_TYPE_FOLDER:
-                            self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_FOLDER);
+                            this.loadFolder(node.itemId);
                             break;
                     }
                     
                     com.sppad.booky.Utils.dump('bookmarkLoaded\n');
                     com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
                     com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
-	        	}
-    		}
-        	finally {
-        	    folder.containerOpen = false;
-        	}
+                }
+            }
+            finally {
+                folder.containerOpen = false;
+            }
+            
         },
         
         cleanup : function() {

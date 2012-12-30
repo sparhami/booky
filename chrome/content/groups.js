@@ -13,6 +13,43 @@ com.sppad.booky.Groups = new function() {
     
     return {
         
+        handleEvent : function(aEvent) {
+            switch (aEvent.type)
+            {
+                case com.sppad.booky.Bookmarks.EVENT_ADD_FOLDER:
+                case com.sppad.booky.Bookmarks.EVENT_LOAD_FOLDER:
+                    return this.onFolderAdded(aEvent);
+                case com.sppad.booky.Bookmarks.EVENT_MOV_FOLDER:
+                    return this.onFolderMoved(aEvent);
+                case com.sppad.booky.Bookmarks.EVENT_DEL_FOLDER:
+                    return this.onFolderRemoved(aEvent);
+                default:
+                    return null;
+            }
+        },
+        
+        onFolderAdded: function(event) {
+            let node = event.node;
+        },
+        
+        onFolderRemoved: function(event) {
+            let node = event.node;
+        },
+        
+        onFolderMoved: function(event) {
+            let node = event.node;
+            let nodeNext = event.nodeNext;
+        },
+        
+        onBookmarkMoved: function(event) {
+            
+            // Check if parent is root
+            //if(event.node === )
+            
+            
+            
+        },
+        
         addFolder: function(aFolderID, aBookmarkArray) {
             
             
@@ -21,6 +58,15 @@ com.sppad.booky.Groups = new function() {
         removeFolder: function(aFolderID) {
             
             
+        },
+        
+        setup: function() {
+            com.sppad.booky.Bookmarks.addListener(this);
+            
+        },
+        
+        cleanup: function() {
+            com.sppad.booky.Bookmarks.removeListener(this);
         },
     }
     

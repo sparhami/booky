@@ -333,6 +333,7 @@ com.sppad.booky.Booky = new function() {
             com.sppad.booky.Resizer.setup();
             com.sppad.booky.TabEvents.setup();
             com.sppad.booky.DragDrop.setup();
+            com.sppad.booky.Groups.setup();
             
             com.sppad.booky.Preferences.addListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
             this.loadPreferences();
@@ -421,4 +422,5 @@ window.addEventListener('unload', function() {
     com.sppad.booky.Booky.cleanup();
     com.sppad.booky.Preferences.cleanup();
     com.sppad.booky.Bookmarks.cleanup();
+    com.sppad.booky.Groups.cleanup();
 }, false);
