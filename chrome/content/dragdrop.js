@@ -91,6 +91,9 @@ com.sppad.booky.DragDrop = new function() {
         return uris;
     };
     
+    /**
+     * Closes the overflow menu/
+     */
     self._closeOverflowMenu = function() {
         self._overflowButton.open = false;
     };
@@ -185,6 +188,7 @@ com.sppad.booky.DragDrop = new function() {
             
             locX = rect.left - 1.5 * self._menuIndicator.clientWidth;
             locY += 1.5 * self._menuIndicator.clientHeight;
+            // Transform rotates the indicator to be sideways
             let xform = "matrix(0, 1, -1, 0,";
             
             self._menuIndicator.style.MozTransform = xform + locX + "px, " + locY + "px)";
