@@ -104,6 +104,11 @@ com.sppad.booky.Bookmarks = new function() {
     	EVENT_MOV_BOOKMARK:			'EVENT_MOV_BOOKMARK',
     	EVENT_LOAD_BOOKMARK: 		'EVENT_LOAD_BOOKMARK',
     	
+        EVENT_ADD_FOLDER:         'EVENT_ADD_FOLDER',
+        EVENT_DEL_FOLDER:         'EVENT_DEL_FOLDER',
+        EVENT_MOV_FOLDER:         'EVENT_MOV_FOLDER',
+        EVENT_LOAD_FOLDER:        'EVENT_LOAD_FOLDER',
+    	
     	moveBookmarkGroupBefore: function(prevBookmarkIDs, bookmarkIDs) {
     		let targetIndex = prevBookmarkIDs ? self._bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
     		
@@ -129,7 +134,12 @@ com.sppad.booky.Bookmarks = new function() {
                 let node = folder.getChild(aIndex);
 		    	if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
 		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_BOOKMARK);
+		    	else if(node.type == node.RESULT_TYPE_FOLDER)
+                    self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_FOLDER);
 		    	
+                com.sppad.booky.Utils.dump('bookmarkAdded\n');
+                com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
+                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
 	    	} finally {
 	    	    folder.containerOpen = false;
 			}
@@ -144,7 +154,12 @@ com.sppad.booky.Bookmarks = new function() {
                 let node = folder.getChild(aIndex);
 		    	if(node.type == node.RESULT_TYPE_URI)
 		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_BOOKMARK);
-	
+		        else if(node.type == node.RESULT_TYPE_FOLDER)
+                    self._eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_FOLDER);
+		    	
+                com.sppad.booky.Utils.dump('bookmarkRemoved\n');
+                com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
+                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
 	    	} finally {
 	    	    folder.containerOpen = false;
 			}
@@ -168,7 +183,12 @@ com.sppad.booky.Bookmarks = new function() {
     	  	
     	    	if(node.type == node.RESULT_TYPE_URI)
     	  	  		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_BOOKMARK);
+                else if(node.type == node.RESULT_TYPE_FOLDER)
+                    self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_FOLDER);
     	    	
+    	        com.sppad.booky.Utils.dump('bookmarkMoved\n');
+                com.sppad.booky.Utils.dump('\t node.type ' + node.type +" \n");
+                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
     		} finally {
     	  	  	folder.containerOpen = false;
     		}
@@ -218,7 +238,14 @@ com.sppad.booky.Bookmarks = new function() {
                         case node.RESULT_TYPE_URI:
                             self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_BOOKMARK);
                             break;
+                        case node.RESULT_TYPE_FOLDER:
+                            self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_FOLDER);
+                            break;
                     }
+                    
+                    com.sppad.booky.Utils.dump('bookmarkLoaded\n');
+                    com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
+                    com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
 	        	}
     		}
         	finally {
