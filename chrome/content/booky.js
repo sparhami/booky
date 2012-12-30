@@ -174,31 +174,63 @@ com.sppad.booky.Booky = new function() {
             // TODO - Implement tab move code to reorder things appropriately
         },
         
+        /**
+         * Handles a tab open event, causing the tab to be added to a launcher,
+         * if appropriate.
+         * 
+         * @param aTab
+         *            A tab that has been opened.
+         */
         onTabOpen: function(aTab) {
             this.onTabAttrChange(aTab);
         },
         
+        /**
+         * Handles a tab select event.
+         * 
+         * @param aTab
+         *            A tab that has been selected.
+         */
         onTabSelect: function(aTab) {
+            // Handle previously selected tab
             if(self._selectedTab.com_sppad_booky_launcher)
                 self._selectedTab.com_sppad_booky_launcher.updateTab(self._selectedTab);
             
+            // Handle newly selected tab
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.selectTab(aTab);
             
+            // Launcher overflow / positioning handling
             if(self._selectedTab.com_sppad_booky_launcher || aTab.com_sppad_booky_launcher)
                 com.sppad.booky.Resizer.onTabSelect(aTab);
             
             self._selectedTab = aTab;
         },
         
+        /**
+         * Handles a tab close event.
+         * 
+         * @param aTab
+         *            A tab that is being closed.
+         */
         onTabClose: function(aTab) {
             if(aTab.com_sppad_booky_launcher) {
                 aTab.com_sppad_booky_launcher.removeTab(aTab);
-                com.sppad.booky.Resizer.onTabTitleChangeCleared(aTab);
+                // com.sppad.booky.Resizer.onTabTitleChangeCleared(aTab);
                 com.sppad.booky.Resizer.onResize();
             }
         },
         
+        /**
+         * Handles a tab attribute change, such as the title or URI changing.
+         * <p>
+         * Changes the launcher (either adding or removing) depending on the id
+         * for the tab.
+         * 
+         * 
+         * @param aTab
+         *            A tab that has a attribute change.
+         */
         onTabAttrChange: function(aTab) {
             let newId = this.getIdFromTab(aTab);
             let oldId = aTab.com_sppad_booky_id;
@@ -210,12 +242,14 @@ com.sppad.booky.Booky = new function() {
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
             if(aTab.label != self._connectingString && (newId != oldId || !aTab.com_sppad_booky_launcher)) {
+                // If the tab was in a launcher, removed it
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
                 
+                // If the tab's id corresponds to a launcher, add it
                 if(com.sppad.booky.Launcher.hasLauncher(newId))
                     com.sppad.booky.Launcher.getLauncher(newId).addTab(aTab);
-                
+
                 aTab.com_sppad_booky_id = newId;
                 
                 // Adding / changing the launcher may cause the overflow
@@ -223,11 +257,17 @@ com.sppad.booky.Booky = new function() {
                 // overflow.
                 com.sppad.booky.Resizer.onResize();
             }
-            
+
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
         },
         
+        /**
+         * Handles a tab title change event.
+         * 
+         * @param aTab
+         *            A tab that has changed title.
+         */
         onTabTitleChange: function(aTab) {
             aTab.com_sppad_booky_titlechanged = true;
             if(aTab.com_sppad_booky_launcher) {
@@ -236,6 +276,13 @@ com.sppad.booky.Booky = new function() {
             }
         },
         
+        /**
+         * Handles a tab title change consumed event.
+         * 
+         * @param aTab
+         *            A tab that had a title change that was consumed (e.g. tab
+         *            selected).
+         */
         onTabTitleChangeCleared: function(aTab) {
             aTab.com_sppad_booky_titlechanged = false;
             if(aTab.com_sppad_booky_launcher) {
@@ -244,19 +291,33 @@ com.sppad.booky.Booky = new function() {
             }
         },
         
-        
+        /**
+         * Handles a tab busy event.
+         * 
+         * @param aTab
+         *            A tab that has become busy.
+         */
         onTabBusy: function(aTab) {
             aTab.com_sppad_booky_busy = true;
             if(aTab.com_sppad_booky_launcher)
                aTab.com_sppad_booky_launcher.updateTab(aTab);
         },
         
+        /**
+         * Handles a tab is no longer busy.
+         * 
+         * @param aTab
+         *            A tab that stopped being busy (e.g. done loading).
+         */
         onTabBusyCleared: function(aTab) {
             aTab.com_sppad_booky_busy = false;
             if(aTab.com_sppad_booky_launcher)
                 aTab.com_sppad_booky_launcher.updateTab(aTab);
         },
         
+        /**
+         * Loads the add-on preferences (for use during initialization).
+         */
         loadPreferences: function() {
             this.prefChanged("debug", com.sppad.booky.CurrentPrefs['debug']);
             this.prefChanged("hideTabStrategy", com.sppad.booky.CurrentPrefs['hideTabStrategy']);
@@ -265,6 +326,9 @@ com.sppad.booky.Booky = new function() {
             this.prefChanged("styleTabs", com.sppad.booky.CurrentPrefs['styleTabs']);
         }, 
         
+        /**
+         * Initialize everything, loading data, registering listeners, etc.
+         */
         setup: function() {
             com.sppad.booky.Resizer.setup();
             com.sppad.booky.TabEvents.setup();
@@ -287,6 +351,9 @@ com.sppad.booky.Booky = new function() {
             this.loadTabs();
         },
         
+        /**
+         * Cleanup for window unload: remove listeners.
+         */
         cleanup: function() {
             com.sppad.booky.Preferences.removeListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
             com.sppad.booky.TabEvents.removeListener(this);
