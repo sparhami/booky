@@ -28,11 +28,9 @@ com.sppad.booky.BookmarksListener = {
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
 	    
 	    dump("item removed\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aFolder);
-	        
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aParentId);
+	    
 		if(rootChildId != null) {
-		    dump("starting removal\n");
-		    
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		}
@@ -147,6 +145,7 @@ com.sppad.booky.Bookmarks = new function() {
             
             let childId = aItemId;
             let parentId = aFolderId;
+            
             while(parentId && parentId != this.rootFolder) {
                 childId = parentId;
                 parentId = self._bs.getFolderIdForItem(parentId);
