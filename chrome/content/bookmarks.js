@@ -17,9 +17,9 @@ com.sppad.booky.BookmarksListener = {
 	onItemAdded: function(aItemId, aFolder, aIndex) {
 	    
 	    dump("item added\n");
-	    let rootChild = com.sppad.booky.Bookmarks.isDescendant(aItemId, aFolder);
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aFolder);
 	    
-		if(rootChild != null) {
+		if(rootChildId != null) {
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
 		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
 		}
@@ -28,9 +28,11 @@ com.sppad.booky.BookmarksListener = {
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
 	    
 	    dump("item removed\n");
-	    com.sppad.booky.Bookmarks.isDescendant(aItemId, aFolder);
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aFolder);
 	        
-		if(rootChild != null) {
+		if(rootChildId != null) {
+		    dump("starting removal\n");
+		    
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		}
@@ -39,9 +41,9 @@ com.sppad.booky.BookmarksListener = {
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
 	    
 	    dump("item changed\n");
-	    let rootChild = com.sppad.booky.Bookmarks.getRootFolderChildNode(aItemId, aParentId);
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aParentId);
 	    
-		if(aProperty === "uri" && rootChild != null) {
+		if(aProperty === "uri" && rootChildId != null) {
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
@@ -52,14 +54,14 @@ com.sppad.booky.BookmarksListener = {
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
 	    
 	    dump("item moved\n");
-	    let oldRootChild = com.sppad.booky.Bookmarks.isDescendant(aItemId, aOldParent);
-	    let newRootChild = com.sppad.booky.Bookmarks.isDescendant(aItemId, aNewParent);
+	    let oldRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aOldParent);
+	    let newRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aNewParent);
 	    
-		if(oldRootChild != null && newRootChild != null)
+		if(oldRootChildId != null && newRootChildId != null)
 		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
-		else if(newRootChild != null)
+		else if(newRootChildId != null)
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aNewParent, aNewIndex);
-		else if(oldRootChild != null)
+		else if(oldRootChildId != null)
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
 	},
 	
@@ -141,27 +143,54 @@ com.sppad.booky.Bookmarks = new function() {
          * @return Null if aItem is not a descendant of rootFolder; the id of
          *         the child node otherwise.
          */
-        getRootFolderChildNode: function(aItemId, aFolderId) {
+        getRootFolderChildNodeId: function(aItemId, aFolderId) {
             
             let childId = aItemId;
             let parentId = aFolderId;
-            while(parent && parent != this.rootFolder) {
+            while(parentId && parentId != this.rootFolder) {
                 childId = parentId;
                 parentId = self._bs.getFolderIdForItem(parentId);
             }
      
-            return (parentId == this.rootFolder) ? child : null;
+            return (parentId == this.rootFolder) ? childId : null;
         },
         
-    	moveBookmarkGroupBefore: function(prevBookmarkIDs, bookmarkIDs) {
-    		let targetIndex = prevBookmarkIDs ? self._bs.getItemIndex(prevBookmarkIDs[prevBookmarkIDs.length - 1]) + 1 : 0;
-    		
-    		for(let i=0; i<bookmarkIDs.length; i++) {
-    			if(i != 0)
-    				targetIndex = self._bs.getItemIndex(bookmarkIDs[i-1]) + 1;
-    			
-    			self._bs.moveItem(bookmarkIDs[i], this.bookmarkFolder, targetIndex);
-    		}
+        getBookmarkURI: function(aItemId) {
+            return self._bs.getBookmarkURI(aItemId);
+        },
+        
+        getFolderBookmarks: function(aFolderId) {
+            let folder = self._getFolder(aFolderId);
+            let bookmarks = new Array();
+            
+            try {
+                folder.containerOpen = true;
+                
+                for (let i = 0; i < folder.childCount; i ++) {
+                    let node = folder.getChild(i);
+                  
+                    switch(node.type) {
+                        case node.RESULT_TYPE_URI:
+                            bookmarks.push(node);
+                            break;
+                        case node.RESULT_TYPE_FOLDER:
+                            bookmarks.concat(this.getFolderBookmarks(node.itemId));
+                            break;
+                    }
+                }
+                
+                return bookmarks;
+            }
+            finally {
+                folder.containerOpen = false;
+            }
+        },
+        
+    	moveBefore: function(priorBookmarkId, bookmarkId, aFolderId) {
+    	    aFolderId = aFolderId || this.rootFolder;
+    	    
+            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : 0;
+            self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
     	},
     	
       	bookmarkAdded: function(aItemId, aFolderId, aIndex) {
@@ -176,14 +205,14 @@ com.sppad.booky.Bookmarks = new function() {
                  * blank (or at least does so on Linux)
                  */
                 let node = folder.getChild(aIndex);
-		    	if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
+                if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
 		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_BOOKMARK);
 		    	else if(node.type == node.RESULT_TYPE_FOLDER)
                     self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_FOLDER);
 		    	
-                com.sppad.booky.Utils.dump('bookmarkAdded\n');
-                com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
-                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
+//                com.sppad.booky.Utils.dump('bookmarkAdded\n');
+//                com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
+//                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
 	    	} finally {
 	    	    folder.containerOpen = false;
 			}
@@ -230,9 +259,9 @@ com.sppad.booky.Bookmarks = new function() {
                 else if(node.type == node.RESULT_TYPE_FOLDER)
                     self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_FOLDER);
     	    	
-    	        com.sppad.booky.Utils.dump('bookmarkMoved\n');
-                com.sppad.booky.Utils.dump('\t node.type ' + node.type +" \n");
-                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
+//    	        com.sppad.booky.Utils.dump('bookmarkMoved\n');
+//                com.sppad.booky.Utils.dump('\t node.type ' + node.type +" \n");
+//                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
     		} finally {
     	  	  	folder.containerOpen = false;
     		}
@@ -273,8 +302,8 @@ com.sppad.booky.Bookmarks = new function() {
         },
         
         loadFolder: function(aFolderId) {
-            
             let folder = self._getFolder(aFolderId);
+      
             try {
                 folder.containerOpen = true;
                 
@@ -290,15 +319,14 @@ com.sppad.booky.Bookmarks = new function() {
                             break;
                     }
                     
-                    com.sppad.booky.Utils.dump('bookmarkLoaded\n');
-                    com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
-                    com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
+//                    com.sppad.booky.Utils.dump('bookmarkLoaded\n');
+//                    com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
+//                    com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
                 }
             }
             finally {
                 folder.containerOpen = false;
             }
-            
         },
         
         cleanup : function() {

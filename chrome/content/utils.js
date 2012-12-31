@@ -73,7 +73,7 @@ com.sppad.booky.Utils = (function() {
          * @param obj
          *            The object to remove from the array
          */
-		removeFromArray: function(array,  obj) {
+		removeFromArray: function(array, obj) {
 			for(let i = 0; i < array.length; i++)
 				if (array[i] == obj)
 					return array.splice(i, 1);
@@ -158,3 +158,57 @@ com.sppad.booky.EventSupport.prototype.
 removeListener = function(listener, type) {
     com.sppad.booky.Utils.removeFromArray(this._getListeners(type), listener);
 };
+
+/**
+ * Array based map. TODO - need something better.
+ */
+com.sppad.booky.Map = function() {
+    
+    var self = this;
+    
+    self.keys = new Array();
+    self.values = new Array();
+    
+    this.get = function(key) {
+        let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
+        return (index >=  0) ? self.values[index] : null;
+    };
+    
+    this.put = function(key, value) {
+        let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
+        
+        if(index >= 0) {
+            let old = self.values[index];
+            self.values[index] = value;
+            
+            return old;
+        } else {
+            self.keys.push(key);
+            self.values.push(value);
+            
+            return null;
+        }
+    };
+    
+    this.remove = function(key) {
+        let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
+
+        if(index >= 0) {
+            self.keys.splice(index, 1);
+            return self.values.splice(index, 1)[0];
+        } else {
+            return null;
+        }
+    };
+    
+    this.toString = function() {
+        
+        let result = "[ ";
+        for(let i=0; i<self.keys.length; i++) {
+            result += self.keys[i] + " -> " + self.values[i] + ", \n";
+        }
+        
+        result += "]";
+        return result;
+    };
+}

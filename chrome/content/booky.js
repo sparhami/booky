@@ -48,13 +48,6 @@ com.sppad.booky.Booky = new function() {
         handleEvent : function(aEvent) {
             switch (aEvent.type)
             {
-                case com.sppad.booky.Bookmarks.EVENT_ADD_BOOKMARK:
-                case com.sppad.booky.Bookmarks.EVENT_LOAD_BOOKMARK:
-                    return this.onBookmarkAdded(aEvent);
-                case com.sppad.booky.Bookmarks.EVENT_MOV_BOOKMARK:
-                    return this.onBookmarkMoved(aEvent);
-                case com.sppad.booky.Bookmarks.EVENT_DEL_BOOKMARK:
-                    return this.onBookmarkRemoved(aEvent);
                 case com.sppad.booky.TabEvents.EVENT_TAB_MOVED:
                     return this.onTabMove(aEvent.tab);
                 case com.sppad.booky.TabEvents.EVENT_TAB_OPENED:
@@ -120,53 +113,6 @@ com.sppad.booky.Booky = new function() {
          */
         applyAttribute: function(id, name, value) {
             document.getElementById(id).setAttribute("com_sppad_booky_" + name, value);
-        },
-        
-        onBookmarkAdded: function(event) {
-            let node = event.node;
-            let id = com.sppad.booky.Groups.getIdFromUriString(node.uri);
-            
-            let launcher = com.sppad.booky.Launcher.getLauncher(id);
-            launcher.addBookmark(node.uri, node.icon, node.itemId);
-            
-            // Add all existing tabs in the launcher
-            let tabs = gBrowser.tabs;
-            for(let i=0; i<tabs.length; i++)
-                if(id == com.sppad.booky.Groups.getIdFromTab(tabs[i]))
-                    launcher.addTab(tabs[i]);
-            
-            this.updateBookmarksCount(1);
-            
-            com.sppad.booky.Resizer.onResize();
-        },
-        
-        onBookmarkRemoved: function(event) {
-            let node = event.node;
-            // Need to lookup by the bookmark id because the uri of the boomark
-            // may have changed (if it has been modified at not deleted).
-            let launcher = com.sppad.booky.Launcher.getLauncherFromBookmarkId(node.itemId);
-       
-            // Can occur due to how bookmarks are edited (at least on Linux)
-            if(!launcher)
-                return;
-            
-            launcher.removeBookmark(node.itemId);
-            this.updateBookmarksCount(-1);
-            
-            com.sppad.booky.Resizer.onResize();
-        },
-        
-        onBookmarkMoved: function(event) {
-            let node = event.node;
-            let nodeNext = event.nodeNext;
-            
-            let group = com.sppad.booky.Launcher.getLauncher(com.sppad.booky.Groups.getIdFromUriString(node.uri));
-            let nextGroup = nodeNext ? com.sppad.booky.Launcher.getLauncher(com.sppad.booky.Groups.getIdFromUriString(nodeNext.uri)) : null;
-            
-            group.createBefore(nextGroup);
-            
-            // Force resize so things are hidden / shown appropriately.
-            com.sppad.booky.Resizer.onResize();
         },
         
         onTabMove: function(aTab) {
@@ -345,7 +291,6 @@ com.sppad.booky.Booky = new function() {
             self._selectedTab = gBrowser.selectedTab;
             
             com.sppad.booky.TabEvents.addListener(this);
-            com.sppad.booky.Bookmarks.addListener(this);
             
             this.updateBookmarksCount(0);
             com.sppad.booky.Bookmarks.loadBookmarks();
@@ -358,7 +303,6 @@ com.sppad.booky.Booky = new function() {
         cleanup: function() {
             com.sppad.booky.Preferences.removeListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
             com.sppad.booky.TabEvents.removeListener(this);
-            com.sppad.booky.Bookmarks.removeListener(this);
         },
     }
 };

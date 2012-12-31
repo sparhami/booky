@@ -1,114 +1,187 @@
 if (typeof com == "undefined") {
-  var com = {};
+    var com = {};
 }
 
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
 com.sppad.booky.Groups = new function() {
-    
+
     var self = this;
+
+    this.groupIdMap = new com.sppad.booky.Map();
+
+    /**
+     * Gets the launcher ID for a given tab. Currently this is based off the
+     * hostname only.
+     * 
+     * @param aTab
+     *            A browser tab
+     * @return The id for the launcher for aTab
+     */
+    this.getPrimaryIdFromTab = function(aTab) {
+        let
+        currentUri = gBrowser.getBrowserForTab(aTab).currentURI;
+
+        try {
+            return this.getPrimaryIdFromUri(currentUri);
+        } catch (err) {
+            return aTab.label;
+        }
+    };
+
+    /**
+     * Gets the launcher ID for a given URI. Currently this is based off the
+     * hostname only.
+     * 
+     * @param uriString
+     *            A string representing a URI
+     * @return The id for the launcher for uriString
+     */
+    this.getPrimaryIdFromUriString = function(uriString) {
+        try {
+            return Services.io.newURI(uriString, null, null).host || uriString;
+        } catch (err) {
+            return uriString;
+        }
+    };
+
+    this.getPrimaryIdFromUri = function(aUri) {
+        try {
+            return aUri.host || aUri.asciiSpec;
+        } catch (err) {
+            return aUri.asciiSpec;
+        }
+    };
     
-    this.folderIDs = new Array();
-    
+    this.getIdFromBookmarkNode = function(aNode) {
+        return com.sppad.booky.Bookmarks.getRootFolderChildNodeId(
+                aNode.itemId, aNode.parent.itemId);
+    };
+
     return {
-        
+
+        getIdFromTab : function(aTab) {
+            let primaryId = self.getPrimaryIdFromTab(aTab);
+            return self.groupIdMap.get(primaryId);
+        },
+
+        getIdFromUriString : function(aUriString) {
+            let primaryId = self.getPrimaryIdFromUriString(aUriString);
+            return self.groupIdMap.get(primaryId);
+        },
+
         handleEvent : function(aEvent) {
-            switch (aEvent.type)
-            {
-                case com.sppad.booky.Bookmarks.EVENT_ADD_FOLDER:
-                case com.sppad.booky.Bookmarks.EVENT_LOAD_FOLDER:
-                    return this.onFolderAdded(aEvent);
+            switch (aEvent.type) {
+                // case com.sppad.booky.Bookmarks.EVENT_ADD_FOLDER:
+                // case com.sppad.booky.Bookmarks.EVENT_LOAD_FOLDER:
+                // return this.onFolderAdded(aEvent);
                 case com.sppad.booky.Bookmarks.EVENT_MOV_FOLDER:
-                    return this.onFolderMoved(aEvent);
-                case com.sppad.booky.Bookmarks.EVENT_DEL_FOLDER:
-                    return this.onFolderRemoved(aEvent);
+                    return this.onMove(aEvent);
+                    // case com.sppad.booky.Bookmarks.EVENT_DEL_FOLDER:
+                    // return this.onFolderRemoved(aEvent);
+                case com.sppad.booky.Bookmarks.EVENT_ADD_BOOKMARK:
+                case com.sppad.booky.Bookmarks.EVENT_LOAD_BOOKMARK:
+                    return this.onBookmarkAdded(aEvent);
+                case com.sppad.booky.Bookmarks.EVENT_MOV_BOOKMARK:
+                    return this.onMove(aEvent);
+                case com.sppad.booky.Bookmarks.EVENT_DEL_BOOKMARK:
+                    return this.onBookmarkRemoved(aEvent);
                 default:
                     return null;
             }
         },
-        
-        onFolderAdded: function(event) {
+
+        onBookmarkAdded : function(event) {
             let node = event.node;
+
+            let groupId = self.getIdFromBookmarkNode(node);
+            let primaryId = self.getPrimaryIdFromUriString(node.uri);
+
+            dump("Mapping " + primaryId + " to " + groupId + "\n");
+            self.groupIdMap.put(primaryId, groupId);
+            
+            
+            let launcher = com.sppad.booky.Launcher.getLauncher(groupId);
+            launcher.addBookmark(node.uri, node.icon, node.itemId);
+            
+            // Add all existing tabs in the launcher
+            let tabs = gBrowser.tabs;
+            for(let i=0; i<tabs.length; i++)
+                if(groupId == com.sppad.booky.Groups.getIdFromTab(tabs[i]))
+                    launcher.addTab(tabs[i]);
+            
+            com.sppad.booky.Booky.updateBookmarksCount(1);
+            com.sppad.booky.Resizer.onResize();
         },
-        
-        onFolderRemoved: function(event) {
+
+        onBookmarkRemoved : function(event) {
+            
+            dump("onbookmark removed\n");
+            
             let node = event.node;
+            let primaryId = self.getPrimaryIdFromUriString(node.uri);
+
+            let groupId = self.groupIdMap.remove(primaryId);
+            dump("Removing Mapping " + primaryId + " to " + groupId + "\n");
+            
+            let node = event.node;
+            // Need to lookup by the bookmark id because the uri of the boomark
+            // may have changed (if it has been modified at not deleted).
+            let launcher = com.sppad.booky.Launcher.getLauncherFromBookmarkId(node.itemId);
+       
+            // Can occur due to how bookmarks are edited (at least on Linux)
+            if(!launcher)
+                return;
+            
+            launcher.removeBookmark(node.itemId);
+            
+            com.sppad.booky.Booky.updateBookmarksCount(-1);
+            com.sppad.booky.Resizer.onResize();
         },
-        
-        onFolderMoved: function(event) {
+
+        onMove : function(event) {
+
+            dump("onbookmark moved\n");
+
             let node = event.node;
             let nodeNext = event.nodeNext;
+            
+            let groupId = self.getIdFromBookmarkNode(node);
+
+            dump("Move: groupId is " + groupId + "\n");
+                     
+            let group = com.sppad.booky.Launcher.getLauncher(groupId);
+            let nextGroup = null;
+            
+            if(nodeNext) {
+                nextGroupId = self.getIdFromBookmarkNode(nodeNext);
+                nextGroup = com.sppad.booky.Launcher.getLauncher(nextGroupId);
+                
+                dump("Next groupId is " + nextGroupId + "\n");
+            }
+                     
+            group.createBefore(nextGroup);
+                     
+            // Force resize so things are hidden / shown appropriately.
+            com.sppad.booky.Resizer.onResize();
         },
         
-        onBookmarkMoved: function(event) {
-            
-            // Check if parent is root
-            //if(event.node === )
-            
-            
-            
+        addFolder : function(aFolderID, aBookmarkArray) {
+
         },
-        
-        addFolder: function(aFolderID, aBookmarkArray) {
-            
-            
+
+        removeFolder : function(aFolderID) {
+
         },
-        
-        removeFolder: function(aFolderID) {
-            
-            
-        },
-        
-        setup: function() {
+
+        setup : function() {
             com.sppad.booky.Bookmarks.addListener(this);
-            
+
         },
-        
-        cleanup: function() {
+
+        cleanup : function() {
             com.sppad.booky.Bookmarks.removeListener(this);
         },
-    }
-    
-};
-
-
-
-
-/**
- * Gets the launcher ID for a given tab. Currently this is based off the
- * hostname only.
- * 
- * @param aTab
- *            A browser tab
- * @return The id for the launcher for aTab
- */
-com.sppad.booky.Groups.getIdFromTab = function(aTab) {
-    let currentUri = gBrowser.getBrowserForTab(aTab).currentURI;
-    
-    try {
-        return currentUri.host || currentUri.asciiSpec;
-    } catch(err) {
-        try {
-            return currentUri.asciiSpec;
-        } catch(err) {
-            return aTab.label;
-        }
-    }
-};
-
-/**
- * Gets the launcher ID for a given URI. Currently this is based off the
- * hostname only.
- * 
- * @param uriString
- *            A string representing a URI
- * @return The id for the launcher for uriString
- */
-com.sppad.booky.Groups.getIdFromUriString = function(uriString) {
-    try {
-        return Services.io.newURI(uriString, null, null).host || uriString;
-    } catch(err) {
-        return uriString;
     }
 };

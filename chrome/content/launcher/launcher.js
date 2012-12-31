@@ -387,6 +387,7 @@ com.sppad.booky.Launcher.prototype.mouseleave = function() {
 
 com.sppad.booky.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
+    dt.setData('text/com-sppad-booky-launcherId', this.id); 
     dt.setData('text/uri-list', this.bookmarks[0]);
     dt.addElement(event.target);
 

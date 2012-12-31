@@ -41,12 +41,13 @@ com.sppad.booky.DragDrop = new function() {
      */
     self._canDrop = function(event) {
         let dt = event.dataTransfer;
+        let launcher = dt.getData('text/com-sppad-booky-launcherId');
         let mozUrl = dt.getData('text/x-moz-url');
         let uriList = dt.getData('text/uri-list');
         let plain = dt.getData('text/plain');
         let internal = dt.getData('text/x-moz-text-internal');
         
-        if(mozUrl || uriList || plain || internal)
+        if(launcher || mozUrl || uriList || plain || internal)
             return true;
         else
             return false;
@@ -89,6 +90,39 @@ com.sppad.booky.DragDrop = new function() {
         }
         
         return uris;
+    };
+    
+    self._dropLauncher = function(launcherId) {
+        dump("dropping launcher\n");
+            
+        let launcher = com.sppad.booky.Launcher.getLauncher(launcherId);
+        let bookmarkId = launcher.id;
+        let prevBookmarkId = self._insertPoint && self._insertPoint.js.id;
+
+        // Move the bookmarks, which will cause the launchers to be
+        // moved appropriately.
+        com.sppad.booky.Bookmarks.moveBefore(prevBookmarkId, bookmarkId);
+    };
+    
+    self._dropUris = function(uris) {
+        dump("dropping uris\n");
+        
+        for(let i=0; i<uris.length; i++) {
+            
+            let uri = uris[i];
+            let id = com.sppad.booky.Groups.getIdFromUriString(uri);
+
+            let launcher = com.sppad.booky.Launcher.getLauncher(id);
+            if(com.sppad.booky.Utils.getIndexInArray(launcher.bookmarks, uri) < 0)
+                com.sppad.booky.Bookmarks.addBookmark(uri);
+            
+            let bookmarkId = launcher.id;
+            let prevBookmarkId = self._insertPoint && self._insertPoint.js.id;
+
+            // Move the bookmarks, which will cause the launchers to be
+            // moved appropriately.
+            com.sppad.booky.Bookmarks.moveBefore(prevBookmarkId, bookmarkId);
+        }
     };
     
     /**
@@ -259,6 +293,7 @@ com.sppad.booky.DragDrop = new function() {
             self._menuIndicator.collapsed = true;
             self._toolbarIndicator.collapsed = true;
             
+            let launcherId = event.dataTransfer.getData('text/com-sppad-booky-launcherId');
             let uris = self._getUris(event);
             
             /*
@@ -266,26 +301,16 @@ com.sppad.booky.DragDrop = new function() {
              * letting the cleanup for tab drop go through first, the adding of
              * a tab to a launcher causes the cleanup to never occur.
              */
-            window.setTimeout(function() { 
-                for(let i=0; i<uris.length; i++) {
-                    
-                    let uri = uris[i];
-                    let id = com.sppad.booky.Groups.getIdFromUriString(uri);
-    
-                    let launcher = com.sppad.booky.Launcher.getLauncher(id);
-                    if(com.sppad.booky.Utils.getIndexInArray(launcher.bookmarks, uri) < 0)
-                        com.sppad.booky.Bookmarks.addBookmark(uri);
-                    
-                    let bookmarkIDs = launcher.bookmarkIDs;
-                    let prevBookmarkIDs = self._insertPoint && self._insertPoint.js.bookmarkIDs;
-    
-                    // Move the bookmarks, which will cause the launchers to be
-                    // moved appropriately.
-                    com.sppad.booky.Bookmarks.moveBookmarkGroupBefore(prevBookmarkIDs, bookmarkIDs);
-                }
+            window.setTimeout(function() {
+                
+                if(launcherId)
+                    self._dropLauncher(launcherId);
+                else
+                    self._dropUris(uris);
                 
                 self._insertPoint = null;
                 self._insertValid = false;
+                
             }, 1);
             
             event.preventDefault();
