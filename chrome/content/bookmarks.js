@@ -158,6 +158,10 @@ com.sppad.booky.Bookmarks = new function() {
             return self._bs.getBookmarkURI(aItemId);
         },
         
+        getTitle: function(aItemId) {
+            return self._bs.getItemTitle(aItemId);
+        },
+        
         getFolderBookmarks: function(aFolderId) {
             let folder = self._getFolder(aFolderId);
             let bookmarks = new Array();

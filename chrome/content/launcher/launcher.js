@@ -14,6 +14,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;
+    this.title = aID;
     this.tabs = [];
     this.selected = false;
     this.bookmarks = [];
@@ -160,6 +161,10 @@ com.sppad.booky.Launcher = function(aID) {
      */
     this.setImage = function(anImage) {
         this.setAttribute('image', anImage || 'chrome://mozapps/skin/places/defaultFavicon.png');
+    };
+    
+    this.setTitle = function(aTitle) {
+        this.title = aTitle;
     };
     
     /**
@@ -370,7 +375,7 @@ com.sppad.booky.Launcher.prototype.mouseenter = function() {
     let tooltipLabel = document.getElementById('com_sppad_booky_tooltip_label');
 
     // need to open tooltip once first to find out the dimensions for centering
-    tooltipLabel.setAttribute('value', this.id);
+    tooltipLabel.setAttribute('value', this.title);
     tooltip.openPopup(this.node, 'after_start', 0, 0, false, false);
     
     let xOffset = (-tooltip.boxObject.width/2) + (this.node.boxObject.width / 2);

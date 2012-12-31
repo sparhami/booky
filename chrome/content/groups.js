@@ -97,13 +97,14 @@ com.sppad.booky.Groups = new function() {
 
             let groupId = self.getIdFromBookmarkNode(node);
             let primaryId = self.getPrimaryIdFromUriString(node.uri);
-
+            let title = com.sppad.booky.Bookmarks.getTitle(groupId) || node.uri;
+            
             dump("Mapping " + primaryId + " to " + groupId + "\n");
             self.groupIdMap.put(primaryId, groupId);
             
-            
             let launcher = com.sppad.booky.Launcher.getLauncher(groupId);
             launcher.addBookmark(node.uri, node.icon, node.itemId);
+            launcher.setTitle(title);
             
             // Add all existing tabs in the launcher
             let tabs = gBrowser.tabs;
@@ -117,8 +118,7 @@ com.sppad.booky.Groups = new function() {
 
         onBookmarkRemoved : function(event) {
             
-            dump("onbookmark removed\n");
-            
+            dump("onbookmark moved\n");
             let node = event.node;
             let primaryId = self.getPrimaryIdFromUriString(node.uri);
 
