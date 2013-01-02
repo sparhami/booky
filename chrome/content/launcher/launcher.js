@@ -34,7 +34,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.forceCloseOverflowMenu = function() {
         let overflowButton = document.getElementById('com_sppad_booky_launchers_overflow_button');
         overflowButton.open = false;
-    }
+    };
     
     this.openTab = function(aUri) {     
         gBrowser.selectedTab = gBrowser.addTab(aUri || this.bookmarks[0]);
@@ -306,8 +306,7 @@ com.sppad.booky.Launcher = function(aID) {
             for(let i=0; i<this.tabs.length; i++)
                 this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
            
-            com.sppad.booky.Utils.removeFromArray(com.sppad.booky.Launcher.launchers, this);
-            com.sppad.booky.Utils.removeFromArray(com.sppad.booky.Launcher.launcherIDs, this.id);
+            com.sppad.booky.Launcher.launcherMap.remove(this.id);
             
             this.forceCloseOverflowMenu();
         }
@@ -362,8 +361,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.node.js = self;
     this.menuNode.js = self;
     
-    com.sppad.booky.Launcher.launchers.push(this);
-    com.sppad.booky.Launcher.launcherIDs.push(this.id);
+    com.sppad.booky.Launcher.launcherMap.put(this.id, this);
 }
 
 /**
@@ -604,15 +602,13 @@ com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
 /** Maps bookmark ids to Launchers */
 com.sppad.booky.Launcher.bookmarkIDToLauncher = {};
 /** Maps ids to Launchers */
-com.sppad.booky.Launcher.launchers = new Array();
-com.sppad.booky.Launcher.launcherIDs = new Array();
+com.sppad.booky.Launcher.launcherMap = new com.sppad.booky.Map();
 com.sppad.booky.Launcher.getLauncher = function(aID) {
-    let index = com.sppad.booky.Utils.getIndexInArray(this.launcherIDs, aID);
-    return (index >=  0) ? this.launchers[index] : new com.sppad.booky.Launcher(aID);
+    return this.launcherMap.get(aID) || new com.sppad.booky.Launcher(aID);
 };
 
 com.sppad.booky.Launcher.hasLauncher = function(aID) {
-    return com.sppad.booky.Utils.getIndexInArray(this.launcherIDs, aID) >= 0;
+    return this.launcherMap.get(aID) != null;
 };
 
 com.sppad.booky.Launcher.getLauncherFromBookmarkId = function(aBookmarkId) {

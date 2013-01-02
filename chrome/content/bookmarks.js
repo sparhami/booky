@@ -17,7 +17,7 @@ com.sppad.booky.BookmarksListener = {
 	onItemAdded: function(aItemId, aFolder, aIndex) {
 	    
 	    dump("item added\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aFolder);
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
 	    
 		if(rootChildId != null) {
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
@@ -28,7 +28,7 @@ com.sppad.booky.BookmarksListener = {
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
 	    
 	    dump("item removed\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aParentId);
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
 	    
 		if(rootChildId != null) {
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
@@ -39,7 +39,7 @@ com.sppad.booky.BookmarksListener = {
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
 	    
 	    dump("item changed\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aParentId);
+	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
 	    
 		if(aProperty === "uri" && rootChildId != null) {
 		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
@@ -52,8 +52,8 @@ com.sppad.booky.BookmarksListener = {
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
 	    
 	    dump("item moved\n");
-	    let oldRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aOldParent);
-	    let newRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId, aNewParent);
+	    let oldRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
+	    let newRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
 	    
 		if(oldRootChildId != null && newRootChildId != null)
 		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
@@ -135,16 +135,14 @@ com.sppad.booky.Bookmarks = new function() {
          * 
          * @param aItem
          *            A bookmarks item's id
-         * @param aFolderId
-         *            The id of the folder that contains aItem
          * 
          * @return Null if aItem is not a descendant of rootFolder; the id of
          *         the child node otherwise.
          */
-        getRootFolderChildNodeId: function(aItemId, aFolderId) {
+        getRootFolderChildNodeId: function(aItemId) {
             
             let childId = aItemId;
-            let parentId = aFolderId;
+            let parentId = self._bs.getFolderIdForItem(aItemId);
             
             while(parentId && parentId != this.rootFolder) {
                 childId = parentId;
@@ -160,6 +158,14 @@ com.sppad.booky.Bookmarks = new function() {
         
         getTitle: function(aItemId) {
             return self._bs.getItemTitle(aItemId);
+        },
+        
+        getFolder: function(aItemId) {
+            return self._bs.getFolderIdForItem(aItemId);
+        },
+        
+        createFolder: function(aTitle, anIndex) {
+            return self._bs.createFolder(this.rootFolder, aTitle, anIndex);
         },
         
         getFolderBookmarks: function(aFolderId) {
