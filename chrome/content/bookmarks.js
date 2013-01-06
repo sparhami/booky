@@ -51,15 +51,20 @@ com.sppad.booky.BookmarksListener = {
 	onItemVisited: function(aBookmarkId, aVisitID, time) {},
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
 	    
-	    dump("item moved\n");
-	    let oldRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
-	    let newRootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
+	    let rootFolderId = com.sppad.booky.Bookmarks.rootFolder;
+	    let entering = (aNewParent == rootFolderId) || com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aNewParent) != null;
+        let exiting = (aOldParent == rootFolderId) || com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aOldParent) != null;
 	    
-		if(oldRootChildId != null && newRootChildId != null)
+	    dump("item moved\n");
+	    
+	    dump("entering? " + entering + "\n");
+	    dump("exiting? " + exiting + "\n");
+	    
+		if(entering && exiting)
 		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
-		else if(newRootChildId != null)
+		else if(entering)
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aNewParent, aNewIndex);
-		else if(oldRootChildId != null)
+		else if(exiting)
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
 	},
 	
@@ -113,7 +118,6 @@ com.sppad.booky.Bookmarks = new function() {
     
     return {
         rootFolder:                 self._folderId,                 
-    	bookmarkFolder:			    self._folderId,
     	bookmarksService:           self._bs,
     	
     	// event types
@@ -127,6 +131,7 @@ com.sppad.booky.Bookmarks = new function() {
         EVENT_MOV_FOLDER:           'EVENT_MOV_FOLDER',
         EVENT_LOAD_FOLDER:          'EVENT_LOAD_FOLDER',
     	
+        
         /**
          * Gets the child node of rootFolder that the item falls under. If the
          * the item falls directly under the root folder, then it is a bookmark
@@ -307,7 +312,7 @@ com.sppad.booky.Bookmarks = new function() {
          * EVENT_LOAD_BOOKMARK event for each one.
          */
     	loadBookmarks: function() {
-    	    this.loadFolder(this.bookmarkFolder);
+    	    this.loadFolder(this.rootFolder);
         },
         
         loadFolder: function(aFolderId) {

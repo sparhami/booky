@@ -169,9 +169,10 @@ com.sppad.booky.Map = function() {
     self.keys = new Array();
     self.values = new Array();
     
-    this.get = function(key) {
+    this.get = function(key, defaultValue) {
         let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
-        return (index >=  0) ? self.values[index] : null;
+        
+        return index >= 0 ? self.values[index] : defaultValue;
     };
     
     this.put = function(key, value) {
@@ -199,6 +200,10 @@ com.sppad.booky.Map = function() {
         } else {
             return null;
         }
+    };
+    
+    this.size = function() {
+        return this.keys.length;
     };
     
     this.toString = function() {
