@@ -169,6 +169,10 @@ com.sppad.booky.Map = function() {
     self.keys = new Array();
     self.values = new Array();
     
+    this.containsKey = function(key) {
+        return com.sppad.booky.Utils.getIndexInArray(self.keys, key) >= 0;
+    };
+    
     this.get = function(key, defaultValue) {
         let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
         
