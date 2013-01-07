@@ -56,11 +56,6 @@ com.sppad.booky.Groups = new function() {
         }
     };
     
-    this.getIdFromBookmarkNode = function(aNode) {
-        return com.sppad.booky.Bookmarks.getRootFolderChildNodeId(
-                aNode.itemId, aNode.parent.itemId);
-    };
-
     return {
 
         getIdFromTab : function(aTab) {
@@ -116,7 +111,6 @@ com.sppad.booky.Groups = new function() {
                 this.moveToCorrectFolder(node);
                 return;
             }
-            
 
             if(!grandparentId || !com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId))
                 return;
@@ -128,14 +122,14 @@ com.sppad.booky.Groups = new function() {
                 dump("alread have a folder, but it is not this one! FIX ME\n");
             }
             
-            dump("Correct level bookmark added.\n");
+//            dump("Correct level bookmark added.\n");
             let bookmarkInfo = {
                     'parentId' : parentId,
                     'primaryId' : primaryId,
             };
             
             let count = self.primaryIdCounts.get(primaryId, 0) + 1;
-            dump("count " + primaryId + " is: " + count + "\n");
+//            dump("count " + primaryId + " is: " + count + "\n");
             self.primaryIdCounts.put(primaryId, count);
             self.groupIdMap.put(primaryId, parentId);
             self.bookmarkInfoMap.put(node.itemId, bookmarkInfo);
@@ -170,16 +164,16 @@ com.sppad.booky.Groups = new function() {
             let parentId = info.parentId;
             let primaryId = info.primaryId;
             
-            dump("doing remove for " + node.itemId + " with primaryId " + primaryId + "\n");
+//            dump("doing remove for " + node.itemId + " with primaryId " + primaryId + "\n");
             self.bookmarkInfoMap.remove(node.itemId);
             
             let count = self.primaryIdCounts.get(primaryId, 0) - 1;
-            dump("count " + primaryId + " is: " + count + "\n");
+//            dump("count " + primaryId + " is: " + count + "\n");
             if(count > 0) {
-                dump("decreased count for " + primaryId + "\n");
+//                dump("decreased count for " + primaryId + "\n");
                 self.primaryIdCounts.put(primaryId, count);
             } else {
-                dump("removed count for " + primaryId + "\n");
+//                dump("removed count for " + primaryId + "\n");
                 self.primaryIdCounts.remove(primaryId);  
                 self.groupIdMap.remove(primaryId);
             }
@@ -193,41 +187,15 @@ com.sppad.booky.Groups = new function() {
 
         onBookmarkMoved: function(event) {
             
-            this.onBookmarkRemoved(event);
-            this.onBookmarkAdded(event);
-
-
-//            dump("onbookmark moved\n");
-//
-//            let node = event.node;
-//            let nodeNext = event.nodeNext;
-//            
-//            let groupId = self.getIdFromBookmarkNode(node);
-//
-//            dump("Move: groupId is " + groupId + "\n");
-//                     
-//            let group = com.sppad.booky.Launcher.getLauncher(groupId);
-//            let nextGroup = null;
-//            
-//            if(nodeNext) {
-//                nextGroupId = self.getIdFromBookmarkNode(nodeNext);
-//                nextGroup = com.sppad.booky.Launcher.getLauncher(nextGroupId);
-//                
-//                dump("Next groupId is " + nextGroupId + "\n");
-//            }
-//                     
-//            group.createBefore(nextGroup);
-//                     
-//            // Force resize so things are hidden / shown appropriately.
-//            com.sppad.booky.Resizer.onResize();
-        },
-        
-        addFolder : function(aFolderID, aBookmarkArray) {
-
-        },
-
-        removeFolder : function(aFolderID) {
-
+            let node = event.node;
+            let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
+            let info = self.bookmarkInfoMap.get(node.itemId);
+            if(parentId == info.parentId) {
+                dump("moving within launcher\n");
+            } else {
+                this.onBookmarkRemoved(event);
+                this.onBookmarkAdded(event);
+            }
         },
 
         setup : function() {
