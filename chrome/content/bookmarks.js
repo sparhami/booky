@@ -17,64 +17,48 @@ com.sppad.booky.BookmarksListener = {
 	onItemAdded: function(aItemId, aFolder, aIndex) {
 	    
 	    dump("item added\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
-	    
-		if(rootChildId != null) {
-		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
-		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
-		}
+	    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
+	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
 	},
 	onItemRemoved: function(aItemId, aFolder, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
 	    
 	    dump("item removed\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
-	    
-		if(rootChildId != null) {
-		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
-		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
-		}
+	    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
+	    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 	},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
 	    
-	    dump("item changed\n");
-	    let rootChildId = com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aItemId);
+        let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 	    
-		if(aProperty === "uri" && rootChildId != null) {
-		    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
+		if(aProperty === "uri") {
+		    dump("item changed\n");
+		    
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
-		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
+		}
+		
+		if(aProperty === "title") {
+		    
+	        dump("title changed\n");
+		    com.sppad.booky.Bookmarks.bookmarkTitleChanged(aItemId, aParentId, index, aNewValue);
 		}
 	},
 	onItemVisited: function(aBookmarkId, aVisitID, time) {},
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
-	    
-	    let rootFolderId = com.sppad.booky.Bookmarks.rootFolder;
-	    let entering = (aNewParent == rootFolderId) || com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aNewParent) != null;
-        let exiting = (aOldParent == rootFolderId) || com.sppad.booky.Bookmarks.getRootFolderChildNodeId(aOldParent) != null;
-	    
 	    dump("item moved\n");
-	    
-	    dump("entering? " + entering + "\n");
-	    dump("exiting? " + exiting + "\n");
-	    
-		if(entering && exiting)
-		    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
-		else if(entering)
-		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aNewParent, aNewIndex);
-		else if(exiting)
-		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aNewParent, aNewIndex);
+	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
 	},
 	
 	QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsINavBookmarkObserver])
 };
 
 com.sppad.booky.Bookmarks = new function() {
-    
+
     let self = this;
 
+    self._BOOKMARK_FOLDER_TITLE = "QuickLaunchBar";
     self._bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
     self._historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
     
@@ -91,33 +75,42 @@ com.sppad.booky.Bookmarks = new function() {
      * 
      * @return The quick launch folder
      */
-	self._getQuicklaunchFolder = function() {
-	     let folder = self._getFolder(self._bs.bookmarksMenuFolder);
+	self._getQuicklaunchFolderId = function() {
+
+        /*
+         * Need to make sure that we haven't been deleted and had another folder
+         * recreated with the same item id.
+         */
+	     let item = self._getFolder(self._bookmarkFolderId);
+	     if(item.title == self._BOOKMARK_FOLDER_TITLE)
+	         return self._bookmarkFolderId;
+	         
+         let rootFolder = self._getFolder(self._bs.bookmarksMenuFolder);
          
          try {
-             folder.containerOpen = true;
+             rootFolder.containerOpen = true;
              
-             for (let i = 0; i < folder.childCount; i ++) {
-                 let node = folder.getChild(i);
+             // Look for the first folder with the correct title
+             for (let i = 0; i < rootFolder.childCount; i ++) {
+                 let node = rootFolder.getChild(i);
                
-                 if(node.type === node.RESULT_TYPE_FOLDER && node.title === "QuickLaunchBar")
+                 if(node.type === node.RESULT_TYPE_FOLDER && node.title === self._BOOKMARK_FOLDER_TITLE)
                      return node.itemId;
              }
              
-             return self._bs.createFolder(self._bs.bookmarksMenuFolder, "QuickLaunchBar", self._bs.DEFAULT_INDEX);
+             return self._bookmarkFolderId = self._bs.createFolder(self._bs.bookmarksMenuFolder, self._BOOKMARK_FOLDER_TITLE, self._bs.DEFAULT_INDEX);
          }
          finally {
-             folder.containerOpen = false;
-         }
+             rootFolder.containerOpen = false;
+         }  
 	};
 	
+	// Initialize bookmark folder id to root
+	self._bookmarkFolderId = self._bs.bookmarksMenuFolder;
     self._eventSupport = new com.sppad.booky.EventSupport();
-	self._folderId = self._getQuicklaunchFolder();
-	
     self._bs.addObserver(com.sppad.booky.BookmarksListener, false);
     
     return {
-        rootFolder:                 self._folderId,                 
     	bookmarksService:           self._bs,
     	
     	// event types
@@ -132,29 +125,8 @@ com.sppad.booky.Bookmarks = new function() {
         EVENT_LOAD_FOLDER:          'EVENT_LOAD_FOLDER',
     	
         
-        /**
-         * Gets the child node of rootFolder that the item falls under. If the
-         * the item falls directly under the root folder, then it is a bookmark
-         * item. Otherwise, it is a folder that falls directly under the root
-         * folder.
-         * 
-         * @param aItem
-         *            A bookmarks item's id
-         * 
-         * @return Null if aItem is not a descendant of rootFolder; the id of
-         *         the child node otherwise.
-         */
-        getRootFolderChildNodeId: function(aItemId) {
-            
-            let childId = aItemId;
-            let parentId = self._bs.getFolderIdForItem(aItemId);
-            
-            while(parentId && parentId != this.rootFolder) {
-                childId = parentId;
-                parentId = self._bs.getFolderIdForItem(parentId);
-            }
-     
-            return (parentId == this.rootFolder) ? childId : null;
+        isQuickLaunchFolder: function(aItemId) {
+            return aItemId == self._getQuicklaunchFolderId();
         },
         
         getBookmarkURI: function(aItemId) {
@@ -170,7 +142,7 @@ com.sppad.booky.Bookmarks = new function() {
         },
         
         createFolder: function(aTitle, anIndex) {
-            return self._bs.createFolder(this.rootFolder, aTitle, anIndex);
+            return self._bs.createFolder(self._getQuicklaunchFolderId(), aTitle, anIndex);
         },
         
         getFolderBookmarks: function(aFolderId) {
@@ -201,10 +173,16 @@ com.sppad.booky.Bookmarks = new function() {
         },
         
     	moveBefore: function(priorBookmarkId, bookmarkId, aFolderId) {
-    	    aFolderId = aFolderId || this.rootFolder;
+    	    aFolderId = aFolderId || self._getQuicklaunchFolderId();
     	    
             targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : 0;
             self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
+    	},
+    	
+    	bookmarkTitleChanged: function(aItemId, aParentId, aIndex, aTitle) {
+            // Prevent user from changing our folder's title by restoring it
+    	    if(aItemId == self._bookmarkFolderId && aTitle != self._BOOKMARK_FOLDER_TITLE)
+    	        self._bs.setItemTitle(aItemId, self._BOOKMARK_FOLDER_TITLE);
     	},
     	
       	bookmarkAdded: function(aItemId, aFolderId, aIndex) {
@@ -224,9 +202,6 @@ com.sppad.booky.Bookmarks = new function() {
 		    	else if(node.type == node.RESULT_TYPE_FOLDER)
                     self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_FOLDER);
 		    	
-//                com.sppad.booky.Utils.dump('bookmarkAdded\n');
-//                com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
-//                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
 	    	} finally {
 	    	    folder.containerOpen = false;
 			}
@@ -244,9 +219,6 @@ com.sppad.booky.Bookmarks = new function() {
 		        else if(node.type == node.RESULT_TYPE_FOLDER)
                     self._eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_FOLDER);
 		    	
-                com.sppad.booky.Utils.dump('bookmarkRemoved\n');
-                com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
-                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
 	    	} finally {
 	    	    folder.containerOpen = false;
 			}
@@ -273,9 +245,6 @@ com.sppad.booky.Bookmarks = new function() {
                 else if(node.type == node.RESULT_TYPE_FOLDER)
                     self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_FOLDER);
     	    	
-//    	        com.sppad.booky.Utils.dump('bookmarkMoved\n');
-//                com.sppad.booky.Utils.dump('\t node.type ' + node.type +" \n");
-//                com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
     		} finally {
     	  	  	folder.containerOpen = false;
     		}
@@ -290,9 +259,9 @@ com.sppad.booky.Bookmarks = new function() {
          * @return The bookmark id of the added bookmark.
          */
     	addBookmark : function(aUriString) {
-    	    // Always call self._getQuicklaunchFolder in case it has been
+    	    // Always call self._getQuicklaunchFolderId in case it has been
             // deleted
-    	    let folder = self._getQuicklaunchFolder();
+    	    let folder = self._getQuicklaunchFolderId();
             let uri = Services.io.newURI(aUriString, null, null);
     	    return self._bs.insertBookmark(folder, uri, self._bs.DEFAULT_INDEX, "");
     	},
@@ -312,7 +281,7 @@ com.sppad.booky.Bookmarks = new function() {
          * EVENT_LOAD_BOOKMARK event for each one.
          */
     	loadBookmarks: function() {
-    	    this.loadFolder(this.rootFolder);
+    	    this.loadFolder(self._getQuicklaunchFolderId());
         },
         
         loadFolder: function(aFolderId) {
@@ -332,10 +301,6 @@ com.sppad.booky.Bookmarks = new function() {
                             this.loadFolder(node.itemId);
                             break;
                     }
-                    
-//                    com.sppad.booky.Utils.dump('bookmarkLoaded\n');
-//                    com.sppad.booky.Utils.dump('\t node.type ' + node.type + "\n");
-//                    com.sppad.booky.Utils.dump('\t node.uri ' + node.uri + "\n");
                 }
             }
             finally {
@@ -351,4 +316,3 @@ com.sppad.booky.Bookmarks = new function() {
         removeListener: function(listener, type) { self._eventSupport.removeListener(listener, type); },
     }
 };
-
