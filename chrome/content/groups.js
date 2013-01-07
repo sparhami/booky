@@ -110,16 +110,14 @@ com.sppad.booky.Groups = new function() {
             
             let node = event.node;
             let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
-            if(!parentId)
-                return;
+            let grandparentId = com.sppad.booky.Bookmarks.getFolder(parentId);
             
             if(com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId)) {
-                dump("Top level bookmark added.\n");
                 this.moveToCorrectFolder(node);
                 return;
             }
             
-            let grandparentId = com.sppad.booky.Bookmarks.getFolder(parentId);
+
             if(!grandparentId || !com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId))
                 return;
             
@@ -133,6 +131,7 @@ com.sppad.booky.Groups = new function() {
             dump("Correct level bookmark added.\n");
             let bookmarkInfo = {
                     'parentId' : parentId,
+                    'primaryId' : primaryId,
             };
             
             let count = self.primaryIdCounts.get(primaryId, 0) + 1;
@@ -164,16 +163,14 @@ com.sppad.booky.Groups = new function() {
             dump("onBookmarkRemoved\n");
             let node = event.node;
             
-            let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
-            if(!parentId)
+            let info = self.bookmarkInfoMap.get(node.itemId);
+            if(!info)
                 return;
             
-            let grandparentId = com.sppad.booky.Bookmarks.getFolder(parentId);
-            if(!grandparentId || !com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId))
-                return;
+            let parentId = info.parentId;
+            let primaryId = info.primaryId;
             
-            let primaryId = self.getPrimaryIdFromUriString(node.uri);
-            
+            dump("doing remove for " + node.itemId + " with primaryId " + primaryId + "\n");
             self.bookmarkInfoMap.remove(node.itemId);
             
             let count = self.primaryIdCounts.get(primaryId, 0) - 1;
@@ -186,54 +183,17 @@ com.sppad.booky.Groups = new function() {
                 self.primaryIdCounts.remove(primaryId);  
                 self.groupIdMap.remove(primaryId);
             }
-  
-//            let node = event.node;
-//            let primaryId = self.bookmarkIdToPrimaryId.get(node.itemId);
-//            let launcherId = self.groupIdMap.get(primaryId);
-//            let launcher = com.sppad.booky.Launcher.getLauncher(launcherId);
-//            
-//            // Can occur due to how bookmarks are edited (at least on Linux)
-//            if(!launcher)
-//                 return;
-//               
-//            launcher.removeBookmark(node.itemId);
-//            com.sppad.booky.Booky.updateBookmarksCount(-1);
-//            
-//            // update the number of bookmarks for this primary id
-//            let count = self.primaryIdCounts.get(primaryId, 0) - 1;
-//            if(count <= 0)
-//                self.primaryIdCounts.remove(primaryId);
-//            else
-//                self.primaryIdCounts.put(primaryId, count);
-//            
-//            dump("count for id " + primaryId + " is " + count + "\n");
-//
-//            
-////            dump("onbookmark moved\n");
-////            let node = event.node;
-////            let primaryId = self.getPrimaryIdFromUriString(node.uri);
-////
-////            let groupId = self.groupIdMap.remove(primaryId);
-////            dump("Removing Mapping " + primaryId + " to " + groupId + "\n");
-////            
-////            let node = event.node;
-////            // Need to lookup by the bookmark id because the uri of the boomark
-////            // may have changed (if it has been modified at not deleted).
-////            let launcher = com.sppad.booky.Launcher.getLauncherFromBookmarkId(node.itemId);
-////       
-////            // Can occur due to how bookmarks are edited (at least on Linux)
-////            if(!launcher)
-////                return;
-////            
-////            launcher.removeBookmark(node.itemId);
-////            
-////            com.sppad.booky.Booky.updateBookmarksCount(-1);
-////            com.sppad.booky.Resizer.onResize();
+            
+            let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
+            launcher.removeBookmark(node.itemId);
+            
+            com.sppad.booky.Booky.updateBookmarksCount(-1);
+            com.sppad.booky.Resizer.onResize();
         },
 
         onBookmarkMoved: function(event) {
             
-//            onBookmarkRemoved(event);
+            this.onBookmarkRemoved(event);
             this.onBookmarkAdded(event);
 
 
