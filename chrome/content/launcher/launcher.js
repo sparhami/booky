@@ -293,20 +293,23 @@ com.sppad.booky.Launcher = function(aID) {
         this.bookmarkIDs.splice(index, 1);
         this.bookmarks.splice(index, 1);
         
-        if(this.bookmarkIDs.length == 0) {
-            let container = document.getElementById('com_sppad_booky_launchers');
-            container.removeChild(this.node);
-            
-            let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
-            overflowContainer.removeChild(this.menuNode);
-           
-            for(let i=0; i<this.tabs.length; i++)
-                this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
-           
-            com.sppad.booky.Launcher.launcherMap.remove(this.id);
-            
-            this.forceCloseOverflowMenu();
-        }
+        if(this.bookmarkIDs.length == 0)
+            this.removeLauncher();
+    };
+    
+    this.removeLauncher = function() {
+        let container = document.getElementById('com_sppad_booky_launchers');
+        container.removeChild(this.node);
+        
+        let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
+        overflowContainer.removeChild(this.menuNode);
+       
+        for(let i=0; i<this.tabs.length; i++)
+            this.tabs[i].setAttribute('com_sppad_booky_hasLauncher', false);
+       
+        com.sppad.booky.Launcher.launcherMap.remove(this.id);
+        
+        this.forceCloseOverflowMenu();
     };
     
     /**

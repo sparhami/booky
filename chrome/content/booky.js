@@ -293,7 +293,6 @@ com.sppad.booky.Booky = new function() {
             com.sppad.booky.TabEvents.addListener(this);
             
             this.updateBookmarksCount(0);
-            com.sppad.booky.Bookmarks.loadBookmarks();
             this.loadTabs();
         },
         

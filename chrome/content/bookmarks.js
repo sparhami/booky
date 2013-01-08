@@ -298,6 +298,7 @@ com.sppad.booky.Bookmarks = new function() {
                             self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_BOOKMARK);
                             break;
                         case node.RESULT_TYPE_FOLDER:
+                            self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_FOLDER);
                             this.loadFolder(node.itemId);
                             break;
                     }
