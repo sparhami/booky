@@ -330,7 +330,7 @@ com.sppad.booky.Launcher = function(aID) {
      */
     this.selectTab = function(aTab) {
         this.updateAttributes();
-        this.evaluateTabIndexIndicator()
+        this.evaluateTabIndexIndicator();
     };
     
     /**

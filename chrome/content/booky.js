@@ -144,7 +144,7 @@ com.sppad.booky.Booky = new function() {
             
             // Handle newly selected tab
             if(aTab.com_sppad_booky_launcher)
-                aTab.com_sppad_booky_launcher.updateTab(aTab);
+                aTab.com_sppad_booky_launcher.selectTab(aTab);
             
             // Launcher overflow / positioning handling
             if(self._selectedTab.com_sppad_booky_launcher || aTab.com_sppad_booky_launcher)
