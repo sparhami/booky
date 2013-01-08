@@ -235,6 +235,8 @@ com.sppad.booky.Groups = new function() {
 
         setup : function() {
             com.sppad.booky.Bookmarks.addListener(this);
+            
+            com.sppad.booky.Booky.updateBookmarksCount(0);
             com.sppad.booky.Bookmarks.loadBookmarks();
         },
 

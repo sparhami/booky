@@ -295,8 +295,6 @@ com.sppad.booky.Booky = new function() {
             self._selectedTab = gBrowser.selectedTab;
             
             com.sppad.booky.TabEvents.addListener(this);
-            
-            this.updateBookmarksCount(0);
             this.loadTabs();
         },
         
