@@ -178,13 +178,17 @@ com.sppad.booky.Booky = new function() {
          *            A tab that has a attribute change.
          */
         onTabAttrChange: function(aTab) {
-            let newId = com.sppad.booky.Groups.getIdFromTab(aTab);
+            
+            let uri = gBrowser.getBrowserForTab(aTab).currentURI;
+            let newId = "";
             let oldId = aTab.com_sppad_booky_id;
             
             // If the tab hasn't loaded yet, use the label for the id
-            if(newId === "about:blank" && aTab.label != self._newTabString && aTab.label != "")
+            if(uri.asciiSpec === "about:blank" && aTab.label != self._newTabString && aTab.label != "")
                 newId = com.sppad.booky.Groups.getIdFromUriString(aTab.label);
-
+            else
+                newId = com.sppad.booky.Groups.getIdFromTab(aTab);
+            
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
             if(aTab.label != self._connectingString && (newId != oldId || !aTab.com_sppad_booky_launcher)) {
