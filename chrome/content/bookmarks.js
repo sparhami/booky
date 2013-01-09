@@ -14,18 +14,13 @@ com.sppad.booky.BookmarksListener = {
 	onBeginUpdateBatch: function() {},
 	onEndUpdateBatch: function() {},
 	
-	onItemAdded: function(aItemId, aFolder, aIndex) {
-	    
-	    dump("item added\n");
-	    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolder, aIndex);
-	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aParentId, index);
+	onItemAdded: function(aItemId, aFolderId, aIndex) {
+	    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolderId, aIndex);
+	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aFolderId, aIndex);
 	},
-	onItemRemoved: function(aItemId, aFolder, aIndex) {},
-	onBeforeItemRemoved: function(aItemId, aItemType, aParentId, aGUID, aParentGUID) {
-	    
-	    dump("item removed\n");
-	    let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
-	    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
+	onItemRemoved: function(aItemId, aFolderId, aIndex) {},
+	onBeforeItemRemoved: function(aItemId, aItemType, aFolderId, aGUID, aParentGUID) {
+        com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aFolderId, aIndex);
 	},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
@@ -33,21 +28,16 @@ com.sppad.booky.BookmarksListener = {
         let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 	    
 		if(aProperty === "uri") {
-		    dump("item changed\n");
-		    
 		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
 		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
 		}
 		
 		if(aProperty === "title") {
-		    
-	        dump("title changed\n");
 		    com.sppad.booky.Bookmarks.bookmarkTitleChanged(aItemId, aParentId, index, aNewValue);
 		}
 	},
 	onItemVisited: function(aBookmarkId, aVisitID, time) {},
 	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
-	    dump("item moved\n");
 	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
 	},
 	
@@ -166,8 +156,7 @@ com.sppad.booky.Bookmarks = new function() {
                 }
                 
                 return bookmarks;
-            }
-            finally {
+            } finally {
                 folder.containerOpen = false;
             }
         },
@@ -296,8 +285,27 @@ com.sppad.booky.Bookmarks = new function() {
                             break;
                     }
                 }
+            } finally {
+                folder.containerOpen = false;
             }
-            finally {
+        },
+        
+        getBookmarks: function(aFolderId, ignoreId) {
+            let folder = self._getFolder(aFolderId);
+            let array = new Array();
+            
+            try {
+                folder.containerOpen = true;
+            
+                for (let i = 0; i < folder.childCount; i ++) {
+                    let node = folder.getChild(i);
+
+                    if(node.itemId != ignoreId)
+                        array.push( { 'icon': node.icon, 'uri': node.uri });
+                }
+                
+                return array;
+            } finally {
                 folder.containerOpen = false;
             }
         },

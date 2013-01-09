@@ -10,16 +10,14 @@ com.sppad.booky.Launcher = function(aID) {
     let overflowTemplateNode = document.getElementById('com_sppad_booky_launcher_overflow_item_template');
     
     let self = this;
+    this.selected = false;
     this._selectedIndex = 0;
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;
     this.title = aID;
     this.tabs = [];
-    this.selected = false;
-    this.bookmarks = [];
-    this.bookmarkIDs= [];
-    this.bookmarkImages = [];
+    this.bookmarksArray = [];
     this.node = document.createElement('launcher');
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
@@ -36,9 +34,13 @@ com.sppad.booky.Launcher = function(aID) {
         overflowButton.open = false;
     };
     
-    this.openTab = function(aUri) {     
-        gBrowser.selectedTab = gBrowser.addTab(aUri || this.bookmarks[0]);
+    this.openTab = function(aUri) {
         
+        if(aUri)
+            gBrowser.selectedTab = gBrowser.addTab(aUri);
+        else if(this.bookmarksArray.length > 0)
+            gBrowser.selectedTab = gBrowser.addTab(this.bookmarksArray[0].uri);
+            
         this.forceCloseOverflowMenu();
     };       
     
@@ -255,43 +257,13 @@ com.sppad.booky.Launcher = function(aID) {
         this.evaluateTabIndexIndicator();
     };
     
-    /**
-     * Adds a bookmark to the launcher.
-     * 
-     * @param aUri
-     *            A String representing the URI for the bookmark
-     * @param anImage
-     *            The URI for the image used by the launcher
-     * @param aBookmarkId
-     *            The bookmark id from the bookmarks service
-     */
-    this.addBookmark = function(aUri, anImage, aBookmarkId) {
+    this.setBookmarks = function(aBookmarkArray) {
         this.bookmarksUpdateTime = Date.now();
+        this.bookmarksArray = aBookmarkArray;
         
-        this.bookmarkImages.push(anImage);
-        this.bookmarkIDs.push(aBookmarkId);
-        this.bookmarks.push(aUri);
-        
-        this.setImage(anImage);
+        this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
     };
     
-    /**
-     * Removes a bookmark from the launcher.
-     * 
-     * @param aBookmarkId
-     *            The bookmark id from the bookmarks service
-     */
-    this.removeBookmark = function(aBookmarkId) {
-        this.bookmarksUpdateTime = Date.now();
-
-        let index = com.sppad.booky.Utils.getIndexInArray(this.bookmarkIDs, aBookmarkId);
-        this.bookmarkImages.splice(index, 1);
-        this.bookmarkIDs.splice(index, 1);
-        this.bookmarks.splice(index, 1);
-        
-        if(this.bookmarkIDs.length == 0)
-            this.removeLauncher();
-    };
     
     this.removeLauncher = function() {
         let container = document.getElementById('com_sppad_booky_launchers');
@@ -390,7 +362,7 @@ com.sppad.booky.Launcher.prototype.mouseleave = function() {
 com.sppad.booky.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
     dt.setData('text/com-sppad-booky-launcherId', this.id); 
-    dt.setData('text/uri-list', this.bookmarks[0]);
+    dt.setData('text/uri-list', this.bookmarksArray[0].uri);
     dt.addElement(event.target);
 
     // Without this check, drag/drop fails for menu launcher
@@ -484,9 +456,9 @@ com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
         for(let i=0; i<toRemove.length; i++)
             node.removeChild(toRemove[i]);
     
-        for(let i=0; i<this.bookmarks.length; i++) {
-            let bookmark = this.bookmarks[i];
-            let image = this.bookmarkImages[i];
+        for(let i=0; i<this.bookmarksArray.length; i++) {
+            let bookmark =  this.bookmarksArray[i].uri;
+            let image = this.bookmarksArray[i].icon;
             
             let menuitem = document.createElement('menuitem');
             menuitem.setAttribute('bookmark', true);
@@ -587,9 +559,9 @@ com.sppad.booky.Launcher.prototype.remove = function(event) {
  * Opens all the bookmarks in the launcher.
  */
 com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
-    let count = this.bookmarkIDs.length;
+    let count = this.bookmarksArray.length;
     for(let i=0; i<count; i++)
-        this.openTab(this.bookmarks[i]);
+        this.openTab(this.bookmarksArray[i].uri);
 }
 
 /** Maps ids to Launchers */

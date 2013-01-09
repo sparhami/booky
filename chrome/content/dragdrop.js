@@ -110,16 +110,15 @@ com.sppad.booky.DragDrop = new function() {
         for(let i=0; i<uris.length; i++) {
             
             let uri = uris[i];
-            let id = com.sppad.booky.Groups.getIdFromUriString(uri);
-
+            
             com.sppad.booky.Bookmarks.addBookmark(uri); 
             
-//            let bookmarkId = launcher.id;
-//            let prevBookmarkId = self._insertPoint && self._insertPoint.js.id;
+            let id = com.sppad.booky.Groups.getIdFromUriString(uri);
+            let prevBookmarkId = self._insertPoint && self._insertPoint.js.id;
 
             // Move the bookmarks, which will cause the launchers to be
             // moved appropriately.
-//            com.sppad.booky.Bookmarks.moveBefore(prevBookmarkId, bookmarkId);
+            com.sppad.booky.Bookmarks.moveBefore(prevBookmarkId, id);
         }
     };
     
