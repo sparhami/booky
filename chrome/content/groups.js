@@ -136,14 +136,14 @@ com.sppad.booky.Groups = new function() {
             // com.sppad.booky.Bookmarks.getTitle(launcherId);
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
             launcher.addBookmark(node.uri, node.icon, node.itemId);
-            /* launcher.setTitle(title);
+//             launcher.setTitle(title);
              
               // Add all existing tabs in the launcher
-              let tabs = gBrowser.tabs;
-              for(let i=0; i<tabs.length; i++)
-              if(groupId == com.sppad.booky.Groups.getIdFromTab(tabs[i]))
-              launcher.addTab(tabs[i]);
-             */
+            let tabs = gBrowser.tabs;
+            for(let i=0; i<tabs.length; i++)
+                if(primaryId == self.getPrimaryIdFromTab(tabs[i]))
+                    launcher.addTab(tabs[i]);
+             
             com.sppad.booky.Resizer.onResize();
         },
 

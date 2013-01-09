@@ -217,10 +217,8 @@ com.sppad.booky.Launcher = function(aID) {
      *            The tab to add
      */
     this.addTab = function(aTab) {
-        if(aTab.com_sppad_booky_launcher === this) {
-            com.sppad.booky.Utils.dump('WW - This tab is already in this launcher.\n');
+        if(aTab.com_sppad_booky_launcher === this)
             return;
-        }
         
         this.tabsUpdateTime = Date.now();
         
@@ -242,10 +240,8 @@ com.sppad.booky.Launcher = function(aID) {
      *            The tab to remove
      */
     this.removeTab = function(aTab) {
-        if(aTab.com_sppad_booky_launcher !== this) {
-            com.sppad.booky.Utils.dump('WW - This tab is not in this launcher.\n');
+        if(aTab.com_sppad_booky_launcher !== this)
             return;
-        }
         
         this.tabsUpdateTime = Date.now();
         
