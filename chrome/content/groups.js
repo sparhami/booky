@@ -169,7 +169,8 @@ com.sppad.booky.Groups = new function() {
             self.bookmarkInfoMap.remove(node.itemId);
             
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
-            launcher.removeBookmark(node.itemId);
+            if(launcher)
+                launcher.removeBookmark(node.itemId);
             
             com.sppad.booky.Resizer.onResize();
         },
@@ -198,7 +199,7 @@ com.sppad.booky.Groups = new function() {
             let bookmarkInfo = { 'parentId' : parentId, };
             self.bookmarkInfoMap.put(node.itemId, bookmarkInfo);
             
-            let launcher = com.sppad.booky.Launcher.getLauncher(node.itemId);
+            let launcher = com.sppad.booky.Launcher.createLauncher(node.itemId);
             com.sppad.booky.Bookmarks.loadFolder(node.itemId);
             
             com.sppad.booky.Booky.updateBookmarksCount(1);
@@ -221,11 +222,16 @@ com.sppad.booky.Groups = new function() {
         
         onFolderMoved: function(event) {
             
-            let node = event.node ;
+            let node = event.node;
+            let nodeNext = event.nodeNext;
             let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
             let info = self.bookmarkInfoMap.get(node.itemId);
             if(info && parentId == info.parentId) {
-                dump("moving folder within quick launcher\n");
+                
+                let launcher = com.sppad.booky.Launcher.getLauncher(node.itemId);
+                launcher.createBefore(nodeNext ? nodeNext.itemId : null);
+                
+                com.sppad.booky.Resizer.onResize();
             } else {
                 this.onFolderRemoved(event);
                 this.onFolderAdded(event);

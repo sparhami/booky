@@ -336,16 +336,19 @@ com.sppad.booky.Launcher = function(aID) {
     /**
      * Moves the DOM node for the launcher.
      * 
-     * @param aLauncher
-     *            The launcher to move before. If null, the launcher is moved to
-     *            the end.
+     * @param aLauncherId
+     *            The id of the launcher to move before. If null, the launcher
+     *            is moved to the end.
      */
-    this.createBefore = function(aLauncher) {
+    this.createBefore = function(aLauncherId) {
+        
+        let launcherNext = com.sppad.booky.Launcher.getLauncher(aLauncherId);
+        
         let container = document.getElementById('com_sppad_booky_launchers');
         let overflowContainer = document.getElementById('com_sppad_booky_launchers_overflow_menu');
         
-        let nodeAnchor = aLauncher ? aLauncher.node : null;
-        let menuNodeAnchor = aLauncher ? aLauncher.menuNode : null;
+        let nodeAnchor = launcherNext ? launcherNext.node : null;
+        let menuNodeAnchor = launcherNext ? launcherNext.menuNode : null;
         
         this.node = container.insertBefore(this.node, nodeAnchor);
         this.menuNode = overflowContainer.insertBefore(this.menuNode, menuNodeAnchor);
@@ -578,15 +581,10 @@ com.sppad.booky.Launcher.prototype.reload = function(event) {
  * Removes the launcher, removing all the associated bookmarks.
  */
 com.sppad.booky.Launcher.prototype.remove = function(event) {
-    /*
-     * Bookmark event firing actually removes the bookmark. Don't use a while
-     * loop since if things go bad, could get stuck. Note that we only ever
-     * remove the 0th index. Also don't want to check length everytime since it
-     * will be modified.
-     */
-    let count = this.bookmarkIDs.length;
-    for(let i=0; i<count; i++)
-        com.sppad.booky.Bookmarks.removeBookmark(this.bookmarkIDs[0]);
+    com.sppad.booky.Bookmarks.removeBookmark(this.id);
+    
+    let tooltip = document.getElementById('com_sppad_booky_tooltip');
+    tooltip.setAttribute('hidden', false);
 };
 
 /**
@@ -601,7 +599,11 @@ com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
 /** Maps ids to Launchers */
 com.sppad.booky.Launcher.launcherMap = new com.sppad.booky.Map();
 com.sppad.booky.Launcher.getLauncher = function(aID) {
-    return this.launcherMap.get(aID) || new com.sppad.booky.Launcher(aID);
+    return this.launcherMap.get(aID);
+};
+
+com.sppad.booky.Launcher.createLauncher = function(aID) {
+    return new com.sppad.booky.Launcher(aID);
 };
 
 com.sppad.booky.Launcher.hasLauncher = function(aID) {

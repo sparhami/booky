@@ -232,13 +232,7 @@ com.sppad.booky.Bookmarks = new function() {
                 
     	  	  	// Find first node prior to the moved node of the same type
                 let node = folder.getChild(aIndex);
-                let nodeNext = null;
-    	  	  	for(let i=aIndex+1; i<folder.childCount; i++) {
-    	  	  		if(folder.getChild(i).type === node.type) {
-    	  	  		    nodeNext = folder.getChild(i);
-    	  	  			break;
-    	  	  		}	
-    	  	  	}
+                let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
     	  	
     	    	if(node.type == node.RESULT_TYPE_URI)
     	  	  		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_BOOKMARK);
