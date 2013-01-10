@@ -414,10 +414,18 @@ com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
     while(node.firstChild)
         node.removeChild(node.firstChild);
     
-    
     let numberOfDays = com.sppad.booky.CurrentPrefs['historyMenuDays'];
     let maxResults = com.sppad.booky.CurrentPrefs['historyMenuItems'];
-    let results = com.sppad.booky.History.queryHistory(this.id, numberOfDays, maxResults);
+   
+    let domains = new Set();
+    for(let i=0; i<this.bookmarksArray.length; i++) {
+        let uriString = this.bookmarksArray[i].uri;
+        let host = com.sppad.booky.Groups.getHostFromUriString(uriString);
+        domains.add(host);
+    }
+
+    let domainArray = [v for (v of domains)];
+    let results = com.sppad.booky.History.queryHistoryArray(domainArray, numberOfDays, maxResults);
     
     for(let i=0; i<results.length; i++) {
         let result = results[i];
@@ -565,7 +573,7 @@ com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
 }
 
 /** Maps ids to Launchers */
-com.sppad.booky.Launcher.launcherMap = new com.sppad.booky.Map();
+com.sppad.booky.Launcher.launcherMap = new com.sppad.collections.Map();
 com.sppad.booky.Launcher.getLauncher = function(aID) {
     return this.launcherMap.get(aID);
 };

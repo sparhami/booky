@@ -9,6 +9,7 @@
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script type="application/x-javascript" src="utils.js" />
+	<script type="application/x-javascript" src="collections.js" />
 	<script type="application/x-javascript" src="bookmarks.js" />
 	<script type="application/x-javascript" src="history.js" />
 	<script type="application/x-javascript" src="tabevents.js" />

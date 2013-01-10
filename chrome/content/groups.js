@@ -9,10 +9,10 @@ com.sppad.booky.Groups = new function() {
 
     var self = this;
 
-    this.bookmarkInfoMap = new com.sppad.booky.Map();
-    this.groupIdMap = new com.sppad.booky.Map();
-    this.primaryIdCounts = new com.sppad.booky.Map();
-    this.bookmarkIdToPrimaryId = new com.sppad.booky.Map();
+    this.bookmarkInfoMap = new com.sppad.collections.Map();
+    this.groupIdMap = new com.sppad.collections.Map();
+    this.primaryIdCounts = new com.sppad.collections.Map();
+    this.bookmarkIdToPrimaryId = new com.sppad.collections.Map();
 
     /**
      * Gets the launcher ID for a given tab. Currently this is based off the
@@ -58,6 +58,10 @@ com.sppad.booky.Groups = new function() {
     
     return {
 
+        getHostFromUriString : function(aUriString) {
+            return self.getPrimaryIdFromUriString(aUriString);
+        },
+        
         getIdFromTab : function(aTab) {
             let primaryId = self.getPrimaryIdFromTab(aTab);
             return self.groupIdMap.get(primaryId);
@@ -135,7 +139,6 @@ com.sppad.booky.Groups = new function() {
             // let title = launcherId == primaryId ? primaryId :
             // com.sppad.booky.Bookmarks.getTitle(launcherId);
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
-            //launcher.addBookmark(node.uri, node.icon, node.itemId);
             launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
 //             launcher.setTitle(title);
              
@@ -170,8 +173,6 @@ com.sppad.booky.Groups = new function() {
             self.bookmarkInfoMap.remove(node.itemId);
             
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
-//            if(launcher)
-//                launcher.removeBookmark(node.itemId);
             if(launcher)
                 launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId, node.itemId));
             

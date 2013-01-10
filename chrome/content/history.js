@@ -18,35 +18,40 @@ com.sppad.booky.History = new function() {
         .getService(Components.interfaces.nsINavHistoryService);
     
     /**
-     * A convenience method for performing a history query.
+     * Queries history for an array of domains, returning 
      * 
-     * @param domain
-     *            The domain to get history results for,
+     * @param aDomainArray
+     *            An array of domains to get history results for,
      * @param numberOfDays
      *            How many days in the past to search.
      * @param maxResults
      *            The maximum number of results to return.
      * 
-     * @return An array of results
+     * @return An array of results, sorted by time.
      */
-    this.queryHistory = function(domain, numberOfDays, maxResults) {
+    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults) {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
         options.sortingMode = options.SORT_BY_DATE_DESCENDING;
         
-        let query = self.hs.getNewQuery();
-        query.beginTimeReference = query.TIME_RELATIVE_NOW;
-        query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
-        query.endTimeReference = query.TIME_RELATIVE_NOW;
-        query.endTime = 0; // now
-        query.domain = domain;
+        let queries = new Array();
+        for(let i=0; i<aDomainArray.length; i++) {
+            let query = self.hs.getNewQuery();
+            query.beginTimeReference = query.TIME_RELATIVE_NOW;
+            query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
+            query.endTimeReference = query.TIME_RELATIVE_NOW;
+            query.endTime = 0; // now
+            query.domain = aDomainArray[i];
+            
+            queries.push(query);
+        }
         
         // execute the query
-        let result = self.hs.executeQuery(query, options);
-        let container = result.root;
+        let queryResult = self.hs.executeQueries(queries, queries.length, options);
         
         let resultArray = new Array();
+        let container = queryResult.root;
         
         try {
             container.containerOpen = true;
@@ -61,5 +66,4 @@ com.sppad.booky.History = new function() {
         
         return resultArray;
     }
-    
 };
