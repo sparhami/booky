@@ -32,6 +32,8 @@
 					onpopupshowing="if(this == event.target) js.contextShowing(event);"
 					onpopuphiding="if(this == event.target) js.contextHiding(event);">
 
+					<xul:menuitem class="showWhenEmpty hideWhenNotEmpty" label="&com_sppad_booky_launcher_empty.label;" disabled="true"/>
+
 					<xul:menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
 						accesskey="&com_sppad_booky_switchTo.accesskey;">
 						<xul:menupopup class="launcher_menupopup_switchTo"
@@ -55,15 +57,16 @@
 							onpopupshowing="js.historyPopupShowing(event);">
 						</xul:menupopup>
 					</xul:menu>
+					
+					<xul:menuseparator />
 
 					<xul:menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
 						accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
 					<xul:menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
 						accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
-					<xul:menuitem class="launcher_menu_remove" label="&com_sppad_booky_remove.label;"
+					<xul:menuitem class="launcher_menu_remove showWhenEmpty" label="&com_sppad_booky_remove.label;"
 						accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
-
-					<xul:menuitem class="launcher_empty_menuitem" label="&com_sppad_booky_launcher_empty.label;" disabled="true"/>
+			
 				</xul:menupopup>
 			</xul:toolbarbutton>
 		</content>
