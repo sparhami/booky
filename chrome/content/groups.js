@@ -221,6 +221,7 @@ com.sppad.booky.Groups = new function() {
         onFolderAdded: function(event) {
             
             let node = event.node;
+            let nodeNext = event.nodeNext;
             let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
             
             if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
@@ -233,8 +234,10 @@ com.sppad.booky.Groups = new function() {
             
             com.sppad.booky.Bookmarks.loadFolder(node.itemId);
             launcher.setTitle(node.title);
+            launcher.createBefore(nodeNext ? nodeNext.itemId : null);
             
             com.sppad.booky.Booky.updateBookmarksCount(1);
+            com.sppad.booky.Resizer.onResize();
         },
         
         onFolderRemoved: function(event) {
@@ -250,6 +253,7 @@ com.sppad.booky.Groups = new function() {
             launcher.removeLauncher();
             
             com.sppad.booky.Booky.updateBookmarksCount(-1);
+            com.sppad.booky.Resizer.onResize();
         },
         
         onFolderMoved: function(event) {

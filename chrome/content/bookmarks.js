@@ -199,10 +199,12 @@ com.sppad.booky.Bookmarks = new function() {
                  * blank (or at least does so on Linux)
                  */
                 let node = folder.getChild(aIndex);
+                let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
+                
                 if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
-		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_BOOKMARK);
+		    		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_ADD_BOOKMARK);
 		    	else if(node.type == node.RESULT_TYPE_FOLDER)
-                    self._eventSupport.fire( { 'node' : node, }, this.EVENT_ADD_FOLDER);
+                    self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_ADD_FOLDER);
 		    	
 	    	} finally {
 	    	    folder.containerOpen = false;
@@ -216,10 +218,12 @@ com.sppad.booky.Bookmarks = new function() {
                 folder.containerOpen = true;
                 
                 let node = folder.getChild(aIndex);
+                let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
+                
 		    	if(node.type == node.RESULT_TYPE_URI)
-		    		self._eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_BOOKMARK);
+		    		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_DEL_BOOKMARK);
 		        else if(node.type == node.RESULT_TYPE_FOLDER)
-                    self._eventSupport.fire( { 'node' : node, }, this.EVENT_DEL_FOLDER);
+                    self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_DEL_FOLDER);
 		    	
 	    	} finally {
 	    	    folder.containerOpen = false;
