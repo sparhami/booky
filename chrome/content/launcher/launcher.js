@@ -242,21 +242,28 @@ com.sppad.booky.Launcher = function(aID) {
      *            The tab to add
      */
     this.addTab = function(aTab) {
-        if(aTab.com_sppad_booky_launcher === this)
-            return;
-        
+        this.addTabArray( [aTab] );
+    };
+    
+    this.addTabArray = function(aTabArray) {
         this.tabsUpdateTime = Date.now();
         
-        this.tabs.push(aTab);
-        aTab.com_sppad_booky_launcher = this;
-        aTab.com_sppad_booky_launcherId = this.id;
-        aTab.setAttribute('com_sppad_booky_hasLauncher', true);
+        for(let i=0; i<aTabArray.length; i++) {
+            let tab = aTabArray[i];
+            
+            if(tab.com_sppad_booky_launcher === this)
+                continue;
+            
+            this.tabs.push(tab);
+            tab.com_sppad_booky_launcher = this;
+            tab.com_sppad_booky_launcherId = this.id;
+            tab.setAttribute('com_sppad_booky_hasLauncher', true);
+            this.placeTab(tab, false);
+        }
         
         this.updateAttributes();
-        this.placeTab(aTab, false);
-        
         this.evaluateTabIndexIndicator();
-    };
+    }
     
     /**
      * Removes a tab from the launcher.
@@ -265,14 +272,25 @@ com.sppad.booky.Launcher = function(aID) {
      *            The tab to remove
      */
     this.removeTab = function(aTab) {
-        if(aTab.com_sppad_booky_launcher !== this)
-            return;
-        
+        this.removeTabArray( [aTab] );
+    };
+    
+    this.removeTabArray = function(aTabArray) {
         this.tabsUpdateTime = Date.now();
         
-        com.sppad.booky.Utils.removeFromArray(this.tabs, aTab);
-        delete aTab.com_sppad_booky_launcher;
-        aTab.removeAttribute('com_sppad_booky_hasLauncher');
+        dump("removing tab array of length " + aTabArray.length);
+        
+        for(let i=0; i<aTabArray.length; i++) {
+            let tab = aTabArray[i];
+            
+            if(tab.com_sppad_booky_launcher !== this)
+                continue;
+            
+            com.sppad.booky.Utils.removeFromArray(this.tabs, tab);
+            delete tab.com_sppad_booky_launcher;
+            delete tab.com_sppad_booky_launcherId;
+            tab.removeAttribute('com_sppad_booky_hasLauncher');
+        }
         
         this.updateAttributes();
         self._selectedIndex = Math.max(self._selectedIndex, this.tabs.length - 1);

@@ -132,7 +132,6 @@ com.sppad.booky.Groups = new function() {
             self.groupIdMap.put(primaryId, parentId);
             self.bookmarkInfoMap.put(node.itemId, bookmarkInfo);
 
-            dump("adding " + node.uri + " to launcher " + folderId + "\n");
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
             launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
              
@@ -143,7 +142,7 @@ com.sppad.booky.Groups = new function() {
                 if(primaryId == self.getPrimaryIdFromTab(tabs[i]))
                     sameDomainTabs.push(tabs[i]);
 
-            let movingLaunchers = folderId && parentId != folderId;
+            let movingLaunchers = (folderId != undefined) && (parentId != folderId);
             if(movingLaunchers) {
                 let previousLauncher = com.sppad.booky.Launcher.getLauncher(folderId);
                 let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(folderId);
@@ -157,9 +156,11 @@ com.sppad.booky.Groups = new function() {
                     let bookmark = otherbookmarks[i];
                     let domain = self.getPrimaryIdFromUriString(bookmark.uri);
                     
-                    if(domain == primaryId)
+                    if(domain == primaryId) {
+                        self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
                         com.sppad.booky.Bookmarks.moveBefore(null, bookmark.itemId, parentId);
-                }
+                    }
+               }
                 
                 previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(folderId));
             }
@@ -194,8 +195,10 @@ com.sppad.booky.Groups = new function() {
             self.bookmarkInfoMap.remove(node.itemId);
             
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
-            if(launcher)
+            if(launcher) {
                 launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId, node.itemId));
+                launcher.updateAttributes();
+            }
             
             com.sppad.booky.Resizer.onResize();
         },
@@ -209,7 +212,8 @@ com.sppad.booky.Groups = new function() {
                 let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
                 launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
             } else {
-                this.onBookmarkRemoved(event);
+                // onBookmarkAdded handles moving between groups correctly, do
+                // not call onBookmarkRemoved as it will mess it up.
                 this.onBookmarkAdded(event);
             }
         },
