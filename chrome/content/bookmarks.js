@@ -134,7 +134,8 @@ com.sppad.booky.Bookmarks = new function() {
         },
         
         createFolder: function(aTitle, anIndex) {
-            return self._bs.createFolder(self._getQuicklaunchFolderId(), aTitle, anIndex);
+            let targetIndex = anIndex || self._bs.DEFAULT_INDEX;
+            return self._bs.createFolder(self._getQuicklaunchFolderId(), aTitle, targetIndex);
         },
         
         getFolderBookmarks: function(aFolderId) {
@@ -200,11 +201,12 @@ com.sppad.booky.Bookmarks = new function() {
                  */
                 let node = folder.getChild(aIndex);
                 let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
+                let obj = { 'node' : node, 'nodeNext' : nodeNext};
                 
                 if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
-		    		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_ADD_BOOKMARK);
+		    		self._eventSupport.fire(obj, this.EVENT_ADD_BOOKMARK);
 		    	else if(node.type == node.RESULT_TYPE_FOLDER)
-                    self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_ADD_FOLDER);
+                    self._eventSupport.fire(obj, this.EVENT_ADD_FOLDER);
 		    	
 	    	} finally {
 	    	    folder.containerOpen = false;
@@ -219,11 +221,12 @@ com.sppad.booky.Bookmarks = new function() {
                 
                 let node = folder.getChild(aIndex);
                 let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
+                let obj = { 'node' : node, 'nodeNext' : nodeNext};
                 
 		    	if(node.type == node.RESULT_TYPE_URI)
-		    		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_DEL_BOOKMARK);
+		    		self._eventSupport.fire(obj, this.EVENT_DEL_BOOKMARK);
 		        else if(node.type == node.RESULT_TYPE_FOLDER)
-                    self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_DEL_FOLDER);
+                    self._eventSupport.fire(obj, this.EVENT_DEL_FOLDER);
 		    	
 	    	} finally {
 	    	    folder.containerOpen = false;
@@ -239,11 +242,12 @@ com.sppad.booky.Bookmarks = new function() {
     	  	  	// Find first node prior to the moved node of the same type
                 let node = folder.getChild(aIndex);
                 let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
-    	  	
+                let obj = { 'node' : node, 'nodeNext' : nodeNext};
+                
     	    	if(node.type == node.RESULT_TYPE_URI)
-    	  	  		self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_BOOKMARK);
+    	  	  		self._eventSupport.fire(obj, this.EVENT_MOV_BOOKMARK);
                 else if(node.type == node.RESULT_TYPE_FOLDER)
-                    self._eventSupport.fire( { 'node' : node, 'nodeNext' : nodeNext}, this.EVENT_MOV_FOLDER);
+                    self._eventSupport.fire(obj, this.EVENT_MOV_FOLDER);
     	    	
     		} finally {
     	  	  	folder.containerOpen = false;
@@ -290,15 +294,22 @@ com.sppad.booky.Bookmarks = new function() {
             try {
                 folder.containerOpen = true;
                 
-                for (let i = 0; i < folder.childCount; i ++) {
-                    let node = folder.getChild(i);
-                  
+                // Save off all the nodes, since the folder may change contents
+                let nodes = new Array();
+                for (let i = 0; i < folder.childCount; i ++)
+                    nodes.push(folder.getChild(i));
+                
+                for (let i = 0; i < nodes.length; i ++) {
+                    
+                    let node = nodes[i];
+                    let obj = { 'node' : node };
+                    
                     switch(node.type) {
                         case node.RESULT_TYPE_URI:
-                            self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_BOOKMARK);
+                            self._eventSupport.fire(obj, this.EVENT_LOAD_BOOKMARK);
                             break;
                         case node.RESULT_TYPE_FOLDER:
-                            self._eventSupport.fire( { 'node' : node, }, this.EVENT_LOAD_FOLDER);
+                            self._eventSupport.fire(obj, this.EVENT_LOAD_FOLDER);
                             break;
                     }
                 }

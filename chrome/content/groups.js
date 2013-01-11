@@ -100,7 +100,7 @@ com.sppad.booky.Groups = new function() {
             let folderId = self.groupIdMap.get(primaryId);
             
             if(!folderId)
-                folderId = com.sppad.booky.Bookmarks.createFolder("", 0);
+                folderId = com.sppad.booky.Bookmarks.createFolder("");
             
             com.sppad.booky.Bookmarks.moveBefore(null, node.itemId, folderId);
         },
