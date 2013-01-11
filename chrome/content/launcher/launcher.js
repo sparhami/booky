@@ -391,6 +391,8 @@ com.sppad.booky.Launcher.prototype.mouseenter = function() {
     
     // If the title is blank/null/undefined, use the domains in the launcher
     let labelTexts = this.title ? [ this.title ] : this.getDomains();
+    if(labelTexts.length == 0)
+        labelTexts = [ '( empty group )' ];
     
     // For each label text item, create and add a label
     for(let i=0; i<labelTexts.length; i++) {
@@ -474,6 +476,9 @@ com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
     let maxResults = com.sppad.booky.CurrentPrefs['historyMenuItems'];
    
     let domains = this.getDomains();
+    if(domains.length == 0)
+        return;
+    
     let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults);
     
     for(let i=0; i<results.length; i++) {

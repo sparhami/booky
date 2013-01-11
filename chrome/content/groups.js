@@ -116,7 +116,7 @@ com.sppad.booky.Groups = new function() {
                 return;
             }
 
-            if(!grandparentId || !com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId))
+            if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId))
                 return;
             
             let primaryId = self.getPrimaryIdFromUriString(node.uri);
@@ -223,7 +223,7 @@ com.sppad.booky.Groups = new function() {
             let node = event.node;
             let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
             
-            if(!parentId || !com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
+            if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
                 return;
             
             let bookmarkInfo = { 'parentId' : parentId, };
@@ -273,7 +273,7 @@ com.sppad.booky.Groups = new function() {
             let node = event.node;
             let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
             
-            if(!parentId || !com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
+            if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
                 return;
             
             let launcher = com.sppad.booky.Launcher.getLauncher(node.itemId);

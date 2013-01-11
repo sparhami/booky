@@ -19,7 +19,8 @@ com.sppad.booky.BookmarksListener = {
 	},
 	onItemRemoved: function(aItemId, aFolderId, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aFolderId, aGUID, aParentGUID) {
-        com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aFolderId, aIndex);
+        let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
+        com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aFolderId, index);
 	},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
