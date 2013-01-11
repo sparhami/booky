@@ -19,6 +19,8 @@
 <!ENTITY com_sppad_booky_close.accesskey "C">
 <!ENTITY com_sppad_booky_remove.label "Delete">
 <!ENTITY com_sppad_booky_remove.accesskey "D">
+<!ENTITY com_sppad_booky_launcher_empty.label "No bookmarks">
+
 
 <!ENTITY preference.window.title "Booky Preferences">
 <!ENTITY preference.prefpane.general.label "General">

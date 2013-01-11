@@ -18,6 +18,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.title = "";
     this.tabs = [];
     this.bookmarksArray = [];
+    this.empty = true;
     this.node = document.createElement('launcher');
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
@@ -304,6 +305,7 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
         this.setTitle(this.title);
+        this.setAttribute('empty', this.bookmarksArray.length == 0);
     };
     
     
@@ -368,6 +370,7 @@ com.sppad.booky.Launcher = function(aID) {
     };
     
     this.createBefore(null);
+    this.setBookmarks([]);
     this.updateAttributes();
     
     this.node.addEventListener("DOMMouseScroll", this.scroll.bind(this), false);
@@ -420,7 +423,7 @@ com.sppad.booky.Launcher.prototype.mouseleave = function() {
 com.sppad.booky.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
     dt.setData('text/com-sppad-booky-launcherId', this.id); 
-    dt.setData('text/uri-list', this.bookmarksArray[0].uri);
+    dt.setData('text/uri-list', this.bookmarksArray.join("\n"));
     dt.addElement(event.target);
 
     // Without this check, drag/drop fails for menu launcher

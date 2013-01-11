@@ -42,3 +42,11 @@ launcher[overflow="true"] {
 .menulauncher[overflow="false"] {
 	display: none;
 }
+
+
+launcher[empty="true"] .launcherMenu > :-moz-any(menu, menuitem):not(.launcher_empty_menuitem),
+launcher[empty="false"] .launcherMenu > .launcher_empty_menuitem,
+.menulauncher[empty="true"] .launcherMenu > :-moz-any(menu, menuitem):not(.launcher_empty_menuitem),
+.menulauncher[empty="false"] .launcherMenu > .launcher_empty_menuitem {
+	visibility: collapse;
+}

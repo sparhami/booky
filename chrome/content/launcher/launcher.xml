@@ -28,7 +28,7 @@
 					<xul:box class="launcher-countindicator-one" />
 				</xul:hbox>
 
-				<xul:menupopup anonid="contextMenu" ondragstart="event.preventDefault();"
+				<xul:menupopup class="launcherMenu" anonid="contextMenu" ondragstart="event.preventDefault();"
 					onpopupshowing="if(this == event.target) js.contextShowing(event);"
 					onpopuphiding="if(this == event.target) js.contextHiding(event);">
 
@@ -63,6 +63,7 @@
 					<xul:menuitem class="launcher_menu_remove" label="&com_sppad_booky_remove.label;"
 						accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
 
+					<xul:menuitem class="launcher_empty_menuitem" label="&com_sppad_booky_launcher_empty.label;" disabled="true"/>
 				</xul:menupopup>
 			</xul:toolbarbutton>
 		</content>
