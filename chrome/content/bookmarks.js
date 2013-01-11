@@ -165,7 +165,7 @@ com.sppad.booky.Bookmarks = new function() {
     	moveBefore: function(priorBookmarkId, bookmarkId, aFolderId) {
     	    aFolderId = aFolderId || self._getQuicklaunchFolderId();
     	    
-            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : 0;
+            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : self._bs.DEFAULT_INDEX;
             self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
     	},
     	
@@ -313,7 +313,7 @@ com.sppad.booky.Bookmarks = new function() {
                     let node = folder.getChild(i);
 
                     if(node.itemId != ignoreId)
-                        array.push( { 'icon': node.icon, 'uri': node.uri });
+                        array.push( { 'icon': node.icon, 'uri': node.uri, 'itemId' : node.itemId });
                 }
                 
                 return array;

@@ -122,10 +122,6 @@ com.sppad.booky.Groups = new function() {
             let primaryId = self.getPrimaryIdFromUriString(node.uri);
             let folderId = self.groupIdMap.get(primaryId);
             
-            if(folderId && parentId != folderId) {
-                dump("alread have a folder, but it is not this one! FIX ME\n");
-            }
-            
             let bookmarkInfo = {
                     'parentId' : parentId,
                     'primaryId' : primaryId,
@@ -140,12 +136,40 @@ com.sppad.booky.Groups = new function() {
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
             launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
              
-              // Add all existing tabs in the launcher
+            // Get all tabs in the same domain
             let tabs = gBrowser.tabs;
+            let sameDomainTabs = new Array();
             for(let i=0; i<tabs.length; i++)
                 if(primaryId == self.getPrimaryIdFromTab(tabs[i]))
-                    launcher.addTab(tabs[i]);
-             
+                    sameDomainTabs.push(tabs[i]);
+
+            let movingLaunchers = folderId && parentId != folderId;
+            if(movingLaunchers) {
+                let previousLauncher = com.sppad.booky.Launcher.getLauncher(folderId);
+                let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(folderId);
+                
+                // Old launcher should no longer track the tabs
+                for(let i=0; i<sameDomainTabs.length; i++)
+                    previousLauncher.removeTab(sameDomainTabs[i]);
+                
+                // Grab all the bookmarks with the same domain and move them
+                for(let i=0; i<otherbookmarks.length; i++) {
+                    let bookmark = otherbookmarks[i];
+                    let domain = self.getPrimaryIdFromUriString(bookmark.uri);
+                    
+                    if(domain == primaryId)
+                        com.sppad.booky.Bookmarks.moveBefore(null, bookmark.itemId, parentId);
+                }
+                
+                previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(folderId));
+            }
+            
+            // Add the tabs to the launcher if it is either new or the domain is
+            // changing to a new launcher
+            if(!folderId || movingLaunchers)
+                for(let i=0; i<sameDomainTabs.length; i++)
+                    launcher.addTab(sameDomainTabs[i]);
+            
             com.sppad.booky.Resizer.onResize();
         },
 
