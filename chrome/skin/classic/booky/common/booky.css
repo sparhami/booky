@@ -63,3 +63,7 @@
 #com_sppad_booky_tabIndex[hide="now"] {
 	visibility: hidden;
 }
+
+#com_sppad_booky_tooltip_box {
+	text-align: center;
+}

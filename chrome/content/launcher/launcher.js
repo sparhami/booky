@@ -170,6 +170,22 @@ com.sppad.booky.Launcher = function(aID) {
     };
     
     /**
+     * Gets all the hostnames represented by the bookmarks in this launcher.
+     * 
+     * @return An array of the hostnames associated with this launcher.
+     */
+    this.getDomains = function() {
+        let domainsSet = new Set();
+        for(let i=0; i<this.bookmarksArray.length; i++) {
+            let uriString = this.bookmarksArray[i].uri;
+            let host = com.sppad.booky.Groups.getHostFromUriString(uriString);
+            domainsSet.add(host);
+        }
+
+        return [v for (v of domainsSet)];
+    };
+    
+    /**
      * Sets the ordinal on the launcher node. Note that it does not set it on
      * the overflow node as that appears to be rather buggy at the moment.
      * 
@@ -341,10 +357,24 @@ com.sppad.booky.Launcher = function(aID) {
  */
 com.sppad.booky.Launcher.prototype.mouseenter = function() {
     let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    let tooltipLabel = document.getElementById('com_sppad_booky_tooltip_label');
+    let tooltipBox = document.getElementById('com_sppad_booky_tooltip_box');
 
+    // Remove all the labels from the previous tooltip
+    while(tooltipBox.firstChild)
+        tooltipBox.removeChild(tooltipBox.firstChild);
+    
+    // If the title is blank/null/undefined, use the domains in the launcher
+    let labelTexts = this.title ? [ this.title ] : this.getDomains();
+    
+    // For each label text item, create and add a label
+    for(let i=0; i<labelTexts.length; i++) {
+        let label = document.createElement('label');
+        label.setAttribute('value', labelTexts[i]);
+        
+        tooltipBox.appendChild(label);
+    }
+    
     // need to open tooltip once first to find out the dimensions for centering
-    tooltipLabel.setAttribute('value', this.title);
     tooltip.openPopup(this.node, 'after_start', 0, 0, false, false);
     
     let xOffset = (-tooltip.boxObject.width/2) + (this.node.boxObject.width / 2);
@@ -417,15 +447,8 @@ com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
     let numberOfDays = com.sppad.booky.CurrentPrefs['historyMenuDays'];
     let maxResults = com.sppad.booky.CurrentPrefs['historyMenuItems'];
    
-    let domains = new Set();
-    for(let i=0; i<this.bookmarksArray.length; i++) {
-        let uriString = this.bookmarksArray[i].uri;
-        let host = com.sppad.booky.Groups.getHostFromUriString(uriString);
-        domains.add(host);
-    }
-
-    let domainArray = [v for (v of domains)];
-    let results = com.sppad.booky.History.queryHistoryArray(domainArray, numberOfDays, maxResults);
+    let domains = this.getDomains();
+    let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults);
     
     for(let i=0; i<results.length; i++) {
         let result = results[i];

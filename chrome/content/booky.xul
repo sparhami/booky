@@ -54,7 +54,7 @@
 				</stack>
 
 				<tooltip id="com_sppad_booky_tooltip">
-					<label id="com_sppad_booky_tooltip_label" inherits="value" />
+					<vbox id="com_sppad_booky_tooltip_box" />
 				</tooltip>
 
 				<box style="display: none">

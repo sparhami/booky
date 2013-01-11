@@ -136,11 +136,8 @@ com.sppad.booky.Groups = new function() {
             self.bookmarkInfoMap.put(node.itemId, bookmarkInfo);
 
             dump("adding " + node.uri + " to launcher " + folderId + "\n");
-            // let title = launcherId == primaryId ? primaryId :
-            // com.sppad.booky.Bookmarks.getTitle(launcherId);
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
             launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
-//             launcher.setTitle(title);
              
               // Add all existing tabs in the launcher
             let tabs = gBrowser.tabs;
@@ -205,8 +202,9 @@ com.sppad.booky.Groups = new function() {
             self.bookmarkInfoMap.put(node.itemId, bookmarkInfo);
             
             let launcher = com.sppad.booky.Launcher.createLauncher(node.itemId);
-            com.sppad.booky.Bookmarks.loadFolder(node.itemId);
+            launcher.setTitle(node.title);
             
+            com.sppad.booky.Bookmarks.loadFolder(node.itemId);
             com.sppad.booky.Booky.updateBookmarksCount(1);
         },
         
@@ -232,7 +230,6 @@ com.sppad.booky.Groups = new function() {
             let parentId = com.sppad.booky.Bookmarks.getFolder(node.itemId);
             let info = self.bookmarkInfoMap.get(node.itemId);
             if(info && parentId == info.parentId) {
-                
                 let launcher = com.sppad.booky.Launcher.getLauncher(node.itemId);
                 launcher.createBefore(nodeNext ? nodeNext.itemId : null);
                 
