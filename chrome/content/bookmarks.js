@@ -113,6 +113,8 @@ com.sppad.booky.Bookmarks = new function() {
         EVENT_DEL_FOLDER:           'EVENT_DEL_FOLDER',
         EVENT_MOV_FOLDER:           'EVENT_MOV_FOLDER',
         EVENT_LOAD_FOLDER:          'EVENT_LOAD_FOLDER',
+        
+        EVENT_UPDATE_TITLE:         'EVENT_UPDATE_TITLE',
     	
         
         isQuickLaunchFolder: function(aItemId) {
@@ -172,6 +174,17 @@ com.sppad.booky.Bookmarks = new function() {
             // Prevent user from changing our folder's title by restoring it
     	    if(aItemId == self._bookmarkFolderId && aTitle != self._BOOKMARK_FOLDER_TITLE)
     	        self._bs.setItemTitle(aItemId, self._BOOKMARK_FOLDER_TITLE);
+    	    
+            let folder = self._getFolder(aParentId);
+            
+            try {
+                folder.containerOpen = true;
+                
+                let node = folder.getChild(aIndex);
+                self._eventSupport.fire( { 'node' : node, }, this.EVENT_UPDATE_TITLE);
+            } finally {
+                folder.containerOpen = false;
+            }
     	},
     	
       	bookmarkAdded: function(aItemId, aFolderId, aIndex) {
