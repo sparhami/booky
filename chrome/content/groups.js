@@ -202,9 +202,10 @@ com.sppad.booky.Groups = new function() {
             self.bookmarkInfoMap.put(node.itemId, bookmarkInfo);
             
             let launcher = com.sppad.booky.Launcher.createLauncher(node.itemId);
-            launcher.setTitle(node.title);
             
             com.sppad.booky.Bookmarks.loadFolder(node.itemId);
+            launcher.setTitle(node.title);
+            
             com.sppad.booky.Booky.updateBookmarksCount(1);
         },
         

@@ -16,7 +16,6 @@ com.sppad.booky.BookmarksListener = {
 	
 	onItemAdded: function(aItemId, aFolderId, aIndex) {
 	    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolderId, aIndex);
-	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aFolderId, aIndex);
 	},
 	onItemRemoved: function(aItemId, aFolderId, aIndex) {},
 	onBeforeItemRemoved: function(aItemId, aItemType, aFolderId, aGUID, aParentGUID) {

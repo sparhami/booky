@@ -15,7 +15,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.tabsUpdateTime = 0;
     this.bookmarksUpdateTime = 0;
     this.id = aID;
-    this.title = aID;
+    this.title = "";
     this.tabs = [];
     this.bookmarksArray = [];
     this.node = document.createElement('launcher');
@@ -103,7 +103,6 @@ com.sppad.booky.Launcher = function(aID) {
         this.setAttribute("unread", unread == true);
         this.setAttribute("selected", selected == true);
         this.setAttribute("titlechanged", titlechanged == true);
-        this.setAttribute('label', this.id);
         
         this.setAttribute("hasSingle", this.tabs.length > 0);
         this.setAttribute("hasMultiple", this.tabs.length > 1);
@@ -167,6 +166,14 @@ com.sppad.booky.Launcher = function(aID) {
     
     this.setTitle = function(aTitle) {
         this.title = aTitle;
+        
+        let label = aTitle;
+        if(!label) {
+            let domains = this.getDomains();
+            label = (domains.length == 1) ? domains[0] : "(no title)";
+        }
+        
+        this.setAttribute('label', label);
     };
     
     /**
@@ -278,6 +285,7 @@ com.sppad.booky.Launcher = function(aID) {
         this.bookmarksArray = aBookmarkArray;
         
         this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
+        this.setTitle(this.title);
     };
     
     
