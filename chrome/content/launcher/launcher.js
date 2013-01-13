@@ -645,10 +645,10 @@ com.sppad.booky.Launcher.hasLauncher = function(aID) {
 
 com.sppad.booky.Launcher.showIndexIndicatorEvent;
 com.sppad.booky.Launcher.showIndexIndicator = function(value) {
-    let indexIndicator = document.getElementById('com_sppad_booky_tabIndex_label');
+    let indexIndicator = document.getElementById('com_sppad_scrollProgress_label');
     indexIndicator.setAttribute('value', value);
     
-    let indexIndicatorWrapper = document.getElementById('com_sppad_booky_tabIndex');
+    let indexIndicatorWrapper = document.getElementById('com_sppad_scrollProgress');
     indexIndicatorWrapper.removeAttribute('hide');
     
     /**
@@ -672,7 +672,7 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
 };
 
 com.sppad.booky.Launcher.hideIndexIndicator = function() {
-    let indexIndicatorWrapper = document.getElementById('com_sppad_booky_tabIndex');
+    let indexIndicatorWrapper = document.getElementById('com_sppad_scrollProgress');
     
     clearTimeout(this.showIndexIndicatorEvent);
     indexIndicatorWrapper.setAttribute('hide', 'now');
