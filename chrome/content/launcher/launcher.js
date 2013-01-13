@@ -113,7 +113,7 @@ com.sppad.booky.Launcher = function(aID) {
      * Evaluates and shows the tab index indicator if the launcher is selected.
      */
     this.evaluateTabIndexIndicator = function() {
-        if(this.selected && this.tabs.length > 1)
+        if(self.selected && self.tabs.length > 1)
             com.sppad.booky.Launcher.showIndexIndicator((self._selectedIndex + 1) + "/" + this.tabs.length); 
         else
             com.sppad.booky.Launcher.hideIndexIndicator();
@@ -335,12 +335,12 @@ com.sppad.booky.Launcher = function(aID) {
     };
     
     /**
-     * Updates this launcher to reflect changes made in a tab.
+     * Updates this launcher to reflect the selected state of a tab.
      * 
      * @param aTab
      *            A tab that has changed
      */
-    this.selectTab = function(aTab) {
+    this.updatedSelectedState = function(aTab) {
         this.updateAttributes();
         this.evaluateTabIndexIndicator();
     };
@@ -645,13 +645,12 @@ com.sppad.booky.Launcher.hasLauncher = function(aID) {
 
 com.sppad.booky.Launcher.showIndexIndicatorEvent;
 com.sppad.booky.Launcher.showIndexIndicator = function(value) {
-    let indexIndicator = document.getElementById('com_sppad_scrollProgress_label');
-    indexIndicator.setAttribute('value', value);
+    let indicator = document.getElementById('com_sppad_scrollProgress_label');
+    indicator.setAttribute('value', value);
     
-    let indexIndicatorWrapper = document.getElementById('com_sppad_scrollProgress');
-    indexIndicatorWrapper.style.transitionDuration = "";
-    indexIndicatorWrapper.style.transitionDelay = "";
-    indexIndicatorWrapper.removeAttribute('hide');
+    let indicatorWrapper = document.getElementById('com_sppad_scrollProgress');
+    indicatorWrapper.removeAttribute('com_sppad_booky_hide');
+    indicatorWrapper.setAttribute('source', 'com_sppad_booky');
     
     /**
      * Use the bottom of navigator-toolbox rather than the y position of browser
@@ -659,7 +658,7 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
      */
     let navbar = document.getElementById('navigator-toolbox');
     let yOffset = navbar.boxObject.y + navbar.boxObject.height;
-    indexIndicatorWrapper.style.top = yOffset + "px";
+    indicatorWrapper.style.top = yOffset + "px";
     
     /*
      * Want to make sure that the css rule for attribute removal (setting
@@ -669,15 +668,15 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
      */
     clearTimeout(this.showIndexIndicatorEvent);
     this.showIndexIndicatorEvent = setTimeout(function() {
-        indexIndicatorWrapper.style.transitionDuration = "0.6s";
-        indexIndicatorWrapper.style.transitionDelay = "1.4s";
-        indexIndicatorWrapper.setAttribute('hide', 'fadeout');    
+        indicatorWrapper.setAttribute('com_sppad_booky_hide', 'fadeout');    
     }, 1);
 };
 
 com.sppad.booky.Launcher.hideIndexIndicator = function() {
-    let indexIndicatorWrapper = document.getElementById('com_sppad_scrollProgress');
+    dump("hide indicator\n");
+    
+    let indicatorWrapper = document.getElementById('com_sppad_scrollProgress');
     
     clearTimeout(this.showIndexIndicatorEvent);
-    indexIndicatorWrapper.setAttribute('hide', 'now');
+    indicatorWrapper.setAttribute('com_sppad_booky_hide', 'now');
 };
