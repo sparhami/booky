@@ -649,6 +649,8 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
     indexIndicator.setAttribute('value', value);
     
     let indexIndicatorWrapper = document.getElementById('com_sppad_scrollProgress');
+    indexIndicatorWrapper.style.transitionDuration = "";
+    indexIndicatorWrapper.style.transitionDelay = "";
     indexIndicatorWrapper.removeAttribute('hide');
     
     /**
@@ -667,6 +669,8 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
      */
     clearTimeout(this.showIndexIndicatorEvent);
     this.showIndexIndicatorEvent = setTimeout(function() {
+        indexIndicatorWrapper.style.transitionDuration = "0.6s";
+        indexIndicatorWrapper.style.transitionDelay = "1.4s";
         indexIndicatorWrapper.setAttribute('hide', 'fadeout');    
     }, 1);
 };
