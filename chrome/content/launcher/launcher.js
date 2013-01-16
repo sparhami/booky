@@ -673,8 +673,6 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
 };
 
 com.sppad.booky.Launcher.hideIndexIndicator = function() {
-    dump("hide indicator\n");
-    
     let indicatorWrapper = document.getElementById('com_sppad_scrollProgress');
     
     clearTimeout(this.showIndexIndicatorEvent);
