@@ -71,7 +71,7 @@ com.sppad.booky.Bookmarks = new function() {
          * recreated with the same item id.
          */
 	     let item = self._getFolder(self._bookmarkFolderId);
-	     if(item.title == self._BOOKMARK_FOLDER_TITLE)
+	     if(item && item.title == self._BOOKMARK_FOLDER_TITLE)
 	         return self._bookmarkFolderId;
 	         
          let rootFolder = self._getFolder(self._bs.bookmarksMenuFolder);

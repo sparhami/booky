@@ -51,7 +51,7 @@ com.sppad.booky.Launcher = function(aID) {
             this.openTab();
         } else if(this.tabs.length > 0) {
             let direction = this.selected ? (next == true ? 1 : -1) : 0;
-            let index = this.getNextIndex(direction, reverse);
+             let index = this.getNextIndex(direction, reverse);
             
             gBrowser.selectedTab = this.tabs[index];
         }
@@ -450,7 +450,9 @@ com.sppad.booky.Launcher.prototype.command = function(event) {
  */
 com.sppad.booky.Launcher.prototype.click = function(event) {
     
-    if(event.button == 0)
+    if(event.altKey)
+        com.sppad.booky.Details.showDetailsPage(this);
+    else if(event.button == 0)
         this.switchTo(true, true, event.shiftKey);
     else if(event.button == 1)
         this.openTab();

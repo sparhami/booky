@@ -296,14 +296,23 @@ com.sppad.booky.Booky = new function() {
             
             com.sppad.booky.TabEvents.addListener(this);
             this.loadTabs();
+            
+            this.loaded = true;
         },
         
         /**
          * Cleanup for window unload: remove listeners.
          */
         cleanup: function() {
+            if(!this.loaded)
+                return;
+            
             com.sppad.booky.Preferences.removeListener(this, com.sppad.booky.Preferences.EVENT_PREFERENCE_CHANGED);
             com.sppad.booky.TabEvents.removeListener(this);
+            
+            com.sppad.booky.Preferences.cleanup();
+            com.sppad.booky.Bookmarks.cleanup();
+            com.sppad.booky.Groups.cleanup();
         },
     }
 };
@@ -365,7 +374,4 @@ window.addEventListener("load", function() {
 
 window.addEventListener('unload', function() {
     com.sppad.booky.Booky.cleanup();
-    com.sppad.booky.Preferences.cleanup();
-    com.sppad.booky.Bookmarks.cleanup();
-    com.sppad.booky.Groups.cleanup();
 }, false);
