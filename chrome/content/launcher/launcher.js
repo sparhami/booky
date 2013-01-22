@@ -279,8 +279,6 @@ com.sppad.booky.Launcher = function(aID) {
     this.removeTabArray = function(aTabArray) {
         this.tabsUpdateTime = Date.now();
         
-        dump("removing tab array of length " + aTabArray.length);
-        
         for(let i=0; i<aTabArray.length; i++) {
             let tab = aTabArray[i];
             
