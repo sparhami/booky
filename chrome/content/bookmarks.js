@@ -230,8 +230,11 @@ com.sppad.booky.Bookmarks = new function() {
 
                 let node = folder.getChild(aIndex);
                 let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
-                let obj = { 'itemId' : node.itemId, 
+                let obj = { 'itemId' : node.itemId,
+                            'uri' : node.uri,
+                            'title' : node.title,
                             'nextItemId' : nodeNext ? nodeNext.itemId : null };
+
                 
                 if(aItemType == self._bs.TYPE_BOOKMARK)
                     self._eventSupport.fire(obj, this.EVENT_MOV_BOOKMARK);
