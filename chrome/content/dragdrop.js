@@ -93,8 +93,6 @@ com.sppad.booky.DragDrop = new function() {
     };
     
     self._dropLauncher = function(launcherId) {
-        dump("dropping launcher\n");
-            
         let launcher = com.sppad.booky.Launcher.getLauncher(launcherId);
         let bookmarkId = launcher.id;
         let prevBookmarkId = self._insertPoint && self._insertPoint.js.id;
@@ -105,8 +103,6 @@ com.sppad.booky.DragDrop = new function() {
     };
     
     self._dropUris = function(uris) {
-        dump("dropping uris\n");
-        
         for(let i=0; i<uris.length; i++) {
             
             let uri = uris[i];

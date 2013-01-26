@@ -14,22 +14,21 @@ com.sppad.booky.BookmarksListener = {
 	onBeginUpdateBatch: function() {},
 	onEndUpdateBatch: function() {},
 	
-	onItemAdded: function(aItemId, aFolderId, aIndex) {
-	    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolderId, aIndex);
+	onItemAdded: function(aItemId, aFolderId, aIndex, aItemType) {
+	    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aFolderId, aIndex, aItemType);
 	},
-	onItemRemoved: function(aItemId, aFolderId, aIndex) {},
-	onBeforeItemRemoved: function(aItemId, aItemType, aFolderId, aGUID, aParentGUID) {
-        let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
-        com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aFolderId, index);
+	onItemRemoved: function(aItemId, aFolderId, aIndex, aItemType) {
+        com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aFolderId, aIndex, aItemType);
 	},
+	onBeforeItemRemoved: function(aItemId, aItemType, aFolderId, aGUID, aParentGUID) {},
 	onItemChanged: function(aItemId, aProperty, aIsAnnotationProperty, aNewValue, 
 			aLastModified, aItemType, aParentId, aGUID, aParentGUID) {
 	    
         let index = com.sppad.booky.Bookmarks.bookmarksService.getItemIndex(aItemId);
 	    
 		if(aProperty === "uri") {
-		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index);
-		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index);
+		    com.sppad.booky.Bookmarks.bookmarkRemoved(aItemId, aParentId, index, aItemType);
+		    com.sppad.booky.Bookmarks.bookmarkAdded(aItemId, aParentId, index, aItemType);
 		}
 		
 		if(aProperty === "title") {
@@ -37,8 +36,8 @@ com.sppad.booky.BookmarksListener = {
 		}
 	},
 	onItemVisited: function(aBookmarkId, aVisitID, time) {},
-	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {
-	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex);
+	onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex, aItemType) {
+	    com.sppad.booky.Bookmarks.bookmarkMoved(aItemId, aNewParent, aNewIndex, aItemType);
 	},
 	
 	QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsINavBookmarkObserver])
@@ -182,30 +181,31 @@ com.sppad.booky.Bookmarks = new function() {
                 folder.containerOpen = true;
                 
                 let node = folder.getChild(aIndex);
-                self._eventSupport.fire( { 'node' : node, }, this.EVENT_UPDATE_TITLE);
+                let obj = { 'itemId' : node.itemId,
+                            'title' : node.title };
+                
+                self._eventSupport.fire(obj, this.EVENT_UPDATE_TITLE);
             } finally {
                 folder.containerOpen = false;
             }
     	},
     	
-      	bookmarkAdded: function(aItemId, aFolderId, aIndex) {
+      	bookmarkAdded: function(aItemId, aFolderId, aIndex, aItemType) {
             let folder = self._getFolder(aFolderId);
       	    
       		try {
       		    folder.containerOpen = true;
-		  	  	
-		  	  	/*
-                 * Ignore about:blank, since in the process of adding a bookmark
-                 * through the bookmark manager, it is created initially as
-                 * blank (or at least does so on Linux)
-                 */
+
                 let node = folder.getChild(aIndex);
                 let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
-                let obj = { 'node' : node, 'nodeNext' : nodeNext};
+                let obj = { 'itemId' : node.itemId,
+                            'uri' : node.uri,
+                            'title' : node.title,
+                            'nextItemId' : nodeNext ? nodeNext.itemId : null };
                 
-                if(node.type == node.RESULT_TYPE_URI && node.uri !== "about:blank")
+                if(aItemType == self._bs.TYPE_BOOKMARK)
 		    		self._eventSupport.fire(obj, this.EVENT_ADD_BOOKMARK);
-		    	else if(node.type == node.RESULT_TYPE_FOLDER)
+		    	else if(aItemType == self._bs.TYPE_FOLDER)
                     self._eventSupport.fire(obj, this.EVENT_ADD_FOLDER);
 		    	
 	    	} finally {
@@ -213,40 +213,29 @@ com.sppad.booky.Bookmarks = new function() {
 			}
     	},
     	
-    	bookmarkRemoved: function(aItemId, aFolderId, aIndex) {
-            let folder = self._getFolder(aFolderId);
+    	bookmarkRemoved: function(aItemId, aFolderId, aIndex, aItemType) {
+            let obj = { 'itemId' : aItemId };
             
-    		try {
-                folder.containerOpen = true;
-                
-                let node = folder.getChild(aIndex);
-                let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
-                let obj = { 'node' : node, 'nodeNext' : nodeNext};
-                
-		    	if(node.type == node.RESULT_TYPE_URI)
-		    		self._eventSupport.fire(obj, this.EVENT_DEL_BOOKMARK);
-		        else if(node.type == node.RESULT_TYPE_FOLDER)
-                    self._eventSupport.fire(obj, this.EVENT_DEL_FOLDER);
-		    	
-	    	} finally {
-	    	    folder.containerOpen = false;
-			}
+	    	if(aItemType == self._bs.TYPE_BOOKMARK)
+	    		self._eventSupport.fire(obj, this.EVENT_DEL_BOOKMARK);
+	        else if(aItemType == self._bs.TYPE_FOLDER)
+                self._eventSupport.fire(obj, this.EVENT_DEL_FOLDER);
     	},
     	
-    	bookmarkMoved: function(aItemId, aFolderId, aIndex) {
+    	bookmarkMoved: function(aItemId, aFolderId, aIndex, aItemType) {
             let folder = self._getFolder(aFolderId);
     	    
     		try {
                 folder.containerOpen = true;
-                
-    	  	  	// Find first node prior to the moved node of the same type
+
                 let node = folder.getChild(aIndex);
                 let nodeNext = (aIndex + 1 >= folder.childCount) ? null : folder.getChild(aIndex + 1);
-                let obj = { 'node' : node, 'nodeNext' : nodeNext};
+                let obj = { 'itemId' : node.itemId, 
+                            'nextItemId' : nodeNext ? nodeNext.itemId : null };
                 
-    	    	if(node.type == node.RESULT_TYPE_URI)
-    	  	  		self._eventSupport.fire(obj, this.EVENT_MOV_BOOKMARK);
-                else if(node.type == node.RESULT_TYPE_FOLDER)
+                if(aItemType == self._bs.TYPE_BOOKMARK)
+                    self._eventSupport.fire(obj, this.EVENT_MOV_BOOKMARK);
+                else if(aItemType == self._bs.TYPE_FOLDER)
                     self._eventSupport.fire(obj, this.EVENT_MOV_FOLDER);
     	    	
     		} finally {
@@ -302,7 +291,9 @@ com.sppad.booky.Bookmarks = new function() {
                 for (let i = 0; i < nodes.length; i ++) {
                     
                     let node = nodes[i];
-                    let obj = { 'node' : node };
+                    let obj = { 'itemId' : node.itemId,
+                                'uri' : node.uri,
+                                'title' : node.title };
                     
                     switch(node.type) {
                         case node.RESULT_TYPE_URI:
@@ -318,7 +309,7 @@ com.sppad.booky.Bookmarks = new function() {
             }
         },
         
-        getBookmarks: function(aFolderId, ignoreId) {
+        getBookmarks: function(aFolderId) {
             let folder = self._getFolder(aFolderId);
             let array = new Array();
             
@@ -327,9 +318,11 @@ com.sppad.booky.Bookmarks = new function() {
             
                 for (let i = 0; i < folder.childCount; i ++) {
                     let node = folder.getChild(i);
-
-                    if(node.itemId != ignoreId)
-                        array.push( { 'icon': node.icon, 'uri': node.uri, 'itemId' : node.itemId });
+                    let obj = { 'itemId' : node.itemId,
+                                'icon': node.icon,
+                                'uri': node.uri };
+                    
+                    array.push(obj);
                 }
                 
                 return array;
