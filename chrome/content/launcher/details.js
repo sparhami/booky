@@ -214,6 +214,17 @@ com.sppad.booky.Details = new function() {
                 this.loadTabs();
                 break;
             case 'history_content':
+                let toRemove = [];
+                
+                for(let i=0; i<aContainer.selectedItems.length; i++) {
+                    let index = aContainer.getIndexOfItem(aContainer.selectedItems[i]);
+                    let uri = Services.io.newURI(self.historyResults[index].uri, null, null);
+                    toRemove.push(uri);
+                }
+                
+                com.sppad.booky.History.removePages(toRemove, toRemove.length);
+                
+                this.loadHistory();
                 break;
             case 'bookmarks_content':
                 // Copy so that removing doesn't change indexing

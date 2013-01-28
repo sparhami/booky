@@ -17,6 +17,9 @@ com.sppad.booky.History = new function() {
     self.hs = Components.classes["@mozilla.org/browser/nav-history-service;1"]
         .getService(Components.interfaces.nsINavHistoryService);
     
+    self.bh = Components.classes["@mozilla.org/browser/nav-history-service;1"]
+        .getService(Components.interfaces.nsIBrowserHistory);
+    
     /**
      * Queries history for an array of domains, returning 
      * 
@@ -65,5 +68,9 @@ com.sppad.booky.History = new function() {
         }
         
         return resultArray;
-    }
+    };
+    
+    this.removePages = function(aUriArray, length) {
+        self.bh.removePages(aUriArray, length);
+    };
 };
