@@ -323,7 +323,8 @@ com.sppad.booky.Bookmarks = new function() {
                     let node = folder.getChild(i);
                     let obj = { 'itemId' : node.itemId,
                                 'icon': node.icon,
-                                'uri': node.uri };
+                                'uri': node.uri,
+                                'title': node.title };
                     
                     array.push(obj);
                 }

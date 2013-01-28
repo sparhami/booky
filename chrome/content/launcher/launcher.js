@@ -522,14 +522,14 @@ com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
             node.removeChild(toRemove[i]);
     
         for(let i=0; i<this.bookmarksArray.length; i++) {
-            let bookmark =  this.bookmarksArray[i].uri;
-            let image = this.bookmarksArray[i].icon;
+            let bookmark = this.bookmarksArray[i];
             
             let menuitem = document.createElement('menuitem');
             menuitem.setAttribute('bookmark', true);
-            menuitem.setAttribute('label', bookmark);
-            menuitem.setAttribute('image', image);
-            menuitem.addEventListener('command', function(event) { this.openTab(bookmark); }.bind(this) );
+            menuitem.setAttribute('label', bookmark.title || bookmark.uri);
+            menuitem.setAttribute('image', bookmark.image);
+            menuitem.setAttribute('tooltiptext', bookmark.uri);
+            menuitem.addEventListener('command', function(event) { this.openTab(bookmark.uri); }.bind(this) );
             
             node.appendChild(menuitem);
         }
@@ -560,7 +560,7 @@ com.sppad.booky.Launcher.prototype.tabsPopupShowing = function(event) {
             let menuitem = document.createElement('menuitem');
             menuitem.tab = tab;
             menuitem.setAttribute('class', 'com_sppad_booky_tab');
-            menuitem.addEventListener('command', function(event) { gBrowser.selectedTab = event.target.tab; }.bind(this) );
+            menuitem.addEventListener('command', function(event) { gBrowser.selectedTab = tab; }.bind(this) );
               
             node.appendChild(menuitem);
         }
