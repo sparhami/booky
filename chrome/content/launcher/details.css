@@ -1,89 +1,89 @@
-#com_sppad_booky_details {
+#details {
 	background-image: linear-gradient(to bottom, #F0ECE9 0%, #E3DFDC 100%);
 	-moz-box-flex: 1;
 	padding: 1em;
 }
 
-#com_sppad_booky_details_sidepanel {
+#sidepanel {
 	-moz-box-flex: 1;
 }
 
-#com_sppad_booky_details_content {
+#content {
 	-moz-box-flex: 9;
 }
 
-#com_sppad_booky_details_sites {
+#sites {
 	-moz-box-flex: 1;
 }
 
-#com_sppad_booky_details_main {
+#main {
 	-moz-box-flex: 10;
 }
 
-#com_sppad_booky_details_top {
+#top {
 	margin-bottom: 0.6em;
 	height: 1.5em;
 }
 
-#com_sppad_booky_details_launcher_icon {
+#launcher_icon {
 	width: 1.5em;
 	height: 1.5em;
 }
 
-#com_sppad_booky_details_launcher_name {
+#launcher_name {
 	width: 10em;
 }
 
-#com_sppad_booky_details_search {
+#search {
 	-moz-box-flex: 1;
 	height: 1em;
 }
 
-#com_sppad_booky_details_middle {
+#middle {
 	-moz-box-flex: 20;
 }
 
-#com_sppad_booky_details_bottom {
+#bottom {
 	-moz-box-flex: 2;
 }
 
-#com_sppad_booky_details_tabs {
+#tabs {
 	-moz-box-flex: 10;
 }
 
-#com_sppad_booky_details_bookmarks {
+#bookmarks {
 	-moz-box-flex: 8;
 }
 
-#com_sppad_booky_details_history {
+#history {
 	-moz-box-flex: 8;
 }
 
-#com_sppad_booky_details_launcher_name,
-#com_sppad_booky_details_search {
+#launcher_name,
+#search {
 	border-width: 2px !important;
 	border-style: solid !important;
 	border-color: rgb(104, 104, 104);
 }
 
-#com_sppad_booky_details_tabs, 
-#com_sppad_booky_details_bookmarks, 
-#com_sppad_booky_details_history {
+#tabs, 
+#bookmarks, 
+#history {
 	border-width: 1px;
 	border-style: solid;
 	border-color: rgb(104, 104, 104);
 }
 
-#com_sppad_booky_details_launcher_icon,
-#com_sppad_booky_details_launcher_name,
-#com_sppad_booky_details_search {
+#launcher_icon,
+#launcher_name,
+#search {
 	background-color: rgba(255, 255, 255, 1);
 	margin-left: 0.8em !important;
 }
 
-#com_sppad_booky_details_tabs, 
-#com_sppad_booky_details_bookmarks, 
-#com_sppad_booky_details_history {
+#tabs, 
+#bookmarks, 
+#history {
 	background-color: rgba(255, 255, 255, 0.5);
 	margin-left: 0.8em;
 }

@@ -5,36 +5,36 @@
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-	<hbox id="com_sppad_booky_details">
-		<hbox id="com_sppad_booky_details_sidepanel"></hbox>
-		<hbox id="com_sppad_booky_details_content">
-			<vbox id="com_sppad_booky_details_sites">
+	<hbox id="details">
+		<hbox id="sidepanel"></hbox>
+		<hbox id="content">
+			<vbox id="sites">
 				<hbox class="detail_domain_icon">ALL</hbox>
 				<hbox class="detail_domain_icon">1</hbox>
 				<hbox class="detail_domain_icon">2</hbox>
 				<hbox class="detail_domain_icon">3</hbox>
 			</vbox>
 
-			<vbox id="com_sppad_booky_details_main">
-				<hbox id="com_sppad_booky_details_top">
-					<box id="com_sppad_booky_details_launcher_icon"></box>
-					<textbox id="com_sppad_booky_details_launcher_name" class="plain"
+			<vbox id="main">
+				<hbox id="top">
+					<box id="launcher_icon"></box>
+					<textbox id="launcher_name" class="plain"
 						placeholder="( no name )" />
-					<textbox id="com_sppad_booky_details_search" class="plain"
+					<textbox id="search" class="plain"
 						placeholder="Search" />
 				</hbox>
-				<hbox id="com_sppad_booky_details_middle">
-					<vbox id="com_sppad_booky_details_tabs">
-						<hbox id="com_sppad_booky_details_tabs_header" class="detail_header">
+				<hbox id="middle">
+					<vbox id="tabs">
+						<hbox id="tabs_header" class="detail_header">
 							<box class="detail_header_text">
 								Tabs
 							</box>
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" id="com_sppad_booky_details_tabs_content" />
+						<listbox class="plain textList" seltype="multiple" id="tabs_content" />
 					</vbox>
-					<vbox id="com_sppad_booky_details_bookmarks">
-						<hbox id="com_sppad_booky_details_bookmarks_header" class="detail_header">
+					<vbox id="bookmarks">
+						<hbox id="bookmarks_header" class="detail_header">
 							<image class="detail_image" src="chrome://booky/skin/images/Rocket000_emblem-star.svg" />
 							<box class="detail_header_text" flex="1">
 								Bookmarks
@@ -42,10 +42,10 @@
 							<button class="detail_button plain" oncommand="alert('click!');">+</button>
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" id="com_sppad_booky_details_bookmarks_content" />
+						<listbox class="plain textList" seltype="multiple" id="bookmarks_content" />
 					</vbox>
-					<vbox id="com_sppad_booky_details_history">
-						<hbox id="com_sppad_booky_details_history_header" class="detail_header" >
+					<vbox id="history">
+						<hbox id="history_header" class="detail_header" >
 							<image class="detail_image" src="chrome://booky/skin/images/Calendar_file.svg" />
 							<box class="detail_header_text" flex="1">
 								History
@@ -54,10 +54,10 @@
 								image="chrome://booky/skin/images/edit-clear.svg" />
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" id="com_sppad_booky_details_history_content" />
+						<listbox class="plain textList" seltype="multiple" id="history_content" />
 					</vbox>
 				</hbox>
-				<hbox id="com_sppad_booky_details_bottom"></hbox>
+				<hbox id="bottom"></hbox>
 			</vbox>
 		</hbox>
 	</hbox>
