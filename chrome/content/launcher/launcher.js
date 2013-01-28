@@ -17,7 +17,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.id = aID;
     this.title = "";
     this.tabs = [];
-    this.bookmarksArray = [];
+    this.bookmarks = [];
     this.empty = true;
     this.node = document.createElement('launcher');
     this.menuNode = overflowTemplateNode.cloneNode(true);
@@ -39,8 +39,8 @@ com.sppad.booky.Launcher = function(aID) {
         
         if(aUri)
             gBrowser.selectedTab = gBrowser.addTab(aUri);
-        else if(this.bookmarksArray.length > 0)
-            gBrowser.selectedTab = gBrowser.addTab(this.bookmarksArray[0].uri);
+        else if(this.bookmarks.length > 0)
+            gBrowser.selectedTab = gBrowser.addTab(this.bookmarks[0].uri);
             
         this.forceCloseOverflowMenu();
     };       
@@ -184,8 +184,8 @@ com.sppad.booky.Launcher = function(aID) {
      */
     this.getDomains = function() {
         let domainsSet = new Set();
-        for(let i=0; i<this.bookmarksArray.length; i++) {
-            let uriString = this.bookmarksArray[i].uri;
+        for(let i=0; i<this.bookmarks.length; i++) {
+            let uriString = this.bookmarks[i].uri;
             let host = com.sppad.booky.Groups.getHostFromUriString(uriString);
             domainsSet.add(host);
         }
@@ -299,11 +299,11 @@ com.sppad.booky.Launcher = function(aID) {
     
     this.setBookmarks = function(aBookmarkArray) {
         this.bookmarksUpdateTime = Date.now();
-        this.bookmarksArray = aBookmarkArray;
+        this.bookmarks = aBookmarkArray;
         
         this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
         this.setTitle(this.title);
-        this.setAttribute('empty', this.bookmarksArray.length == 0);
+        this.setAttribute('empty', this.bookmarks.length == 0);
     };
     
     
@@ -421,7 +421,7 @@ com.sppad.booky.Launcher.prototype.mouseleave = function() {
 com.sppad.booky.Launcher.prototype.dragstart = function(event) {
     let dt = event.dataTransfer;
     dt.setData('text/com-sppad-booky-launcherId', this.id); 
-    dt.setData('text/uri-list', this.bookmarksArray.join("\n"));
+    dt.setData('text/uri-list', this.bookmarks.join("\n"));
     dt.addElement(event.target);
 
     // Without this check, drag/drop fails for menu launcher
@@ -521,8 +521,8 @@ com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
         for(let i=0; i<toRemove.length; i++)
             node.removeChild(toRemove[i]);
     
-        for(let i=0; i<this.bookmarksArray.length; i++) {
-            let bookmark = this.bookmarksArray[i];
+        for(let i=0; i<this.bookmarks.length; i++) {
+            let bookmark = this.bookmarks[i];
             
             let menuitem = document.createElement('menuitem');
             menuitem.setAttribute('bookmark', true);
@@ -624,9 +624,9 @@ com.sppad.booky.Launcher.prototype.remove = function(event) {
  * Opens all the bookmarks in the launcher.
  */
 com.sppad.booky.Launcher.prototype.openAllBookmarks = function(event) {
-    let count = this.bookmarksArray.length;
+    let count = this.bookmarks.length;
     for(let i=0; i<count; i++)
-        this.openTab(this.bookmarksArray[i].uri);
+        this.openTab(this.bookmarks[i].uri);
 }
 
 /** Maps ids to Launchers */

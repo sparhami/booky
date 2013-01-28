@@ -11,6 +11,7 @@ com.sppad.booky.Details = new function() {
     self.loading = false;
     self.launcher = null;
     self.document = null;
+    self.results = null;
     
     /** A weak reference to the tab containing the details page */
     self.tab = null;
@@ -54,11 +55,6 @@ com.sppad.booky.Details = new function() {
             self.setupPage();
     };
     
-    this.listBlur = function(aEvent) {
-        
-        
-    };
-    
     this.loadHistory = function() {
         
         let container = self.document.getElementById('history_content');
@@ -73,6 +69,7 @@ com.sppad.booky.Details = new function() {
             return;
         
         let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults);
+        self.historyResults = results;
         
         for(let i=0; i<results.length; i++) {
             let result = results[i];
@@ -83,7 +80,7 @@ com.sppad.booky.Details = new function() {
             item.setAttribute('image', result.icon);
             item.setAttribute('tooltiptext', result.uri);
             
-            item.addEventListener('dblclick', self.openUri.bind(self, result.uri), true);
+            item.addEventListener('dblclick', self.onAction.bind(self, container, i), true);
             
             container.appendChild(item);
         }
@@ -95,7 +92,7 @@ com.sppad.booky.Details = new function() {
         while(container.hasChildNodes())
             container.removeChild(container.lastChild);
         
-        let bookmarks = self.launcher.bookmarksArray;
+        let bookmarks = self.launcher.bookmarks;
         for(let i=0; i<bookmarks.length; i++) {
             let bookmark = bookmarks[i];
             
@@ -105,7 +102,7 @@ com.sppad.booky.Details = new function() {
             item.setAttribute('image', bookmark.icon);
             item.setAttribute('tooltiptext', bookmark.uri);
             
-            item.addEventListener('dblclick', self.openUri.bind(self, bookmark.uri), true);
+            item.addEventListener('dblclick', self.onAction.bind(self, container, i), true);
             
             container.appendChild(item);
         }
@@ -126,7 +123,7 @@ com.sppad.booky.Details = new function() {
             item.setAttribute('label', tab.label);
             item.setAttribute('image', tab.getAttribute('image'));
             
-            item.addEventListener('dblclick', self.openTab.bind(self, tab), true);
+            item.addEventListener('dblclick', self.onAction.bind(self, container, i), true);
             
             container.appendChild(item);
         }
@@ -140,12 +137,16 @@ com.sppad.booky.Details = new function() {
         gBrowser.selectedTab = aTab;
     };
     
+    this.closeTab = function(aTab) {
+        gBrowser.removeTab(aTab);
+    };
     
     this.onPageLoad = function(aEvent) {
-        let doc = aEvent.originalTarget; // doc is document that triggered
-                                            // "onload" event
+        let doc = aEvent.originalTarget;
         if(doc.location.href != 'chrome://booky/content/launcher/details.xul')
             return;
+        
+        gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
         
         // Don't need to listen for load anymore
         document.getElementById('appcontent').removeEventListener('DOMContentLoaded', this.onPageLoad);
@@ -156,21 +157,92 @@ com.sppad.booky.Details = new function() {
         self.loading = false;
         
 
-// self.document.defaultView.addEventListener("unload", function(event){
-// self.onPageUnload(event); }, true);
+        doc.defaultView.addEventListener("unload", function(event){ self.onPageUnload(event); }, true);
+    };
+    
+    this.onPageUnload = function(aEvent) {
+        dump("details page unloaded\n");
+        gBrowser.tabContainer.removeEventListener("TabSelect", self.tabselect);
     };
     
     this.setupListeners = function() {
         
         let containerIds = ['tabs_content', 'history_content', 'bookmarks_content'];
 
-        containerIds.forEach(function(id) { 
-            self.document.getElementById(id).addEventListener('blur', self.containerBlur, false);
+        containerIds.forEach(function(id) {
+            let container = self.document.getElementById(id);
+            
+            container.addEventListener('blur', self.containerBlur, false);
+            container.addEventListener('keyup', self.keyEvent, false);
         });
     };
     
     this.containerBlur = function(aEvent) {
         aEvent.originalTarget.selectedIndex = -1;
+    };
+    
+    this.onAction = function(aContainer, aIndex) {
+        if(aIndex == undefined && aContainer.selectedCount != 1)
+            return;
+            
+        let index = aIndex || aContainer.selectedIndex;
+        switch(aContainer.id) {
+            case 'tabs_content':
+                gBrowser.selectedTab = self.launcher.tabs[index];
+                break;
+            case 'history_content':
+                gBrowser.selectedTab = gBrowser.loadOneTab(self.historyResults[index].uri);
+                break;
+            case 'bookmarks_content':
+                gBrowser.selectedTab = gBrowser.loadOneTab(self.launcher.bookmarks[index].uri);
+                break;
+        }
+    };
+    
+    this.onDelete = function(aContainer) {
+
+        switch(aContainer.id) {
+            case 'tabs_content':
+                // Copy so that removing doesn't change indexing
+                let tabsCopy = [].concat(self.launcher.tabs);
+                
+                for(let i=0; i<aContainer.selectedItems.length; i++) {
+                    let index = aContainer.getIndexOfItem(aContainer.selectedItems[i]);
+                    gBrowser.removeTab(tabsCopy[index]);
+                }
+                
+                this.loadTabs();
+                break;
+            case 'history_content':
+                break;
+            case 'bookmarks_content':
+                // Copy so that removing doesn't change indexing
+                let bookmarksCopy = [].concat(self.launcher.bookmarks);
+                
+                for(let i=0; i<aContainer.selectedItems.length; i++) {
+                    let index = aContainer.getIndexOfItem(aContainer.selectedItems[i]);
+                    com.sppad.booky.Bookmarks.removeBookmark(bookmarksCopy[index].itemId);
+                }
+                   
+                this.loadBookmarks();
+                break;
+        }
+        
+    };
+    
+    this.keyEvent = function(aEvent) {
+        
+        switch(aEvent.keyCode) {
+            case KeyEvent.DOM_VK_RETURN:
+                self.onAction(aEvent.originalTarget);
+                break;
+            case KeyEvent.DOM_VK_DELETE:
+                self.onDelete(aEvent.originalTarget);
+                break;
+            default:
+                break;
+        }
+        
     };
     
     this.setupPage = function() {
@@ -179,15 +251,9 @@ com.sppad.booky.Details = new function() {
         self.loadTabs();
     };
     
-// this.onPageUnload = function(aEvent) {
-// dump("details page unloaded\n");
-// };
-    
-   
     this.setup = function() {
         // Add the details page URI to the list of pages to set disablechrome on
         XULBrowserWindow.inContentWhitelist.push("chrome://booky/content/launcher/details.xul");
-        gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
     };
     
 };
