@@ -14,7 +14,10 @@
 	<script type="application/x-javascript" src="history.js" />
 	<script type="application/x-javascript" src="tabevents.js" />
 	<script type="application/x-javascript" src="launcher/launcher.js" />
-	<script type="application/x-javascript" src="launcher/details.js" />
+	<script type="application/x-javascript" src="management/details.js" />
+	<script type="application/x-javascript" src="management/tabsView.js" />
+	<script type="application/x-javascript" src="management/historyView.js" />
+	<script type="application/x-javascript" src="management/bookmarksView.js" />
 	<script type="application/x-javascript" src="preferences/preferences.js" />
 	<script type="application/x-javascript" src="groups.js" />
 	<script type="application/x-javascript" src="booky.js" />

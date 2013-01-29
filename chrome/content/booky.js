@@ -192,7 +192,7 @@ com.sppad.booky.Booky = new function() {
             // Check to see if the tab needs to be removed from existing group
             // and/or added to a group
             if(aTab.label != self._connectingString && (newId != oldId || !aTab.com_sppad_booky_launcher)) {
-                // If the tab was in a launcher, removed it
+                // If the tab was in a launcher, remove it
                 if(aTab.com_sppad_booky_launcher)
                     aTab.com_sppad_booky_launcher.removeTab(aTab);
                 
