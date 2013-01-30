@@ -18,6 +18,8 @@ com.sppad.booky.HistoryView = new function() {
         
         self.context = aDocument.getElementById('history_context');
         self.context.js = self;
+        
+        aDocument.getElementById('history_clear').addEventListener('command', self.onDeleteAll, false);
     };
     
     this.setLauncher = function(aLauncher) {
@@ -73,15 +75,30 @@ com.sppad.booky.HistoryView = new function() {
     
     this.onDelete = function() {
         
-        let toRemove = [];
+        let uris = [];
+        let items = [];
         
         let count = self.container.selectedItems.length;
         for(let i=0; i<count; i++) {
-            let uriString = self.container.selectedItems[i].result.uri;
-            toRemove.push(Services.io.newURI(uriString, null, null));
+            let item = self.container.selectedItems[i];
+            
+            uris.push(Services.io.newURI(item.result.uri, null, null));
+            items.push(item);
         }
         
-        com.sppad.booky.History.removePages(toRemove, toRemove.length);
+        for(let i=0; i<items.length; i++)
+            self.container.removeChild(items[i]);
+        
+        com.sppad.booky.History.removePagesByUris(uris, uris.length);
+    };
+    
+    this.onDeleteAll = function() {
+        let strings = document.getElementById("com_sppad_booky_addonstrings");
+        if(!confirm(strings.getString("booky.historyClearConfirmation")))
+            return;
+        
+        let hosts = self.launcher.getDomains();
+        com.sppad.booky.History.removePagesByHosts(hosts);
         
         self.loadItems();
     };
@@ -94,6 +111,9 @@ com.sppad.booky.HistoryView = new function() {
                 break;
             case KeyEvent.DOM_VK_DELETE:
                 self.onDelete();
+                break;
+            case KeyEvent.DOM_VK_ESCAPE:
+                self.containerBlur();
                 break;
             default:
                 break;

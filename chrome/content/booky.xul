@@ -27,6 +27,7 @@
 	<window id="main-window">
 		<stringbundleset id="stringbundleset">
 			<stringbundle id="com_sppad_booky_tabstrings" src="chrome://browser/locale/tabbrowser.properties" />
+			<stringbundle id="com_sppad_booky_addonstrings" src="chrome://booky/locale/booky.properties"/>
 		</stringbundleset>
 	</window>
 

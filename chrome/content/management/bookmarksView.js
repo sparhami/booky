@@ -83,6 +83,9 @@ com.sppad.booky.BookmarksView = new function() {
             case KeyEvent.DOM_VK_DELETE:
                 self.onDelete();
                 break;
+            case KeyEvent.DOM_VK_ESCAPE:
+                self.containerBlur();
+                break;
             default:
                 break;
         }

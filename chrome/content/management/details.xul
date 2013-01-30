@@ -20,10 +20,8 @@
 			<vbox id="main">
 				<hbox id="top">
 					<box id="launcher_icon"></box>
-					<textbox id="launcher_name" class="plain"
-						placeholder="( no name )" />
-					<textbox id="search" class="plain"
-						placeholder="Search" />
+					<textbox id="launcher_name" class="plain" placeholder="( no name )" />
+					<textbox id="search" class="plain" placeholder="Search" />
 				</hbox>
 				<hbox id="middle">
 					<vbox id="tabs">
@@ -33,9 +31,11 @@
 							</box>
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="tabs_context" seltype="multiple" id="tabs_content" />
+						<listbox class="plain textList" context="tabs_context" seltype="multiple"
+							id="tabs_content" />
 						<menupopup id="tabs_context" onpopupshowing="js.popupShowing()">
-							<menuitem id="tabs_context_remove" oncommand="js.onDelete()">&com_sppad_booky_close.label;</menuitem>
+							<menuitem id="tabs_context_remove" oncommand="js.onDelete()">&com_sppad_booky_close.label;
+							</menuitem>
 						</menupopup>
 					</vbox>
 					<vbox id="bookmarks">
@@ -47,24 +47,28 @@
 							<button class="detail_button plain" oncommand="alert('click!');">+</button>
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="bookmarks_context" seltype="multiple" id="bookmarks_content" />
+						<listbox class="plain textList" context="bookmarks_context"
+							seltype="multiple" id="bookmarks_content" />
 						<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing()">
-							<menuitem id="bookmarks_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;</menuitem>
+							<menuitem id="bookmarks_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;
+							</menuitem>
 						</menupopup>
 					</vbox>
 					<vbox id="history">
-						<hbox id="history_header" class="detail_header" >
+						<hbox id="history_header" class="detail_header">
 							<image class="detail_image" src="chrome://booky/skin/images/Calendar_file.svg" />
 							<box class="detail_header_text" flex="1">
 								&com_sppad_booky_historyView.label;
 							</box>
-							<button class="detail_button plain" oncommand="alert('click!');"
+							<button id="history_clear" class="detail_button plain"
 								image="chrome://booky/skin/images/edit-clear.svg" />
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="history_context" seltype="multiple" id="history_content" />
+						<listbox class="plain textList" context="history_context" seltype="multiple"
+							id="history_content" />
 						<menupopup id="history_context" onpopupshowing="js.popupShowing()">
-							 <menuitem id="history_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;</menuitem>
+							<menuitem id="history_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;
+							</menuitem>
 						</menupopup>
 					</vbox>
 				</hbox>

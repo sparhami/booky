@@ -70,7 +70,13 @@ com.sppad.booky.History = new function() {
         return resultArray;
     };
     
-    this.removePages = function(aUriArray, length) {
+    this.removePagesByUris = function(aUriArray, length) {
         self.bh.removePages(aUriArray, length);
+    };
+    
+    this.removePagesByHosts = function(aHostArray) {       
+        let length = aHostArray.length;
+        for(let i=0; i<length; i++)
+            self.bh.removePagesFromHost(aHostArray[i], false); 
     };
 };
