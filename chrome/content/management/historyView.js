@@ -7,7 +7,18 @@ com.sppad.booky = com.sppad.booky || {};
 
 com.sppad.booky.HistoryView = new function() {
     
+    const MICROSECONDS_PER_MILLISECOND = 1000;
+    const DAY_IN_MICROSECONDS = 24 * 60 * 60 * 1000000;
+    
     var self = this;
+    self.strings = document.getElementById("com_sppad_booky_addonstrings");
+    self.titles = [ "Last day",
+                    "Last two days",
+                    "Last 7 days",
+                    "Last 30 days",
+                    "More than 30 days" ];
+    
+    self.dividers = null;
     
     this.setup = function(aDocument) {
         self.document = aDocument;
@@ -37,23 +48,79 @@ com.sppad.booky.HistoryView = new function() {
         let domains = self.launcher.getDomains();
         if(domains.length == 0)
             return;
-        
+
+        let now = Date.now() * MICROSECONDS_PER_MILLISECOND;
         let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults);
         
+        groupings = [ now,
+                      now - DAY_IN_MICROSECONDS,
+                      now - 2*DAY_IN_MICROSECONDS,
+                      now - 7*DAY_IN_MICROSECONDS,
+                      now - 30*DAY_IN_MICROSECONDS ];
+        
+        self.dividers = [];
+        
+        let di = 0; // divider index
         for(let i=0; i<results.length; i++) {
             let result = results[i];
             
-            let item = self.document.createElement('listitem');
-            item.result = result;
-            item.setAttribute('class', 'listitem-iconic');
-            item.setAttribute('label', result.title);
-            item.setAttribute('image', result.icon);
-            item.setAttribute('tooltiptext', result.uri);
+            while(di <= groupings.length && result.time < groupings[di])
+                self.container.appendChild(self.createDivider(di++));
             
-            item.addEventListener('dblclick', self.onAction.bind(self, i), true);
-            
-            self.container.appendChild(item);
+            self.container.appendChild(self.createItem(result, i));
         }
+        
+        self.removeEmptyDividers();
+        self.container.appendChild(self.createNoMoreItems());
+    };
+    
+    this.createItem = function(aResult, aIndex) {
+        let item = self.document.createElement('listitem');
+        item.result = aResult;
+        item.setAttribute('class', 'listitem-iconic');
+        item.setAttribute('label', aResult.title);
+        item.setAttribute('image', aResult.icon);
+        item.setAttribute('tooltiptext', aResult.uri);
+        
+        item.addEventListener('dblclick', self.onAction.bind(self, aIndex), true);
+        
+        return item;
+    };
+    
+    this.createDivider = function(aIndex) {
+        let item = self.document.createElement('listitem');
+        item.divider = true;
+        item.setAttribute('class', 'listitem-iconic listdivider');
+        item.setAttribute('label', self.titles[aIndex]);
+        item.setAttribute('disabled', 'true');
+        
+        self.dividers.push(item);
+        
+        return item;
+    };
+    
+    this.createNoMoreItems = function() {
+        let item = self.document.createElement('listitem');
+        item.divider = true;
+        item.setAttribute('class', 'listitem-iconic listend');
+        item.setAttribute('label', 'No more results');
+        item.setAttribute('disabled', 'true');
+        
+        return item;
+    };
+    
+    this.removeEmptyDividers = function() {
+        let toRemove = [];
+        
+        for(let i=0; i<self.dividers.length - 1; i++) {
+           if(self.dividers[i].nextSibling === self.dividers[i+1]) {
+               self.container.removeChild(self.dividers[i]);
+               toRemove.push(i);
+           }
+        }
+           
+        for(let i=toRemove.length - 1; i>=0; i--)
+            self.dividers.splice(toRemove[i], 1);
     };
     
     this.openUri = function(aUri) {
@@ -82,19 +149,27 @@ com.sppad.booky.HistoryView = new function() {
         for(let i=0; i<count; i++) {
             let item = self.container.selectedItems[i];
             
+            if(item.divider)
+                continue;
+            
             uris.push(Services.io.newURI(item.result.uri, null, null));
             items.push(item);
         }
         
+        // No selected items
+        if(items.length == 0)
+            return;
+        
         for(let i=0; i<items.length; i++)
             self.container.removeChild(items[i]);
         
+        self.removeEmptyDividers();
         com.sppad.booky.History.removePagesByUris(uris, uris.length);
     };
     
     this.onDeleteAll = function() {
-        let strings = document.getElementById("com_sppad_booky_addonstrings");
-        if(!confirm(strings.getString("booky.historyClearConfirmation")))
+
+        if(!confirm(self.strings.getString("booky.historyClearConfirmation")))
             return;
         
         let hosts = self.launcher.getDomains();

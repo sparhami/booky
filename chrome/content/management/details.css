@@ -98,16 +98,45 @@
 	margin-left: 0.4em !important;
 }
 
-.textList listitem {
+listitem {
 	padding: .2em;
 }
 
-.textList listitem:nth-child(even):not([selected]) {
-	background-color: rgba(0, 0, 0, .04);
+
+
+#history_content .listitem-iconic image {
+	padding-left: .4em;
 }
 
-.textList listitem:not([selected]):hover {
-	background-color: rgba(0, 0, 0, .15);
+.listdivider {
+	background-color: transparent !important;
+	pointer-events: none;
+}
+
+.listdivider label {
+	padding-left: 0em;
+}
+
+.listdivider image {
+	background-color: rgb(160, 160, 160);
+	-moz-box-ordinal-group: 16384;
+	-moz-box-flex: 16384;
+	min-width: 1px;
+	height: 1px;
+	margin-left: .6em;
+}
+
+.listend {
+	margin-top: .4em;
+	background-color: transparent !important;
+	pointer-events: none;
+	font-style: italic;
+	text-align: center;
+	-moz-box-ordinal-group: 1;
+}
+
+.listend image {
+	display: none;
 }
 
 .detail_domain_icon {
