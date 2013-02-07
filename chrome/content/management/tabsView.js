@@ -25,7 +25,10 @@ com.sppad.booky.TabsView = new function() {
     };
     
     this.loadItems = function() {
-        
+        this.loadPreviewItems();
+    };
+    
+    this.loadTextItems = function() {
         while(self.container.hasChildNodes())
             self.container.removeChild(self.container.lastChild);
         
@@ -38,6 +41,30 @@ com.sppad.booky.TabsView = new function() {
             item.setAttribute('class', 'listitem-iconic');
             item.setAttribute('label', tab.label);
             item.setAttribute('image', tab.getAttribute('image'));
+            
+            item.addEventListener('dblclick', self.onAction.bind(self, i), true);
+            
+            self.container.appendChild(item);
+        }
+    };
+    
+    this.loadPreviewItems = function() {
+        while(self.container.hasChildNodes())
+            self.container.removeChild(self.container.lastChild);
+        
+        let width = self.container.boxObject.width - 20;
+        let height = (width * window.screen.height) / window.screen.width;
+        
+        let tabs = self.launcher.tabs;
+        for(let i=0; i<tabs.length; i++) {
+            let tab = tabs[i];
+            
+            let item = self.document.createElement('richlistitem');
+            item.setAttribute('class', 'tabPreview');
+            item.tab = tab;
+
+            let preview = com.sppad.booky.Utils.drawWindow(tab, width, height);
+            item.appendChild(preview);
             
             item.addEventListener('dblclick', self.onAction.bind(self, i), true);
             
@@ -77,6 +104,16 @@ com.sppad.booky.TabsView = new function() {
         self.loadItems();
     };
     
+    this.onOpen = function() {
+        
+        let count = self.container.selectedItems.length;
+        for(let i=0; i<count; i++) {
+            let tab = self.container.selectedItems[i].tab;
+            gBrowser.selectedTab = tab;
+        }
+        
+    };
+    
     this.keyEvent = function(aEvent) {
         
         switch(aEvent.keyCode) {
@@ -97,7 +134,9 @@ com.sppad.booky.TabsView = new function() {
     
     this.popupShowing = function() {
         let removeItem = self.document.getElementById('tabs_context_remove');
-        
         removeItem.setAttribute('disabled', self.container.selectedCount == 0);
+        
+        let openItem = self.document.getElementById('tabs_context_open');
+        openItem.setAttribute('disabled', self.container.selectedCount != 1);
     };
 };

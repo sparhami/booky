@@ -11,7 +11,6 @@ com.sppad.booky.HistoryView = new function() {
     const DAY_IN_MICROSECONDS = 24 * 60 * 60 * 1000000;
     
     var self = this;
-    self.strings = document.getElementById("com_sppad_booky_addonstrings");
     self.titles = [ "Last day",
                     "Last two days",
                     "Last 7 days",
@@ -22,10 +21,12 @@ com.sppad.booky.HistoryView = new function() {
     
     this.setup = function(aDocument) {
         self.document = aDocument;
+        self.strings = aDocument.getElementById("com_sppad_booky_addonstrings");
         
         self.container = aDocument.getElementById('history_content');
         self.container.addEventListener('blur', self.containerBlur, false);
         self.container.addEventListener('keyup', self.keyEvent, false);
+        self.container.addEventListener('select', self.select, false);
         
         self.context = aDocument.getElementById('history_context');
         self.context.js = self;
@@ -103,7 +104,7 @@ com.sppad.booky.HistoryView = new function() {
         let item = self.document.createElement('listitem');
         item.divider = true;
         item.setAttribute('class', 'listitem-iconic listend');
-        item.setAttribute('label', 'No more results');
+        item.setAttribute('label', self.strings.getString("booky.historyEnd"));
         item.setAttribute('disabled', 'true');
         
         return item;
@@ -129,6 +130,11 @@ com.sppad.booky.HistoryView = new function() {
     
     this.containerBlur = function() {
         self.container.selectedIndex = -1;
+    };
+    
+    this.select = function() {
+        let latestItem = self.container.selectedItems[self.container.selectedCount - 1];
+        latestItem.divider && self.container.selectedItems.pop();
     };
     
     this.onAction = function(aIndex) {
@@ -169,7 +175,7 @@ com.sppad.booky.HistoryView = new function() {
     
     this.onDeleteAll = function() {
 
-        if(!confirm(self.strings.getString("booky.historyClearConfirmation")))
+        if(!window.confirm(self.strings.getString("booky.historyClearConfirmation")))
             return;
         
         let hosts = self.launcher.getDomains();
@@ -198,7 +204,9 @@ com.sppad.booky.HistoryView = new function() {
     
     this.popupShowing = function() {
         let removeItem = self.document.getElementById('history_context_remove');
-        
         removeItem.setAttribute('disabled', self.container.selectedCount == 0);
+        
+        let openItem = self.document.getElementById('history_context_open');
+        openItem.setAttribute('disabled', self.container.selectedCount != 1);
     };
 };

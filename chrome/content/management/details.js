@@ -87,7 +87,6 @@ com.sppad.booky.Details = new function() {
     };
     
     this.onPageUnload = function(aEvent) {
-        dump("details page unloaded\n");
         gBrowser.tabContainer.removeEventListener("TabSelect", self.tabselect);
     };
     

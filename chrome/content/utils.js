@@ -97,6 +97,69 @@ com.sppad.booky.Utils = (function() {
               
 	          return -1;
 		},
+		
+		  /**
+         * Generates a tab preview for the given tab, based on a 16:9 aspect
+         * ratio of the screen size (not application window size).
+         * 
+         * @param aTab
+         *            The tab to generate a preview for
+         * @return A canvas element containing the tab preview
+         */
+        generatePreview: function(aTab) {
+                let win = aTab.linkedBrowser.contentWindow;
+                
+                let aspectRatio = 0.5625; // 16:9
+                let screen = win.screen;
+                
+                let width = Math.ceil(screen.availWidth / 5.75);
+                let height = Math.round(width * aspectRatio);
+                          
+                return TabDockUtils.drawWindow(aTab, width, height);
+        },
+        
+        /**
+         * Tab previews utility, produces thumbnails. Code based on browser.js
+         * tabPreviews. Unlike the Firefox function, it uses the full window of
+         * the tab to generate a preview rather than just a upper left portion.
+         * 
+         * @param aTab
+         *            The tab to generate a preview for
+         * @param width
+         *            The width of the preview
+         * @param height
+         *            The height of the preview
+         * @return A canvas element containing the tab preview
+         */
+        drawWindow: function(aTab, width, height) {
+            let win = aTab.linkedBrowser.contentWindow;
+            
+            let aspectRatio = 0.5625; // 16:9
+            let screen = win.screen;
+                      
+            let canvas = win.document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
+            canvas.mozOpaque = true;
+            canvas.height = height;
+            canvas.width = width;
+
+            let ctx = canvas.getContext("2d");
+            /*
+             * FIXME - window's innerWidth doesn't update instantly, which can
+             * cause this to mess up if done too quickly after the window is
+             * resized. This results in a black bar appearing on the right or
+             * bottom of the preview.
+             */
+            let snippetWidth = win.innerWidth * 1.0;
+            let snippetHeight = win.innerHeight * 1.0;
+            let scaleWidth = width / snippetWidth;
+            let scaleheight = height / snippetHeight;
+            
+            ctx.scale(scaleWidth, scaleheight);
+            ctx.drawWindow(win, win.scrollX, win.scrollY,
+                    snippetWidth, snippetHeight, "rgb(255,255,255)");
+
+            return canvas;
+        }
 	}
 })();
 

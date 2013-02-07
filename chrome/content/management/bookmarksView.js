@@ -74,6 +74,16 @@ com.sppad.booky.BookmarksView = new function() {
         self.loadItems();
     };
     
+    this.onOpen = function() {
+        
+        let count = self.container.selectedItems.length;
+        for(let i=0; i<count; i++) {
+            let uri = self.container.selectedItems[i].bookmark.uri;
+            self.openUri(uri);
+        }
+        
+    };
+    
     this.keyEvent = function(aEvent) {
         
         switch(aEvent.keyCode) {
@@ -94,7 +104,9 @@ com.sppad.booky.BookmarksView = new function() {
     
     this.popupShowing = function() {
         let removeItem = self.document.getElementById('bookmarks_context_remove');
-        
         removeItem.setAttribute('disabled', self.container.selectedCount == 0);
+        
+        let openItem = self.document.getElementById('bookmarks_context_open');
+        openItem.setAttribute('disabled', self.container.selectedCount == 0);
     };
 };

@@ -15,6 +15,8 @@
 <!ENTITY com_sppad_booky_history.accesskey "H">
 <!ENTITY com_sppad_booky_reload.label "Reload">
 <!ENTITY com_sppad_booky_reload.accesskey "R">
+<!ENTITY com_sppad_booky_open.label "Open">
+<!ENTITY com_sppad_booky_open.accesskey "O	">
 <!ENTITY com_sppad_booky_close.label "Close">
 <!ENTITY com_sppad_booky_close.accesskey "C">
 <!ENTITY com_sppad_booky_remove.label "Delete">

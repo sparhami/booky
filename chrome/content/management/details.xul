@@ -7,6 +7,10 @@
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+	<stringbundleset id="stringbundleset">
+		<stringbundle id="com_sppad_booky_addonstrings" src="chrome://booky/locale/booky.properties" />
+	</stringbundleset>
+
 	<hbox id="details">
 		<hbox id="sidepanel"></hbox>
 		<hbox id="content">
@@ -31,9 +35,11 @@
 							</box>
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="tabs_context" seltype="multiple"
-							id="tabs_content" />
+						<richlistbox class="plain textList" context="tabs_context"
+							seltype="multiple" id="tabs_content" />
 						<menupopup id="tabs_context" onpopupshowing="js.popupShowing()">
+							<menuitem id="tab_context_open" oncommand="js.onOpen()">&com_sppad_booky_switchTo.label;
+							</menuitem>
 							<menuitem id="tabs_context_remove" oncommand="js.onDelete()">&com_sppad_booky_close.label;
 							</menuitem>
 						</menupopup>
@@ -50,6 +56,8 @@
 						<listbox class="plain textList" context="bookmarks_context"
 							seltype="multiple" id="bookmarks_content" />
 						<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing()">
+							<menuitem id="bookmarks_context_open" oncommand="js.onOpen()">&com_sppad_booky_open.label;
+							</menuitem>
 							<menuitem id="bookmarks_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;
 							</menuitem>
 						</menupopup>
@@ -67,6 +75,8 @@
 						<listbox class="plain textList" context="history_context" seltype="multiple"
 							id="history_content" />
 						<menupopup id="history_context" onpopupshowing="js.popupShowing()">
+							<menuitem id="history_context_open" oncommand="js.onOpen()">&com_sppad_booky_open.label;
+							</menuitem>
 							<menuitem id="history_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;
 							</menuitem>
 						</menupopup>
