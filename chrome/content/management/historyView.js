@@ -19,8 +19,10 @@ com.sppad.booky.HistoryView = new function() {
     
     self.dividers = null;
     
-    this.setup = function(aDocument) {
+    this.setup = function(aDocument, aLauncher) {
         self.document = aDocument;
+        self.launcher = aLauncher;
+        
         self.strings = aDocument.getElementById("com_sppad_booky_addonstrings");
         
         self.container = aDocument.getElementById('history_content');
@@ -32,10 +34,6 @@ com.sppad.booky.HistoryView = new function() {
         self.context.js = self;
         
         aDocument.getElementById('history_clear').addEventListener('command', self.onDeleteAll, false);
-    };
-    
-    this.setLauncher = function(aLauncher) {
-        self.launcher = aLauncher;
     };
     
     this.loadItems = function() {

@@ -9,8 +9,9 @@ com.sppad.booky.TabsView = new function() {
     
     var self = this;
     
-    this.setup = function(aDocument) {
+    this.setup = function(aDocument, aLauncher) {
         self.document = aDocument;
+        self.launcher = aLauncher;
         
         self.container = aDocument.getElementById('tabs_content');
         self.container.addEventListener('blur', self.containerBlur, false);
@@ -19,11 +20,7 @@ com.sppad.booky.TabsView = new function() {
         self.context = aDocument.getElementById('tabs_context');
         self.context.js = self;
     };
-    
-    this.setLauncher = function(aLauncher) {
-        self.launcher = aLauncher;
-    };
-    
+
     this.loadItems = function() {
         this.loadPreviewItems();
     };

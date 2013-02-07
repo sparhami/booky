@@ -5,7 +5,9 @@
 
 <!DOCTYPE overlay SYSTEM "chrome://booky/locale/booky.dtd">
 
-<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<window id="detailsContentWindow" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="application/x-javascript" src="details_content.js" />
 
 	<stringbundleset id="stringbundleset">
 		<stringbundle id="com_sppad_booky_addonstrings" src="chrome://booky/locale/booky.properties" />
