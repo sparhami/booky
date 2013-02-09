@@ -25,7 +25,7 @@ com.sppad.booky.Booky = new function() {
      * Keeps track of the number of bookmarks to show the drag hint area when
      * there are none.
      */
-    self._bookmarkCount = 0;
+    self._launcherCount = 0;
     
     return {
         
@@ -40,9 +40,9 @@ com.sppad.booky.Booky = new function() {
                 this.onTabOpen(container.getItemAtIndex(i));
         },
         
-        updateBookmarksCount: function(count) {
-            self._bookmarkCount += count;
-            document.getElementById('com_sppad_booky_container').setAttribute('bookmarkCount', self._bookmarkCount);
+        updateLauncherCount: function(count) {
+            self._launcherCount += count;
+            document.getElementById('com_sppad_booky_container').setAttribute('bookmarkCount', self._launcherCount);
         },
         
         handleEvent : function(aEvent) {

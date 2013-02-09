@@ -95,8 +95,18 @@ com.sppad.booky.Groups = new function() {
             }
         },
         
-        moveToCorrectFolder: function(aItemId, aUri) {
-            let primaryId = self.getPrimaryIdFromUriString(aUri);
+        /**
+         * Moves a bookmark item to the correct launcher folder for that item.
+         * If none exists, a new folder is created and the bookmark is moved
+         * there.
+         * 
+         * @param aItemId
+         *            A bookmark itemId
+         * @param aUri
+         *            A string representing the URI of the bookmark
+         */
+        moveToCorrectFolder: function(aItemId, aUriString) {
+            let primaryId = self.getPrimaryIdFromUriString(aUriString);
             let folderId = self.groupIdMap.get(primaryId);
             
             if(!folderId)
@@ -105,30 +115,48 @@ com.sppad.booky.Groups = new function() {
             com.sppad.booky.Bookmarks.moveBefore(null, aItemId, folderId);
         },
 
-        onBookmarkAdded: function(event) {
+        /**
+         * Handles a bookmark being added.
+         * <p>
+         * For tracked bookmarks, the parentId will correspond to a sub-folder
+         * of the quick launch bookmarks folder. This also acts as the group's
+         * id.
+         */
+        onBookmarkAdded: function(aEvent) {
             
-            let itemId = event.itemId;
+            let itemId = aEvent.itemId;
             let parentId = com.sppad.booky.Bookmarks.getFolder(itemId);
             let grandparentId = com.sppad.booky.Bookmarks.getFolder(parentId);
             
+            // Check if bookmark is directly under the quick launch folder and
+            // move it to the appropriate sub-folder if so. The bookmark move
+            // event will end up calling us again once the bookmark is in the
+            // right location.
             if(com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId)) {
-                this.moveToCorrectFolder(itemId, event.uri);
+                this.moveToCorrectFolder(itemId, aEvent.uri);
                 return;
             }
 
+            // Not in a launcher folder, so nothing to do
             if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId))
                 return;
             
-            let primaryId = self.getPrimaryIdFromUriString(event.uri);
-            let folderId = self.groupIdMap.get(primaryId);
+            let primaryId = self.getPrimaryIdFromUriString(aEvent.uri);
+            let prevFolderId = self.groupIdMap.get(primaryId);
             
+            // Used to track the parent folder. Needed for when a bookmark is
+            // deleted so we know which launcher it came from.
             let bookmarkInfo = {
                     'parentId' : parentId,
                     'primaryId' : primaryId,
             };
-            
+
+            // Update how many bookmark URIs we are tracking that correspond to
+            // this site. Needed so that we can know when to remove the mapping
+            // between URI and group id.
             let count = self.primaryIdCounts.get(primaryId, 0) + 1;
             self.primaryIdCounts.put(primaryId, count);
+            
             self.groupIdMap.put(primaryId, parentId);
             self.bookmarkInfoMap.put(itemId, bookmarkInfo);
 
@@ -142,10 +170,11 @@ com.sppad.booky.Groups = new function() {
                 if(primaryId == self.getPrimaryIdFromTab(tabs[i]))
                     sameDomainTabs.push(tabs[i]);
 
-            let movingLaunchers = (folderId != undefined) && (parentId != folderId);
-            if(movingLaunchers) {
-                let previousLauncher = com.sppad.booky.Launcher.getLauncher(folderId);
-                let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(folderId);
+            // Handle moving betweem two launchers. Moves all bookmarks with the
+            // same host from the old launcher to the new one.
+            if((prevFolderId != undefined) && (parentId != prevFolderId)) {
+                let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
+                let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(prevFolderId);
                 
                 // Old launcher should no longer track the tabs
                 for(let i=0; i<sameDomainTabs.length; i++)
@@ -156,34 +185,44 @@ com.sppad.booky.Groups = new function() {
                     let bookmark = otherbookmarks[i];
                     let domain = self.getPrimaryIdFromUriString(bookmark.uri);
                     
+                    // Need to update the bookmarkInfo object for this bookmark
+                    // since the parent folder has changed
                     if(domain == primaryId) {
                         self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
                         com.sppad.booky.Bookmarks.moveBefore(null, bookmark.itemId, parentId);
                     }
                }
                 
-                previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(folderId));
+                previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(prevFolderId));
             }
             
             // Add the tabs to the launcher if it is either new or the domain is
             // changing to a new launcher
-            if(!folderId || movingLaunchers)
+            if(!prevFolderId || movingLaunchers)
                 for(let i=0; i<sameDomainTabs.length; i++)
                     launcher.addTab(sameDomainTabs[i]);
             
             com.sppad.booky.Resizer.onResize();
         },
 
-        onBookmarkRemoved: function(event) {
+        /**
+         * Handles a bookmark being removed. This is called after the bookmark
+         * has already been removed, so we need to lookup which launcher the
+         * bookmark belonged to.
+         */
+        onBookmarkRemoved: function(aEvent) {
            
-            let itemId = event.itemId;
+            let itemId = aEvent.itemId;
             let info = self.bookmarkInfoMap.get(itemId);
+            
+            // Not a tracked bookmark, nothing to do
             if(!info)
                 return;
             
             let parentId = info.parentId;
             let primaryId = info.primaryId;
             
+            // Update how many bookmarks map to the launcher
             let count = self.primaryIdCounts.get(primaryId, 0) - 1;
             if(count > 0) {
                 self.primaryIdCounts.put(primaryId, count);
@@ -194,6 +233,7 @@ com.sppad.booky.Groups = new function() {
             
             self.bookmarkInfoMap.remove(itemId);
             
+            // Update the launcher, if it still exists
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
             if(launcher) {
                 launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
@@ -203,47 +243,63 @@ com.sppad.booky.Groups = new function() {
             com.sppad.booky.Resizer.onResize();
         },
 
-        onBookmarkMoved: function(event) {
+        /**
+         * Handles a bookmark move event. Note that a move can be within the
+         * quick launch folder or from another bookmark folder entirely.
+         */
+        onBookmarkMoved: function(aEvent) {
             
-            let itemId = event.itemId;
+            let itemId = aEvent.itemId;
             let parentId = com.sppad.booky.Bookmarks.getFolder(itemId);
             let info = self.bookmarkInfoMap.get(itemId);
+            
+            // Moving within a launcher. update bookmarks for ordering
             if(info && parentId == info.parentId) {
                 let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
                 launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
+            // onBookmarkAdded handles bookmarks that are new and those that
+            // moving between groups
             } else {
-                // onBookmarkAdded handles moving between groups correctly, do
-                // not call onBookmarkRemoved as it will mess it up.
-                this.onBookmarkAdded(event);
+                this.onBookmarkAdded(aEvent);
             }
         },
         
-        onFolderAdded: function(event) {
+        /**
+         * Handles a folder being added. Folders correspond to launchers if they
+         * are direct sub folders of the quick launch folder.
+         */
+        onFolderAdded: function(aEvent) {
             
-            let itemId = event.itemId;
-            let nextItemId = event.nextItemId;
+            let itemId = aEvent.itemId;
+            let nextItemId = aEvent.nextItemId;
             let parentId = com.sppad.booky.Bookmarks.getFolder(itemId);
             
+            // Not a direct subfolder, so nothing to do
             if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
                 return;
             
             let bookmarkInfo = { 'parentId' : parentId, };
             self.bookmarkInfoMap.put(itemId, bookmarkInfo);
-            
+
             let launcher = com.sppad.booky.Launcher.createLauncher(itemId);
-            
+
             com.sppad.booky.Bookmarks.loadFolder(itemId);
-            launcher.setTitle(event.title);
+            launcher.setTitle(aEvent.title);
             launcher.createBefore(nextItemId);
             
-            com.sppad.booky.Booky.updateBookmarksCount(1);
+            com.sppad.booky.Booky.updateLauncherCount(1);
             com.sppad.booky.Resizer.onResize();
         },
         
-        onFolderRemoved: function(event) {
+        /**
+         * Handles folders being removed. Only care about launcher folders.
+         */
+        onFolderRemoved: function(aEvent) {
             
-            let itemId = event.itemId;
+            let itemId = aEvent.itemId;
             let info = self.bookmarkInfoMap.get(itemId);
+            
+            // Not a direct subfolder, so nothing to do
             if(!info)
                 return;
             
@@ -252,42 +308,50 @@ com.sppad.booky.Groups = new function() {
             let launcher = com.sppad.booky.Launcher.getLauncher(itemId);
             launcher.removeLauncher();
             
-            com.sppad.booky.Booky.updateBookmarksCount(-1);
+            com.sppad.booky.Booky.updateLauncherCount(-1);
             com.sppad.booky.Resizer.onResize();
         },
         
-        onFolderMoved: function(event) {
+        /**
+         * Handles folders being moved. Only care about launcher folders.
+         */
+        onFolderMoved: function(aEvent) {
             
-            let itemId = event.itemId;
-            let nextItemId = event.nextItemId;
+            let itemId = aEvent.itemId;
+            let nextItemId = aEvent.nextItemId;
             let parentId = com.sppad.booky.Bookmarks.getFolder(itemId);
             let info = self.bookmarkInfoMap.get(itemId);
+            
+            // Launcher folder is being reordered with siblings
             if(info && parentId == info.parentId) {
                 let launcher = com.sppad.booky.Launcher.getLauncher(itemId);
                 launcher.createBefore(nextItemId);
                 
                 com.sppad.booky.Resizer.onResize();
+            // Folder is moving in/out or has nothing to do with the quick
+            // launch folder
             } else {
-                this.onFolderRemoved(event);
-                this.onFolderAdded(event);
+                this.onFolderRemoved(aEvent);
+                this.onFolderAdded(aEvent);
             }
         },
 
-        onTitleUpdated: function(event) {
-            let itemId = event.itemId;
+        onTitleUpdated: function(aEvent) {
+            let itemId = aEvent.itemId;
             let parentId = com.sppad.booky.Bookmarks.getFolder(itemId);
             
+            // Not a launcher, so nothing to do
             if(!com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId))
                 return;
             
             let launcher = com.sppad.booky.Launcher.getLauncher(itemId);
-            launcher.setTitle(event.title);
+            launcher.setTitle(aEvent.title);
         },
         
         setup : function() {
             com.sppad.booky.Bookmarks.addListener(this);
             
-            com.sppad.booky.Booky.updateBookmarksCount(0);
+            com.sppad.booky.Booky.updateLauncherCount(0);
             com.sppad.booky.Bookmarks.loadBookmarks();
         },
 
