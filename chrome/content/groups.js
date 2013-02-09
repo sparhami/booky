@@ -172,7 +172,8 @@ com.sppad.booky.Groups = new function() {
 
             // Handle moving betweem two launchers. Moves all bookmarks with the
             // same host from the old launcher to the new one.
-            if((prevFolderId != undefined) && (parentId != prevFolderId)) {
+            let movingLaunchers = (prevFolderId != undefined) && (parentId != prevFolderId);
+            if(movingLaunchers) {
                 let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
                 let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(prevFolderId);
                 
