@@ -77,7 +77,7 @@ com.sppad.booky.HistoryView = new function() {
         let item = self.document.createElement('listitem');
         item.result = aResult;
         item.setAttribute('class', 'listitem-iconic');
-        item.setAttribute('label', aResult.title);
+        item.setAttribute('label', aResult.title || aResult.uri);
         item.setAttribute('image', aResult.icon);
         item.setAttribute('tooltiptext', aResult.uri);
         

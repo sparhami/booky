@@ -22,7 +22,7 @@ com.sppad.booky.TabsView = new function() {
     };
 
     this.loadItems = function() {
-        this.loadPreviewItems();
+        this.loadTextItems();
     };
     
     this.loadTextItems = function() {
@@ -36,6 +36,7 @@ com.sppad.booky.TabsView = new function() {
             let item = self.document.createElement('listitem');
             item.tab = tab;
             item.setAttribute('class', 'listitem-iconic');
+            item.setAttribute('crop', 'right');
             item.setAttribute('label', tab.label);
             item.setAttribute('image', tab.getAttribute('image'));
             

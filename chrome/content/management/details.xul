@@ -37,10 +37,10 @@
 							</box>
 						</hbox>
 						<hbox class="detail_separator" />
-						<richlistbox class="plain textList" context="tabs_context"
+						<listbox class="plain textList" context="tabs_context"
 							seltype="multiple" id="tabs_content" />
 						<menupopup id="tabs_context" onpopupshowing="js.popupShowing()">
-							<menuitem id="tab_context_open" oncommand="js.onOpen()">&com_sppad_booky_switchTo.label;
+							<menuitem id="tabs_context_open" oncommand="js.onOpen()">&com_sppad_booky_switchTo.label;
 							</menuitem>
 							<menuitem id="tabs_context_remove" oncommand="js.onDelete()">&com_sppad_booky_close.label;
 							</menuitem>
