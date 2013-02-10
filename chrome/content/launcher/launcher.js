@@ -51,7 +51,7 @@ com.sppad.booky.Launcher = function(aID) {
             this.openTab();
         } else if(this.tabs.length > 0) {
             let direction = this.selected ? (next == true ? 1 : -1) : 0;
-             let index = this.getNextIndex(direction, reverse);
+            let index = this.getNextIndex(direction, reverse);
             
             gBrowser.selectedTab = this.tabs[index];
         }
@@ -83,6 +83,7 @@ com.sppad.booky.Launcher = function(aID) {
         let unread = false;
         let selected = false;
         let titlechanged = false;
+        
         for(let i=0; i<this.tabs.length; i++) {
             let tab = this.tabs[i];
             
@@ -564,26 +565,23 @@ com.sppad.booky.Launcher.prototype.tabsPopupShowing = function(event) {
         node.tabsUpdateTime = this.tabsUpdateTime;
     }
 
+    let attributes = [ 'label', 'image', 'unread', 'selected', 'titlechanged'];
     let tabMenuItems = node.childNodes;
     for(let i=0; i<tabMenuItems.length; i++) {
-        tabMenuItems[i].setAttribute('label', tabMenuItems[i].tab.label);
-        tabMenuItems[i].setAttribute('image', tabMenuItems[i].tab.getAttribute('image'));
-        tabMenuItems[i].setAttribute('unread', tabMenuItems[i].tab.getAttribute('unread'));
-        tabMenuItems[i].setAttribute('selected', tabMenuItems[i].tab.getAttribute('selected'));
-        tabMenuItems[i].setAttribute('titlechanged', tabMenuItems[i].tab.getAttribute('titlechanged'));
+        attributes.forEach(function(attr) {
+            tabMenuItems[i].setAttribute(attr, tabMenuItems[i].tab.getAttribute(attr));
+        });
     }
 };
 
 com.sppad.booky.Launcher.prototype.contextShowing = function(event) {
-    let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.setAttribute('hidden', true);
+    document.getElementById('com_sppad_booky_tooltip').setAttribute('hidden', true);
     
     this.disableMenuItems(this.node);
 };
 
 com.sppad.booky.Launcher.prototype.contextHiding = function(event) {
-    let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.setAttribute('hidden', false);
+    document.getElementById('com_sppad_booky_tooltip').setAttribute('hidden', false);
 };
 
 com.sppad.booky.Launcher.prototype.overflowMenuShowing = function(event) {
@@ -611,9 +609,7 @@ com.sppad.booky.Launcher.prototype.reload = function(event) {
  */
 com.sppad.booky.Launcher.prototype.remove = function(event) {
     com.sppad.booky.Bookmarks.removeBookmark(this.id);
-    
-    let tooltip = document.getElementById('com_sppad_booky_tooltip');
-    tooltip.setAttribute('hidden', false);
+    this.contextHiding();
 };
 
 /**
