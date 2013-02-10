@@ -126,19 +126,16 @@ com.sppad.booky.Launcher = function(aID) {
      *            The DOM node for the menu.
      */
     this.disableMenuItems = function(rootNode) {
-        let tabsMenu = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_switchTo');
-        let itemClose = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_close');
-        let itemReload = document.getAnonymousElementByAttribute(rootNode, 'class', 'launcher_menu_reload');
-
-        if(this.tabs.length == 0) {
-            tabsMenu.setAttribute('disabled', 'true');
-            itemClose.setAttribute('disabled', 'true');
-            itemReload.setAttribute('disabled', 'true');
-        } else {
-            tabsMenu.removeAttribute('disabled');
-            itemClose.removeAttribute('disabled');
-            itemReload.removeAttribute('disabled');
-        }     
+        let items = [ 'launcher_menu_switchTo', 'launcher_menu_close', 'launcher_menu_reload'];
+        
+        items.forEach(function(item) {
+            let node = document.getAnonymousElementByAttribute(rootNode, 'class', item);
+        
+            if(self.tabs.length == 0)
+                node.setAttribute('disabled', 'true');
+            else
+                node.removeAttribute('disabled');
+        });
     };
     
     /**
@@ -302,7 +299,6 @@ com.sppad.booky.Launcher = function(aID) {
         this.bookmarks = aBookmarkArray;
         
         this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
-        this.setTitle(this.title);
         this.setAttribute('empty', this.bookmarks.length == 0);
     };
     
@@ -527,7 +523,7 @@ com.sppad.booky.Launcher.prototype.bookmarksPopupShowing = function(event) {
             let menuitem = document.createElement('menuitem');
             menuitem.setAttribute('bookmark', true);
             menuitem.setAttribute('label', bookmark.title || bookmark.uri);
-            menuitem.setAttribute('image', bookmark.image);
+            menuitem.setAttribute('image', bookmark.icon);
             menuitem.setAttribute('tooltiptext', bookmark.uri);
             menuitem.addEventListener('command', function(event) { this.openTab(bookmark.uri); }.bind(this) );
             

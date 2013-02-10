@@ -252,12 +252,18 @@ com.sppad.booky.Groups = new function() {
             
             let itemId = aEvent.itemId;
             let parentId = com.sppad.booky.Bookmarks.getFolder(itemId);
+            let grandparentId = com.sppad.booky.Bookmarks.getFolder(parentId);
             let info = self.bookmarkInfoMap.get(itemId);
             
             // Moving within a launcher. update bookmarks for ordering
             if(info && parentId == info.parentId) {
                 let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
                 launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
+            // bookmark leaving entirely
+            } else if(info
+                    && !com.sppad.booky.Bookmarks.isQuickLaunchFolder(parentId)
+                    && !com.sppad.booky.Bookmarks.isQuickLaunchFolder(grandparentId)) {
+                this.onBookmarkRemoved(aEvent);
             // onBookmarkAdded handles bookmarks that are new and those that
             // moving between groups
             } else {
