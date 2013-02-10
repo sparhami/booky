@@ -5,7 +5,7 @@
 
 <!DOCTYPE overlay SYSTEM "chrome://booky/locale/booky.dtd">
 
-<window id="detailsContentWindow" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<window id="detailsContentWindow" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="Booky - details">
 
 	<script type="application/x-javascript" src="details_content.js" />
 
@@ -16,21 +16,13 @@
 	<hbox id="details">
 		<hbox id="sidepanel"></hbox>
 		<hbox id="content">
-			<vbox id="sites">
-				<hbox class="detail_domain_icon">ALL</hbox>
-				<hbox class="detail_domain_icon">1</hbox>
-				<hbox class="detail_domain_icon">2</hbox>
-				<hbox class="detail_domain_icon">3</hbox>
-			</vbox>
-
 			<vbox id="main">
 				<hbox id="top">
-					<box id="launcher_icon"></box>
-					<textbox id="launcher_name" class="plain" placeholder="( no name )" />
-					<textbox id="search" class="plain" placeholder="Search" />
+					<textbox id="titleBox" class="plain" placeholder="( no title )" />
+					<textbox id="searchBox" type="search" class="plain" placeholder="Search" />
 				</hbox>
 				<hbox id="middle">
-					<vbox id="tabs">
+					<vbox id="tabs" class="dataView">
 						<hbox id="tabs_header" class="detail_header">
 							<box class="detail_header_text">
 								&com_sppad_booky_tabsView.label;
@@ -46,7 +38,7 @@
 							</menuitem>
 						</menupopup>
 					</vbox>
-					<vbox id="bookmarks">
+					<vbox id="bookmarks" class="dataView">
 						<hbox id="bookmarks_header" class="detail_header">
 							<image class="detail_image" src="chrome://booky/skin/images/Rocket000_emblem-star.svg" />
 							<box class="detail_header_text" flex="1">
@@ -64,7 +56,7 @@
 							</menuitem>
 						</menupopup>
 					</vbox>
-					<vbox id="history">
+					<vbox id="history" class="dataView">
 						<hbox id="history_header" class="detail_header">
 							<image class="detail_image" src="chrome://booky/skin/images/Calendar_file.svg" />
 							<box class="detail_header_text" flex="1">

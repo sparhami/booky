@@ -47,28 +47,47 @@ com.sppad.booky.Details = new function() {
     };
     
     this.pageLoaded = function(aEvent) {
-        let contentDocument = aEvent.originalTarget.document;
+        let contentDocument = aEvent.target.data.document;
         if(!contentDocument.location.href.startsWith('chrome://booky/content/management/details.xul'))
             return;
         
-        contentDocument.title = "Booky - details";
-        
         self.params = self.getQueryParams(contentDocument.location);
         
-        let launcherId = self.params['launcherId'];
-        let launcher = com.sppad.booky.Launcher.getLauncher(launcherId);
-        if(!launcher) {
-            com.sppad.booky.Utils.dump("Launcher not found for " + launcherId  + "\n");
+        self.launcherId = self.params['launcherId'];
+        self.launcher = com.sppad.booky.Launcher.getLauncher(self.launcherId);
+        if(!self.launcher) {
+            com.sppad.booky.Utils.dump("Launcher not found for " + self.launcherId  + "\n");
             return;
         }
         
-        com.sppad.booky.TabsView.setup(contentDocument, launcher);
-        com.sppad.booky.HistoryView.setup(contentDocument, launcher);
-        com.sppad.booky.BookmarksView.setup(contentDocument, launcher);
+        com.sppad.booky.TabsView.setup(contentDocument, self.launcher);
+        com.sppad.booky.HistoryView.setup(contentDocument, self.launcher);
+        com.sppad.booky.BookmarksView.setup(contentDocument, self.launcher);
         
         self.setupPage();
         
         gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
+        
+        contentDocument.getElementById('searchBox').addEventListener('command', self.onSearch, false);
+        contentDocument.getElementById('titleBox').addEventListener('change', self.onTitleSet, false);
+    };
+    
+    this.pageUnloaded = function(aEvent) {
+        let contentDocument = aEvent.target.data.document;
+        if(!contentDocument.location.href.startsWith('chrome://booky/content/management/details.xul'))
+            return;
+        
+        gBrowser.tabContainer.removeEventListener("TabSelect", self.tabselect);
+    };
+    
+    this.onTitleSet = function(aEvent) {
+        let value = aEvent.target.value;
+        com.sppad.booky.Bookmarks.setTitle(self.launcher.id, value);
+    };
+    
+    this.onSearch = function(aEvent) {
+        let value = aEvent.target.value;
+        dump("search for " + value + "\n");
     };
     
     /**
@@ -95,6 +114,8 @@ com.sppad.booky.Details = new function() {
         XULBrowserWindow.inContentWhitelist.push("chrome://booky/content/management/details.xul");
 
         document.addEventListener("com_sppad_booky_details_page_loaded", self.pageLoaded, false, true);
+        document.addEventListener("com_sppad_booky_details_page_unloaded", self.pageUnloaded, false, true);
+        document.addEventListener("com_sppad_booky_details_search", self.search, false, true);
         gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
     };
     

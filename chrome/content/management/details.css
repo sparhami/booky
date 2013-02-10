@@ -30,11 +30,11 @@
 	height: 1.5em;
 }
 
-#launcher_name {
+#titleBox {
 	width: 10em;
 }
 
-#search {
+#searchBox {
 	-moz-box-flex: 1;
 	height: 1em;
 }
@@ -48,47 +48,47 @@
 }
 
 #tabs {
-	width: 0;
-	-moz-box-flex: 10;
+	-moz-box-flex: 8;
 }
 
 #bookmarks {
-	width: 0;
 	-moz-box-flex: 8;
 }
 
 #history {
-	width: 0;
 	-moz-box-flex: 8;
 }
 
-#launcher_name,
-#search {
-	border-width: 2px !important;
-	border-style: solid !important;
-	border-color: rgb(104, 104, 104);
-}
-
-#tabs, 
-#bookmarks, 
-#history {
-	border-width: 1px;
-	border-style: solid;
-	border-color: rgb(104, 104, 104);
-}
-
-#launcher_icon,
-#launcher_name,
-#search {
-	background-color: rgba(255, 255, 255, 1);
-	margin-left: 0.8em !important;
-}
-
-#tabs, 
-#bookmarks, 
-#history {
+.dataView {
+	width: 0;
 	background-color: rgba(255, 255, 255, 0.5);
-	margin-left: 0.8em;
+}
+
+.dataView:not(:last-child) {
+	margin-right: .8em;
+}
+
+#titleBox,
+#searchBox,
+.dataView {
+	border-width: 1px !important;;
+	border-style: solid !important;;
+	border-color: rgb(104, 104, 104) !important;;
+}
+
+#titleBox,
+#searchBox {
+	background-color: -moz-Field;
+	color: -moz-FieldText;
+}
+
+#searchBox,
+#titleBox {
+	padding: 2px 4px 2px 4px !important;
+}
+
+#searchBox {
+	margin-left: .8em !important;
 }
 
 .textList {

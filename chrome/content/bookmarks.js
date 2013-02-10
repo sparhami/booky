@@ -128,6 +128,10 @@ com.sppad.booky.Bookmarks = new function() {
             return self._bs.getItemTitle(aItemId);
         },
         
+        setTitle: function(aItemId, aTitle) {
+            return self._bs.setItemTitle(aItemId, aTitle);  
+        },
+        
         getFolder: function(aItemId) {
             return self._bs.getFolderIdForItem(aItemId);
         },
