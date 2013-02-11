@@ -21,10 +21,9 @@ launcher[titlechanged="true"] .launcher-countindicators {
 
 #TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] launcher[hasSingle="false"]:not(:hover) .launcher-icon,
 #TabsToolbar[com_sppad_booky_grayoutInactiveIcons="true"] .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
-	filter: url("chrome://booky/content/filters.svg#grayscale");
+	filter: url("chrome://booky/skin/filters.svg#grayscale");
 	opacity: .55;
 }
-
 
 
 #TabsToolbar[com_sppad_booky_styleTabs="true"] .tabbrowser-tab {

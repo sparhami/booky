@@ -37,8 +37,10 @@ com.sppad.booky.TabEvents = new function() {
     
     /** Number of tabs that have a busy event */
     self._busyTabsCount = 0;
-
     
+    /** The tab events to listen for */
+    self._tabEvents = ['TabMove', 'TabOpen', 'TabSelect', 'TabClose', 'TabAttrModified'];
+
     return {
         EVENT_TAB_MOVED: 'EVENT_TAB_MOVED',
         EVENT_TAB_OPENED: 'EVENT_TAB_OPENED',
@@ -209,13 +211,15 @@ com.sppad.booky.TabEvents = new function() {
             let tabStringBundle = window.document.getElementById("com_sppad_booky_tabstrings");
             self._connectingString = tabStringBundle.getString("tabs.connecting");
             
-            let container = window.gBrowser.tabContainer;
-
-            container.addEventListener("TabMove", this, false);  
-            container.addEventListener("TabOpen", this, false);
-            container.addEventListener("TabSelect", this, false);
-            container.addEventListener("TabClose", this, false);
-            container.addEventListener("TabAttrModified", this, false);
+            self._tabEvents.forEach(function(eventName) {
+                window.gBrowser.tabContainer.addEventListener(eventName, this, false);
+            }.bind(this));
+        },
+        
+        cleanup: function() {
+            self._tabEvents.forEach(function(eventName) {
+                window.gBrowser.tabContainer.removeEventListener(eventName, this);
+            }.bind(this)); 
         },
         
         addListener: function(listener, type) { self._eventSupport.addListener(listener, type); },

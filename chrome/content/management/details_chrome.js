@@ -44,6 +44,8 @@ com.sppad.booky.Details = new function() {
         com.sppad.booky.TabsView.loadItems();
         com.sppad.booky.HistoryView.loadItems();
         com.sppad.booky.BookmarksView.loadItems();
+        
+        self.updateTabCount();
     };
     
     this.pageLoaded = function(aEvent) {
@@ -157,7 +159,6 @@ com.sppad.booky.Details = new function() {
     this.setup = function() {
         document.addEventListener("com_sppad_booky_details_page_loaded", self.pageLoaded, false, true);
         document.addEventListener("com_sppad_booky_details_page_unloaded", self.pageUnloaded, false, true);
-        document.addEventListener("com_sppad_booky_details_search", self.search, false, true);
         gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
     };
     
