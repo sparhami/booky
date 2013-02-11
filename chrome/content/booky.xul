@@ -96,8 +96,8 @@
 								accesskey="&com_sppad_booky_reload.accesskey;" oncommand="js.reload();" />
 							<menuitem class="launcher_menu_close" label="&com_sppad_booky_close.label;"
 								accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
-							<menuitem class="launcher_menu_remove showWhenEmpty" label="&com_sppad_booky_remove.label;"
-								accesskey="&com_sppad_booky_remove.accesskey;" oncommand="js.remove();" />
+							<menuitem class="launcher_menu_manage showWhenEmpty" label="&com_sppad_booky_manage.label;"
+								accesskey="&com_sppad_booky_manage.accesskey;" oncommand="js.manage();" />
 								
 						</menupopup>
 					</menu>

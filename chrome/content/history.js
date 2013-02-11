@@ -32,7 +32,7 @@ com.sppad.booky.History = new function() {
      * 
      * @return An array of results, sorted by time.
      */
-    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults) {
+    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults, searchTerms) {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
@@ -41,6 +41,7 @@ com.sppad.booky.History = new function() {
         let queries = new Array();
         for(let i=0; i<aDomainArray.length; i++) {
             let query = self.hs.getNewQuery();
+            query.searchTerms = searchTerms;
             query.beginTimeReference = query.TIME_RELATIVE_NOW;
             query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
             query.endTimeReference = query.TIME_RELATIVE_NOW;

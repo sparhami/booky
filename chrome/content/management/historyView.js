@@ -11,32 +11,32 @@ com.sppad.booky.HistoryView = new function() {
     const DAY_IN_MICROSECONDS = 24 * 60 * 60 * 1000000;
     
     var self = this;
-    self.titles = [ "Last day",
-                    "Last two days",
-                    "Last 7 days",
-                    "Last 30 days",
-                    "More than 30 days" ];
-    
     self.dividers = null;
     
-    this.setup = function(aDocument, aLauncher) {
-        self.document = aDocument;
+    this.setup = function(aWindow, aLauncher) {
+        self.window = aWindow;
+        self.document = aWindow.document;
         self.launcher = aLauncher;
         
-        self.strings = aDocument.getElementById("com_sppad_booky_addonstrings");
+        self.strings = self.document.getElementById("com_sppad_booky_addonstrings");
+        self.titles = [ self.strings.getString("booky.last24Hr"),
+                        self.strings.getString("booky.last48Hr"),
+                        self.strings.getString("booky.last7Days"),
+                        self.strings.getString("booky.last30Days"),
+                        self.strings.getString("booky.greaterThan30Days") ];
         
-        self.container = aDocument.getElementById('history_content');
+        self.container = self.document.getElementById('history_content');
         self.container.addEventListener('blur', self.containerBlur, false);
         self.container.addEventListener('keyup', self.keyEvent, false);
         self.container.addEventListener('select', self.select, false);
         
-        self.context = aDocument.getElementById('history_context');
+        self.context = self.document.getElementById('history_context');
         self.context.js = self;
         
-        aDocument.getElementById('history_clear').addEventListener('command', self.onDeleteAll, false);
+        self.document.getElementById('history_clear').addEventListener('command', self.onDeleteAll, false);
     };
     
-    this.loadItems = function() {
+    this.loadItems = function(searchTerms) {
         
         while(self.container.hasChildNodes())
             self.container.removeChild(self.container.lastChild);
@@ -49,7 +49,7 @@ com.sppad.booky.HistoryView = new function() {
             return;
 
         let now = Date.now() * MICROSECONDS_PER_MILLISECOND;
-        let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults);
+        let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults, searchTerms);
         
         groupings = [ now,
                       now - DAY_IN_MICROSECONDS,
@@ -173,7 +173,7 @@ com.sppad.booky.HistoryView = new function() {
     
     this.onDeleteAll = function() {
 
-        if(!window.confirm(self.strings.getString("booky.historyClearConfirmation")))
+        if(!self.window.confirm(self.strings.getString("booky.historyClearConfirmation")))
             return;
         
         let hosts = self.launcher.getDomains();

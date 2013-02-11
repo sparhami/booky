@@ -9,15 +9,16 @@ com.sppad.booky.BookmarksView = new function() {
     
     var self = this;
     
-    this.setup = function(aDocument, aLauncher) {
-        self.document = aDocument;
+    this.setup = function(aWindow, aLauncher) {
+        self.window = aWindow;
+        self.document = aWindow.document;
         self.launcher = aLauncher;
         
-        self.container = aDocument.getElementById('bookmarks_content');
+        self.container =  self.document.getElementById('bookmarks_content');
         self.container.addEventListener('blur', self.containerBlur, false);
         self.container.addEventListener('keyup', self.keyEvent, false);
         
-        self.context = aDocument.getElementById('bookmarks_context');
+        self.context = self.document.getElementById('bookmarks_context');
         self.context.js = self;
     };
     
@@ -26,7 +27,7 @@ com.sppad.booky.BookmarksView = new function() {
         while(self.container.hasChildNodes())
             self.container.removeChild(self.container.lastChild);
         
-        let bookmarks = self.launcher.bookmarks;
+        let bookmarks = com.sppad.booky.Bookmarks.getBookmarks(self.launcher.id);
         for(let i=0; i<bookmarks.length; i++) {
             let bookmark = bookmarks[i];
             

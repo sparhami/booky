@@ -9,9 +9,9 @@ sendEvent = function(aType, aData) {
 };
 
 window.addEventListener('load', function() {
-    sendEvent('com_sppad_booky_details_page_loaded', { 'document': document });
+    sendEvent('com_sppad_booky_details_page_loaded', { 'window': window });
 });
 
 window.addEventListener('unload', function() {
-    sendEvent('com_sppad_booky_details_page_unloaded', { 'document': document });
+    sendEvent('com_sppad_booky_details_page_unloaded', { 'window': window });
 });

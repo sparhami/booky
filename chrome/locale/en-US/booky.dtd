@@ -21,11 +21,16 @@
 <!ENTITY com_sppad_booky_close.accesskey "C">
 <!ENTITY com_sppad_booky_remove.label "Delete">
 <!ENTITY com_sppad_booky_remove.accesskey "D">
+<!ENTITY com_sppad_booky_manage.label "Manage">
+<!ENTITY com_sppad_booky_manage.accesskey "M">
 <!ENTITY com_sppad_booky_launcher_empty.label "No bookmarks">
 
 <!ENTITY com_sppad_booky_tabsView.label "Tabs">
 <!ENTITY com_sppad_booky_historyView.label "History">
 <!ENTITY com_sppad_booky_bookmarksView.label "Bookmarks">
+
+<!ENTITY com_sppad_booky_noTitle.label "( no title )">
+<!ENTITY com_sppad_booky_searchBox.label "Search History">
 
 <!ENTITY preference.window.title "Booky Preferences">
 <!ENTITY preference.prefpane.general.label "General">

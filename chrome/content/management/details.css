@@ -4,10 +4,6 @@
 	padding: 1em;
 }
 
-#sidepanel {
-	-moz-box-flex: 1;
-}
-
 #content {
 	-moz-box-flex: 9;
 }
@@ -62,6 +58,8 @@
 .dataView {
 	width: 0;
 	background-color: rgba(255, 255, 255, 0.5);
+	
+	border-width: 1px !important;;
 }
 
 .dataView:not(:last-child) {
@@ -71,7 +69,6 @@
 #titleBox,
 #searchBox,
 .dataView {
-	border-width: 1px !important;;
 	border-style: solid !important;;
 	border-color: rgb(104, 104, 104) !important;;
 }
@@ -80,11 +77,13 @@
 #searchBox {
 	background-color: -moz-Field;
 	color: -moz-FieldText;
+	
+	border-width: 2px !important;;
 }
 
 #searchBox,
 #titleBox {
-	padding: 2px 4px 2px 4px !important;
+	padding: 3px 6px 3px 4px !important;
 }
 
 #searchBox {
@@ -211,4 +210,37 @@ listitem {
 
 .detail_button:hover {
 	background: radial-gradient(circle at center, rgba(155, 191, 255, 0.9) 0%, rgba(203, 235, 255, 0.4) 60%, rgba(255, 255, 255, 0) 100%);
+}
+
+#sidepanel {
+	margin-right: 1.6em;
+}
+
+#sidepanel button {
+	margin-bottom: .6em !important;
+
+	border-radius: 2px !important;
+	border-style: solid !important;
+	border-color: rgb(160, 160, 160) !important;
+	border-width: 1px !important;
+		
+	background-color: rgba(255, 255, 255, 0.5);
+
+	min-width: 48px;
+	min-height: 48px;
+	max-width: 48px;
+	max-height: 48px;
+}
+
+#sidepanel button[disabled="true"] {
+	background-color: rgba(200, 200, 200, 0.5);
+}
+
+#sidepanel button:not([disabled="true"]):hover:not(:active) {
+	box-shadow: 0 0 2px 1px rgb(155, 191, 255);
+	border-color: rgb(155, 191, 255) !important;
+}
+
+#sidepanel button:not([disabled="true"]):active {
+	background-color: rgba(120, 120, 120, 0.4);
 }

@@ -446,7 +446,7 @@ com.sppad.booky.Launcher.prototype.command = function(event) {
 com.sppad.booky.Launcher.prototype.click = function(event) {
     
     if(event.altKey)
-        com.sppad.booky.Details.showDetailsPage(this);
+        this.manage();
     else if(event.button == 0)
         this.switchTo(true, true, event.shiftKey);
     else if(event.button == 1)
@@ -611,6 +611,14 @@ com.sppad.booky.Launcher.prototype.remove = function(event) {
     com.sppad.booky.Bookmarks.removeBookmark(this.id);
     this.contextHiding();
 };
+
+/**
+ * Opens the management page for the launcher.
+ */
+com.sppad.booky.Launcher.prototype.manage = function(event) {
+    com.sppad.booky.Details.showDetailsPage(this);
+};
+
 
 /**
  * Opens all the bookmarks in the launcher.

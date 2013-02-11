@@ -9,15 +9,16 @@ com.sppad.booky.TabsView = new function() {
     
     var self = this;
     
-    this.setup = function(aDocument, aLauncher) {
-        self.document = aDocument;
+    this.setup = function(aWindow, aLauncher) {
+        self.window = aWindow;
+        self.document = aWindow.document;
         self.launcher = aLauncher;
         
-        self.container = aDocument.getElementById('tabs_content');
+        self.container = self.document.getElementById('tabs_content');
         self.container.addEventListener('blur', self.containerBlur, false);
         self.container.addEventListener('keyup', self.keyEvent, false);
         
-        self.context = aDocument.getElementById('tabs_context');
+        self.context = self.document.getElementById('tabs_context');
         self.context.js = self;
     };
 
