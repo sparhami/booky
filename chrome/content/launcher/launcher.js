@@ -108,6 +108,11 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.setAttribute("hasSingle", this.tabs.length > 0);
         this.setAttribute("hasMultiple", this.tabs.length > 1);
+        
+        if(this.tabs.length == 0)
+            this.setImage(this.bookmarks.length > 0 ? this.bookmarks[0].icon : null);
+        else
+            this.setImage(this.tabs[self._selectedIndex].image);
     };
     
     /**
