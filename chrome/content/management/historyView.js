@@ -5,6 +5,10 @@ if (typeof com == "undefined") {
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
+
+Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
+
 com.sppad.booky.HistoryView = new function() {
     
     const MICROSECONDS_PER_MILLISECOND = 1000;
@@ -12,6 +16,30 @@ com.sppad.booky.HistoryView = new function() {
     
     var self = this;
     self.dividers = null;
+    self.historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
+    
+    this.historyObserver = {
+        onBeforeDeleteURI : function(aURI, aGUID) { },
+        onBeginUpdateBatch : function() { },
+        onClearHistory : function() { },
+        onDeleteURI : function(aURI, aGUID) { },
+        onDeleteVisits : function(aURI, aVisitTime, aGUID) { }, 
+        onEndUpdateBatch : function() { },
+        onPageChanged : function(aURI, aWhat, aValue) { },
+        onPageExpired : function(aURI, aVisitTime, aWholeEntry) { },
+        onTitleChanged : function(aURI, aPageTitle) { },
+        onVisit : function(aURI, aVisitID, aTime, aSessionID, aReferringID, aTransitionType, aGUID, aAdded) { 
+            
+            let host = com.sppad.booky.Groups.getHostFromUri(aURI);
+            let domains = self.launcher.getDomains();
+            
+            if(com.sppad.booky.Utils.getIndexInArray(domains, host) >= 0) {
+                dump("new history item for this launcher\n");
+            }
+        },
+        
+        QueryInterface : XPCOMUtils.generateQI([Components.interfaces.nsINavHistoryObserver])  
+    };
     
     this.setup = function(aWindow, aLauncher) {
         self.window = aWindow;
@@ -26,14 +54,19 @@ com.sppad.booky.HistoryView = new function() {
                         self.strings.getString("booky.greaterThan30Days") ];
         
         self.container = self.document.getElementById('history_content');
-        self.container.addEventListener('blur', self.containerBlur, false);
-        self.container.addEventListener('keyup', self.keyEvent, false);
+        self.container.addEventListener('blur', self.blur, false);
+        self.container.addEventListener('keyup', self.keyup, false);
         self.container.addEventListener('select', self.select, false);
         
         self.context = self.document.getElementById('history_context');
         self.context.js = self;
         
         self.document.getElementById('history_clear').addEventListener('command', self.onDeleteAll, false);
+        self.historyService.addObserver(self.historyObserver, false);
+    };
+    
+    this.cleanup = function() {
+        self.historyService.removeObserver(self.historyObserver);
     };
     
     this.loadItems = function(searchTerms) {
@@ -126,7 +159,7 @@ com.sppad.booky.HistoryView = new function() {
         gBrowser.selectedTab = gBrowser.loadOneTab(aUri);
     };
     
-    this.containerBlur = function() {
+    this.blur = function() {
         self.container.selectedIndex = -1;
     };
     
@@ -182,7 +215,7 @@ com.sppad.booky.HistoryView = new function() {
         self.loadItems();
     };
     
-    this.keyEvent = function(aEvent) {
+    this.keyup = function(aEvent) {
         
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
@@ -192,7 +225,7 @@ com.sppad.booky.HistoryView = new function() {
                 self.onDelete();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
-                self.containerBlur();
+                self.blue();
                 break;
             default:
                 break;

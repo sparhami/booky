@@ -167,12 +167,19 @@ com.sppad.booky.Bookmarks = new function() {
             }
         },
         
-    	moveBefore: function(priorBookmarkId, bookmarkId, aFolderId) {
+        moveAfter: function(priorBookmarkId, bookmarkId, aFolderId) {
     	    aFolderId = aFolderId || self._getQuicklaunchFolderId();
     	    
             targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : self._bs.DEFAULT_INDEX;
             self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
     	},
+    	
+        moveBefore: function(priorBookmarkId, bookmarkId, aFolderId) {
+            aFolderId = aFolderId || self._getQuicklaunchFolderId();
+            
+            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) : self._bs.DEFAULT_INDEX;
+            self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
+        },
     	
     	bookmarkTitleChanged: function(aItemId, aParentId, aIndex, aTitle) {
             // Prevent user from changing our folder's title by restoring it

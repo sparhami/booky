@@ -62,6 +62,10 @@ com.sppad.booky.Groups = new function() {
             return self.getPrimaryIdFromUriString(aUriString);
         },
         
+        getHostFromUri : function(aUri) {
+            return self.getPrimaryIdFromUri(aUri);
+        },
+        
         getIdFromTab : function(aTab) {
             let primaryId = self.getPrimaryIdFromTab(aTab);
             return self.groupIdMap.get(primaryId);
@@ -112,7 +116,7 @@ com.sppad.booky.Groups = new function() {
             if(!folderId)
                 folderId = com.sppad.booky.Bookmarks.createFolder("");
             
-            com.sppad.booky.Bookmarks.moveBefore(null, aItemId, folderId);
+            com.sppad.booky.Bookmarks.moveAfter(null, aItemId, folderId);
         },
 
         /**
@@ -190,7 +194,7 @@ com.sppad.booky.Groups = new function() {
                     // since the parent folder has changed
                     if(domain == primaryId) {
                         self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
-                        com.sppad.booky.Bookmarks.moveBefore(null, bookmark.itemId, parentId);
+                        com.sppad.booky.Bookmarks.moveAfter(null, bookmark.itemId, parentId);
                     }
                }
                 

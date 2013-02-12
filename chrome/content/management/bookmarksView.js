@@ -15,11 +15,18 @@ com.sppad.booky.BookmarksView = new function() {
         self.launcher = aLauncher;
         
         self.container =  self.document.getElementById('bookmarks_content');
-        self.container.addEventListener('blur', self.containerBlur, false);
-        self.container.addEventListener('keyup', self.keyEvent, false);
+        self.container.addEventListener('blur', self.blur, false);
+        self.container.addEventListener('keyup', self.keyup, false);
+        self.container.addEventListener('dragstart', self.dragstart, true);
+        self.container.addEventListener('dragover', self.dragoverEmpty, true);
+        self.container.addEventListener('drop', self.drop, true);
         
         self.context = self.document.getElementById('bookmarks_context');
         self.context.js = self;
+    };
+    
+    this.cleanup = function() {
+        
     };
     
     this.loadItems = function() {
@@ -38,7 +45,8 @@ com.sppad.booky.BookmarksView = new function() {
             item.setAttribute('image', bookmark.icon);
             item.setAttribute('tooltiptext', bookmark.uri);
             
-            item.addEventListener('dblclick', self.onAction.bind(self, i), true);
+            item.addEventListener('dragover', self.dragover, true);
+            item.addEventListener('dblclick', self.onAction.bind(self, i), false);
             
             self.container.appendChild(item);
         }
@@ -48,8 +56,76 @@ com.sppad.booky.BookmarksView = new function() {
         gBrowser.selectedTab = gBrowser.loadOneTab(aUri);
     };
     
-    this.containerBlur = function() {
+    this.blur = function() {
         self.container.selectedIndex = -1;
+    };
+    
+
+    this.dragstart = function(aEvent) {
+        let dt = aEvent.dataTransfer;
+        let items = self.container.childNodes;
+        let selectedItems = self.container.selectedItems;
+        
+        let itemIds = selectedItems.map(function(item) { return item.bookmark.itemId }).join('\n');
+        dt.setData('text/com-sppad-booky-itemIds', itemIds);
+        
+        self.dragValid = false;
+        
+        /*
+         * XXX - total hack - Can't add multiple elements, so normally can only
+         * have one showing as the drag image. Too lazy to actually implement
+         * drawing selected items on canvas. Instead, hide everything but the
+         * selected items, cause the preview to be generated, then unhide them.
+         */
+        for(let i=0; i<items.length; i++)
+            !items[i].selected && (items[i].style.visibility = 'hidden');
+        
+        dt.addElement(self.container);
+        
+        window.setTimeout(function() {
+            for(let i=0; i<items.length; i++)
+                items[i].style.visibility = '';
+        }, 1);
+    };
+    
+    this.dragover = function(aEvent) {
+        self.handleDrag(aEvent, aEvent.target);
+    };
+    
+    this.dragoverEmpty = function(aEvent) {
+        self.handleDrag(aEvent, null);
+    };
+    
+    this.handleDrag = function(aEvent, aTarget) {
+        if(!aEvent.dataTransfer.getData('text/com-sppad-booky-itemIds'))
+            return;
+        
+        self.dragValid = true;
+        self.dragTarget = aTarget;
+        aEvent.preventDefault();
+    };
+    
+    this.drop = function(aEvent) {
+        if(!self.dragValid)
+            return;
+        
+        let dt = aEvent.dataTransfer;
+        let data = dt.getData('text/com-sppad-booky-itemIds');
+        
+        if(!data)
+            return;
+        
+        let prevItemId = self.dragTarget ? self.dragTarget.bookmark.itemId : null;
+        let itemIds = data.split("\n");
+        
+        if(prevItemId)
+            itemIds.reverse();
+            
+        for(let i=0; i<itemIds.length; i++)
+            com.sppad.booky.Bookmarks.moveBefore(prevItemId, itemIds[i], self.launcher.id);
+        
+        self.loadItems();
+        aEvent.preventDefault();
     };
     
     this.onAction = function(aIndex) {
@@ -82,7 +158,7 @@ com.sppad.booky.BookmarksView = new function() {
         
     };
     
-    this.keyEvent = function(aEvent) {
+    this.keyup = function(aEvent) {
         
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
@@ -92,7 +168,7 @@ com.sppad.booky.BookmarksView = new function() {
                 self.onDelete();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
-                self.containerBlur();
+                self.blur();
                 break;
             default:
                 break;

@@ -99,7 +99,7 @@ com.sppad.booky.DragDrop = new function() {
 
         // Move the bookmarks, which will cause the launchers to be
         // moved appropriately.
-        com.sppad.booky.Bookmarks.moveBefore(prevBookmarkId, bookmarkId);
+        com.sppad.booky.Bookmarks.moveAfter(prevBookmarkId, bookmarkId);
     };
     
     self._dropUris = function(uris) {
@@ -114,7 +114,7 @@ com.sppad.booky.DragDrop = new function() {
 
             // Move the bookmarks, which will cause the launchers to be
             // moved appropriately.
-            com.sppad.booky.Bookmarks.moveBefore(prevBookmarkId, id);
+            com.sppad.booky.Bookmarks.moveAfter(prevBookmarkId, id);
         }
     };
     

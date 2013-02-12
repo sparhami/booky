@@ -15,11 +15,16 @@ com.sppad.booky.TabsView = new function() {
         self.launcher = aLauncher;
         
         self.container = self.document.getElementById('tabs_content');
-        self.container.addEventListener('blur', self.containerBlur, false);
-        self.container.addEventListener('keyup', self.keyEvent, false);
+        self.container.addEventListener('blur', self.blur, false);
+        self.container.addEventListener('keyup', self.keyup, false);
         
         self.context = self.document.getElementById('tabs_context');
         self.context.js = self;
+    };
+    
+    this.cleanup = function() {
+        
+        
     };
 
     this.loadItems = function() {
@@ -79,7 +84,7 @@ com.sppad.booky.TabsView = new function() {
         gBrowser.removeTab(aTab);
     };
     
-    this.containerBlur = function() {
+    this.blur = function() {
         self.container.selectedIndex = -1;
     };
     
@@ -113,7 +118,7 @@ com.sppad.booky.TabsView = new function() {
         
     };
     
-    this.keyEvent = function(aEvent) {
+    this.keyup = function(aEvent) {
         
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
@@ -123,7 +128,7 @@ com.sppad.booky.TabsView = new function() {
                 self.onDelete();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
-                self.containerBlur();
+                self.blur();
                 break;
             default:
                 break;

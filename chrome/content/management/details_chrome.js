@@ -90,6 +90,10 @@ com.sppad.booky.Details = new function() {
         if(!contentDocument.location.href.startsWith('chrome://booky/content/management/details.xul'))
             return;
         
+        com.sppad.booky.TabsView.cleanup();
+        com.sppad.booky.HistoryView.cleanup();
+        com.sppad.booky.BookmarksView.cleanup();
+        
         gBrowser.tabContainer.removeEventListener("TabSelect", self.tabselect);
         gBrowser.tabContainer.removeEventListener("TabClose", self.tabEvent);
         gBrowser.tabContainer.removeEventListener("TabOpen", self.tabEvent);
@@ -157,8 +161,8 @@ com.sppad.booky.Details = new function() {
     };
     
     this.setup = function() {
-        document.addEventListener("com_sppad_booky_details_page_loaded", self.pageLoaded, false, true);
-        document.addEventListener("com_sppad_booky_details_page_unloaded", self.pageUnloaded, false, true);
+        document.addEventListener("com_sppad_booky_details_page_load", self.pageLoaded, false, true);
+        document.addEventListener("com_sppad_booky_details_page_beforeunload", self.pageUnloaded, false, true);
         gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
     };
     
