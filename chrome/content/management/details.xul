@@ -5,7 +5,8 @@
 
 <!DOCTYPE overlay SYSTEM "chrome://booky/locale/booky.dtd">
 
-<window id="detailsContentWindow" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="Booky - details">
+<window id="detailsContentWindow"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" title="Booky - details">
 
 	<script type="application/x-javascript" src="details_content.js" />
 
@@ -13,67 +14,85 @@
 		<stringbundle id="com_sppad_booky_addonstrings" src="chrome://booky/locale/booky.properties" />
 	</stringbundleset>
 
+	<popupset>
+		<menupopup id="tabs_context" onpopupshowing="js.popupShowing()">
+			<menuitem id="tabs_context_open" oncommand="js.onOpen()"
+				label="&com_sppad_booky_switchTo.label;" />
+			<menuitem id="tabs_context_remove" oncommand="js.onDelete()"
+				label="&com_sppad_booky_close.label;" />
+		</menupopup>
+
+		<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing()">
+			<menuitem id="bookmarks_context_open" oncommand="js.onOpen()"
+				label="&com_sppad_booky_open.label;" />
+			<menuitem id="bookmarks_context_remove" oncommand="js.onDelete()"
+				label="&com_sppad_booky_remove.label;" />
+		</menupopup>
+
+		<menupopup id="history_context" onpopupshowing="js.popupShowing()">
+			<menuitem id="history_context_open" oncommand="js.onOpen()"
+				label="&com_sppad_booky_open.label;" />
+			<menuitem id="history_context_remove" oncommand="js.onDelete()"
+				label="&com_sppad_booky_remove.label;" />
+		</menupopup>
+	</popupset>
+
 	<hbox id="details">
 		<vbox id="sidepanel">
-			<button id="reloadButton" icon="refresh" class="plain" tooltiptext="&com_sppad_booky_reload.label;" />
-			<button id="closeButton" icon="close" class="plain" tooltiptext="&com_sppad_booky_close.label;" />
-			<button id="removeButton" icon="remove" class="plain" tooltiptext="&com_sppad_booky_remove.label;" />
+			<button id="reloadButton" icon="refresh" class="plain"
+				tooltiptext="&com_sppad_booky_reload.label;" />
+			<button id="closeButton" icon="close" class="plain"
+				tooltiptext="&com_sppad_booky_close.label;" />
+			<button id="removeButton" icon="remove" class="plain"
+				tooltiptext="&com_sppad_booky_remove.label;" />
 		</vbox>
 		<hbox id="content">
 			<vbox id="main">
-				<hbox id="top">	
+
+				<hbox id="top">
 					<textbox id="titleBox" class="plain" placeholder="&com_sppad_booky_noTitle.label;" />
-					<textbox id="searchBox" type="search" class="plain" placeholder="&com_sppad_booky_searchBox.label;" />
+					<textbox id="searchBox" type="search" class="plain"
+						placeholder="&com_sppad_booky_searchBox.label;" />
 				</hbox>
+
 				<hbox id="middle">
 					<vbox id="tabs" class="dataView">
 						<hbox id="tabs_header" class="detail_header">
-							<label class="detail_header_text" flex="1" value="&com_sppad_booky_tabsView.label;" />
+							<label class="detail_header_text" flex="1"
+								value="&com_sppad_booky_tabsView.label;" />
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="tabs_context"
-							seltype="multiple" id="tabs_content" />
-						<menupopup id="tabs_context" onpopupshowing="js.popupShowing()">
-							<menuitem id="tabs_context_open" oncommand="js.onOpen()">&com_sppad_booky_switchTo.label;
-							</menuitem>
-							<menuitem id="tabs_context_remove" oncommand="js.onDelete()">&com_sppad_booky_close.label;
-							</menuitem>
-						</menupopup>
+
+						<listbox id="tabs_content" class="plain textList" context="tabs_context"
+							seltype="multiple" />
 					</vbox>
 					<vbox id="bookmarks" class="dataView">
 						<hbox id="bookmarks_header" class="detail_header">
 							<image class="detail_image" src="chrome://booky/skin/images/Rocket000_emblem-star.svg" />
-							<label class="detail_header_text" flex="1" value="&com_sppad_booky_bookmarksView.label;" />
+							<label class="detail_header_text" flex="1"
+								value="&com_sppad_booky_bookmarksView.label;" />
 							<button class="detail_button plain" oncommand="alert('click!');">+</button>
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="bookmarks_context"
-							seltype="multiple" id="bookmarks_content" />
-						<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing()">
-							<menuitem id="bookmarks_context_open" oncommand="js.onOpen()">&com_sppad_booky_open.label;
-							</menuitem>
-							<menuitem id="bookmarks_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;
-							</menuitem>
-						</menupopup>
+
+						<listbox id="bookmarks_content" class="plain textList" context="bookmarks_context"
+							seltype="multiple" />
 					</vbox>
 					<vbox id="history" class="dataView">
 						<hbox id="history_header" class="detail_header">
 							<image class="detail_image" src="chrome://booky/skin/images/Calendar_file.svg" />
-							<label class="detail_header_text" flex="1" value="&com_sppad_booky_historyView.label;" />
+							<label class="detail_header_text" flex="1"
+								value="&com_sppad_booky_historyView.label;" />
 							<button id="history_clear" class="detail_button plain"
 								image="chrome://booky/skin/images/edit-clear.svg" />
 						</hbox>
 						<hbox class="detail_separator" />
-						<listbox class="plain textList" context="history_context" seltype="multiple"
-							id="history_content" />
-						<menupopup id="history_context" onpopupshowing="js.popupShowing()">
-							<menuitem id="history_context_open" oncommand="js.onOpen()">&com_sppad_booky_open.label;
-							</menuitem>
-							<menuitem id="history_context_remove" oncommand="js.onDelete()">&com_sppad_booky_remove.label;
-							</menuitem>
-						</menupopup>
+
+						<listbox id="history_content" class="plain textList" context="history_context"
+							seltype="multiple" />
 					</vbox>
 				</hbox>
+
 			</vbox>
 		</hbox>
 	</hbox>

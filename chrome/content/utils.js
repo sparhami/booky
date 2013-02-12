@@ -97,26 +97,6 @@ com.sppad.booky.Utils = (function() {
               
 	          return -1;
 		},
-		
-		  /**
-         * Generates a tab preview for the given tab, based on a 16:9 aspect
-         * ratio of the screen size (not application window size).
-         * 
-         * @param aTab
-         *            The tab to generate a preview for
-         * @return A canvas element containing the tab preview
-         */
-        generatePreview: function(aTab) {
-                let win = aTab.linkedBrowser.contentWindow;
-                
-                let aspectRatio = 0.5625; // 16:9
-                let screen = win.screen;
-                
-                let width = Math.ceil(screen.availWidth / 5.75);
-                let height = Math.round(width * aspectRatio);
-                          
-                return TabDockUtils.drawWindow(aTab, width, height);
-        },
         
         /**
          * Tab previews utility, produces thumbnails. Code based on browser.js

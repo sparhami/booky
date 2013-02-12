@@ -225,7 +225,7 @@ com.sppad.booky.HistoryView = new function() {
                 self.onDelete();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
-                self.blue();
+                self.blur();
                 break;
             default:
                 break;

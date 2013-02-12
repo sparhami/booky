@@ -8,10 +8,6 @@
 	-moz-box-flex: 9;
 }
 
-#sites {
-	-moz-box-flex: 1;
-}
-
 #main {
 	-moz-box-flex: 10;
 }
@@ -37,10 +33,6 @@
 
 #middle {
 	-moz-box-flex: 20;
-}
-
-#bottom {
-	-moz-box-flex: 2;
 }
 
 #tabs {
