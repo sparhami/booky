@@ -186,7 +186,10 @@ com.sppad.booky.EventSupport = function() {
 
 com.sppad.booky.EventSupport.prototype.
 addListener = function(listener, type) {
-    this._getListeners(type).push(listener);
+    let types = (type instanceof Array) ? type : [ type ];
+        
+    for(let i=0; i<types.length; i++)
+        this._getListeners(types[i]).push(listener);
 };
 
 com.sppad.booky.EventSupport.prototype.
@@ -199,5 +202,8 @@ fire = function(event, type) {
 
 com.sppad.booky.EventSupport.prototype.
 removeListener = function(listener, type) {
-    com.sppad.booky.Utils.removeFromArray(this._getListeners(type), listener);
+    let types = (type instanceof Array) ? type : [ type ];
+    
+    for(let i=0; i<types.length; i++)
+        com.sppad.booky.Utils.removeFromArray(this._getListeners(types[i]), listener);
 };

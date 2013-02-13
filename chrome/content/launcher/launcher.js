@@ -22,6 +22,7 @@ com.sppad.booky.Launcher = function(aID) {
     this.node = document.createElement('launcher');
     this.menuNode = overflowTemplateNode.cloneNode(true);
     this.menuNode.removeAttribute('id');
+    this.eventSupport = new com.sppad.booky.EventSupport();
     
     /*
      * This is needed to force close the overflow menu in some situations. The
@@ -267,6 +268,7 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.updateAttributes();
         this.evaluateTabIndexIndicator();
+        this.eventSupport.fire( {}, this.TABS_ADDED);
     }
     
     /**
@@ -294,10 +296,15 @@ com.sppad.booky.Launcher = function(aID) {
             tab.removeAttribute('com_sppad_booky_hasLauncher');
         }
         
-        this.updateAttributes();
-        self._selectedIndex = Math.max(self._selectedIndex, this.tabs.length - 1);
+        self._selectedIndex = Math.min(self._selectedIndex, this.tabs.length - 1);
         
+        this.updateAttributes();
         this.evaluateTabIndexIndicator();
+        this.eventSupport.fire( {}, this.TABS_REMOVED );
+    };
+    
+    this.moveTab = function(aTab) {
+        this.eventSupport.fire( {}, this.TABS_MOVED );  
     };
     
     this.setBookmarks = function(aBookmarkArray) {
@@ -306,6 +313,8 @@ com.sppad.booky.Launcher = function(aID) {
         
         this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
         this.setAttribute('empty', this.bookmarks.length == 0);
+        
+        this.eventSupport.fire( {}, this.BOOKMARKS_CHANGED);
     };
     
     
@@ -369,6 +378,9 @@ com.sppad.booky.Launcher = function(aID) {
             this.placeTab(this.tabs[i], true);
     };
     
+    this.addListener = function(listener, type) { self.eventSupport.addListener(listener, type); };
+    this.removeListener = function(listener, type) { self.eventSupport.removeListener(listener, type); };
+    
     this.createBefore(null);
     this.setBookmarks([]);
     this.updateAttributes();
@@ -379,6 +391,11 @@ com.sppad.booky.Launcher = function(aID) {
     
     com.sppad.booky.Launcher.launcherMap.put(this.id, this);
 }
+
+com.sppad.booky.Launcher.prototype.TABS_ADDED = "LAUNCHER_TAB_ADDED";
+com.sppad.booky.Launcher.prototype.TABS_MOVED = "LAUNCHER_TAB_MOVED";
+com.sppad.booky.Launcher.prototype.TABS_REMOVED = "LAUNCHER_TAB_REMOVED";
+com.sppad.booky.Launcher.prototype.BOOKMARKS_CHANGED = "LAUNCHER_BOOKMARKS_CHANGED";
 
 /**
  * Shows a tooltip when hovering over a launcher. The tooltip is centered

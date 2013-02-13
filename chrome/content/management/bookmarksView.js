@@ -23,10 +23,16 @@ com.sppad.booky.BookmarksView = new function() {
         
         self.context = self.document.getElementById('bookmarks_context');
         self.context.js = self;
+        
+        self.launcher.addListener(self.bookmarkEvent, com.sppad.booky.Launcher.BOOKMARKS_CHANGED);
     };
     
     this.cleanup = function() {
-        
+        self.launcher.removeListener(self.bookmarkEvent, com.sppad.booky.Launcher.BOOKMARKS_CHANGED);
+    };
+    
+    this.bookmarkEvent = function() {
+        self.loadItems();
     };
     
     this.loadItems = function() {
@@ -124,7 +130,6 @@ com.sppad.booky.BookmarksView = new function() {
         for(let i=0; i<itemIds.length; i++)
             com.sppad.booky.Bookmarks.moveBefore(prevItemId, itemIds[i], self.launcher.id);
         
-        self.loadItems();
         aEvent.preventDefault();
     };
     
@@ -145,7 +150,6 @@ com.sppad.booky.BookmarksView = new function() {
             com.sppad.booky.Bookmarks.removeBookmark(itemId);
         }
            
-        self.loadItems();
     };
     
     this.onOpen = function() {

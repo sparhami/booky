@@ -116,8 +116,9 @@ com.sppad.booky.Booky = new function() {
         },
         
         onTabMove: function(aTab) {
-            // com.sppad.booky.Utils.dump('onTabMove\n');
             // TODO - Implement tab move code to reorder things appropriately
+            if(aTab.com_sppad_booky_launcher)
+                aTab.com_sppad_booky_launcher.moveTab(aTab);
         },
         
         /**

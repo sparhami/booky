@@ -8,6 +8,10 @@ com.sppad.booky = com.sppad.booky || {};
 com.sppad.booky.TabsView = new function() {
     
     var self = this;
+    self.tabEvents = [ com.sppad.booky.Launcher.TABS_ADDED,
+                       com.sppad.booky.Launcher.TABS_MOVED,
+                       com.sppad.booky.Launcher.TABS_REMOVED ];
+    
     
     this.setup = function(aWindow, aLauncher) {
         self.window = aWindow;
@@ -20,15 +24,20 @@ com.sppad.booky.TabsView = new function() {
         
         self.context = self.document.getElementById('tabs_context');
         self.context.js = self;
+        
+        self.launcher.addListener(self.tabEvent, self.tabEvents);
     };
     
     this.cleanup = function() {
-        
-        
+        self.launcher.removeListener(self.tabEvent, self.tabEvents);
+    };
+    
+    this.tabEvent = function(aEvent) {
+        self.loadItems();
     };
 
     this.loadItems = function() {
-        this.loadTextItems();
+        self.loadTextItems();
     };
     
     this.loadTextItems = function() {
@@ -105,7 +114,6 @@ com.sppad.booky.TabsView = new function() {
             gBrowser.removeTab(tab);
         }
         
-        self.loadItems();
     };
     
     this.onOpen = function() {
