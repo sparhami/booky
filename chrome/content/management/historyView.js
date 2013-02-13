@@ -17,6 +17,8 @@ com.sppad.booky.HistoryView = new function() {
     var self = this;
     self.dividers = null;
     self.historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
+    self.searchTerms = "";
+    self.lastResultTime = 0;
     
     this.historyObserver = {
         onBeforeDeleteURI : function(aURI, aGUID) { },
@@ -57,6 +59,7 @@ com.sppad.booky.HistoryView = new function() {
         self.container.addEventListener('blur', self.blur, false);
         self.container.addEventListener('keyup', self.keyup, false);
         self.container.addEventListener('select', self.select, false);
+        self.container.addEventListener('scroll', self.scroll, false);
         
         self.context = self.document.getElementById('history_context');
         self.context.js = self;
@@ -71,18 +74,35 @@ com.sppad.booky.HistoryView = new function() {
     
     this.loadItems = function(searchTerms) {
         
+        self.searchTerms = searchTerms;
+        self.lastResultTime = null;
+        self.moreResults = true;
+        
         while(self.container.hasChildNodes())
             self.container.removeChild(self.container.lastChild);
         
-        let numberOfDays = 365;
-        let maxResults = 1000;
+        self.queryMoreItems(searchTerms);
+        
+        self.removeEmptyDividers();
+    };
+    
+    this.queryMoreItems = function(searchTerms) {
+        let endTime = self.lastResultTime;
+        dump("self.lastResultTime is " + self.lastResultTime + "\n");
+        dump("self.moreResults  is " + self.moreResults  + "\n");
+        
+        if(!self.moreResults)
+            return;
+        
+        let numberOfDays = -1;
+        let maxResults = 40;
        
         let domains = self.launcher.getDomains();
         if(domains.length == 0)
             return;
 
         let now = Date.now() * MICROSECONDS_PER_MILLISECOND;
-        let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults, searchTerms);
+        let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults, searchTerms, endTime);
         
         groupings = [ now,
                       now - DAY_IN_MICROSECONDS,
@@ -96,14 +116,17 @@ com.sppad.booky.HistoryView = new function() {
         for(let i=0; i<results.length; i++) {
             let result = results[i];
             
-            while(di <= groupings.length && result.time < groupings[di])
-                self.container.appendChild(self.createDivider(di++));
+//            while(di <= groupings.length && result.time < groupings[di])
+//                self.container.appendChild(self.createDivider(di++));
             
             self.container.appendChild(self.createItem(result, i));
         }
         
-        self.removeEmptyDividers();
-        self.container.appendChild(self.createNoMoreItems());
+        self.lastResultTime = results[results.length - 1].time -1;
+        self.moreResults = results.length == maxResults;
+        
+        if(!self.moreResults)
+            self.container.appendChild(self.createNoMoreItems());
     };
     
     this.createItem = function(aResult, aIndex) {
@@ -166,6 +189,13 @@ com.sppad.booky.HistoryView = new function() {
     this.select = function() {
         let latestItem = self.container.selectedItems[self.container.selectedCount - 1];
         latestItem.divider && self.container.selectedItems.pop();
+    };
+    
+    this.scroll = function() {
+        let index = self.container.getIndexOfFirstVisibleRow();
+        if(self.container.itemCount - index < 40) {
+            self.queryMoreItems(self.searchTerms);
+        }
     };
     
     this.onAction = function(aIndex) {

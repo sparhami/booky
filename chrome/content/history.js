@@ -21,18 +21,25 @@ com.sppad.booky.History = new function() {
         .getService(Components.interfaces.nsIBrowserHistory);
     
     /**
-     * Queries history for an array of domains, returning 
+     * Queries history for an array of domains, returning
      * 
      * @param aDomainArray
      *            An array of domains to get history results for,
      * @param numberOfDays
-     *            How many days in the past to search.
+     *            How many days in the past to search. Any value not greater
+     *            than or equal to 0 will query all history.
      * @param maxResults
      *            The maximum number of results to return.
+     * @param searchTerms
+     *            The terms to search for.
+     * @param endTime
+     *            Where to stop for the most recent result. If not specified,
+     *            everything up until the moment the query is executed is
+     *            considered.
      * 
      * @return An array of results, sorted by time.
      */
-    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults, searchTerms) {
+    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults, searchTerms, endTime) {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
@@ -42,10 +49,23 @@ com.sppad.booky.History = new function() {
         for(let i=0; i<aDomainArray.length; i++) {
             let query = self.hs.getNewQuery();
             query.searchTerms = searchTerms;
-            query.beginTimeReference = query.TIME_RELATIVE_NOW;
-            query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
-            query.endTimeReference = query.TIME_RELATIVE_NOW;
-            query.endTime = 0; // now
+            
+            if(numberOfDays >= 0) {
+                query.beginTimeReference = query.TIME_RELATIVE_NOW;
+                query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
+            } else {
+                query.beginTimeReference = query.TIME_RELATIVE_EPOCH;
+                query.beginTime = 0;
+            }
+
+            if(endTime) {
+                query.endTimeReference = query.TIME_RELATIVE_EPOCH;
+                query.endTime = endTime;
+            } else {
+                query.endTimeReference = query.TIME_RELATIVE_NOW;
+                query.endTime = 0; // now
+            }
+
             query.domain = aDomainArray[i];
             
             queries.push(query);

@@ -71,7 +71,6 @@
 							<image class="detail_image" src="chrome://booky/skin/images/Rocket000_emblem-star.svg" />
 							<label class="detail_header_text" flex="1"
 								value="&com_sppad_booky_bookmarksView.label;" />
-							<button class="detail_button plain" oncommand="alert('click!');">+</button>
 						</hbox>
 						<hbox class="detail_separator" />
 
