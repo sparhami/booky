@@ -1,0 +1,70 @@
+.dataView {
+	background-color: rgba(255, 255, 255, 0.5);
+	border-width: 1px !important;
+}
+
+#titleBox,
+#searchBox,
+.dataView {
+	border-style: solid !important;
+	border-color: rgb(140, 140, 140) !important;
+	border-radius: 2px;
+}
+
+#titleBox,
+#searchBox {
+	background-color: -moz-Field;
+	color: -moz-FieldText;
+	
+	border-width: 2px !important;
+}
+
+#titleBox[focused],
+#searchBox[focused] {
+	border-color: rgb(110, 167, 255) !important;
+	box-shadow: 0 0 1px 0px rgb(122, 167, 255);
+}
+
+.textList {
+	-moz-box-flex: 1;
+
+	background-color: transparent;
+}
+
+.detail_separator {
+	border-width: 1px 0px 0px 0px;
+	border-style: solid;
+	border-color: rgb(160, 160, 160);
+}
+
+.detail_image,
+.detail_button,
+.detail_button image {
+	background-color: transparent;
+}
+
+.detail_button:hover {
+	background: radial-gradient(circle at center, rgba(155, 191, 255, 0.9) 0%, rgba(203, 235, 255, 0.4) 60%, rgba(255, 255, 255, .1) 100%);
+}
+
+#sidepanel button {
+	border-radius: 2px !important;
+	border-style: solid !important;
+	border-color: rgb(160, 160, 160) !important;
+	border-width: 1px !important;
+		
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+#sidepanel button[disabled="true"] {
+	background-color: rgba(200, 200, 200, 0.5);
+}
+
+#sidepanel button:not([disabled="true"]):hover:not(:active) {
+	box-shadow: 0 0 1px 1px rgb(110, 167, 255);
+	border-color: rgb(110, 167, 255) !important;
+}
+
+#sidepanel button:not([disabled="true"]):active {
+	background-color: rgba(120, 120, 120, 0.4);
+}
