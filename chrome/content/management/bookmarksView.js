@@ -14,7 +14,7 @@ com.sppad.booky.BookmarksView = new function() {
         self.document = aWindow.document;
         self.launcher = aLauncher;
         
-        self.container =  self.document.getElementById('bookmarks_content');
+        self.container = self.document.getElementById('bookmarks_content');
         self.container.addEventListener('blur', self.blur, false);
         self.container.addEventListener('keyup', self.keyup, false);
         self.container.addEventListener('dragstart', self.dragstart, true);

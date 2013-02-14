@@ -21,7 +21,7 @@ com.sppad.booky.History = new function() {
         .getService(Components.interfaces.nsIBrowserHistory);
     
     /**
-     * Queries history for an array of domains, returning
+     * Queries history for an array of domains, returning the history results.
      * 
      * @param aDomainArray
      *            An array of domains to get history results for,
@@ -39,7 +39,30 @@ com.sppad.booky.History = new function() {
      * 
      * @return An array of results, sorted by time.
      */
-    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults, searchTerms, endTime) {
+    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults, searchTerms) {
+        
+        let options = res = self.getQueries(aDomainArray, numberOfDays, maxResults, searchTerms) ;
+        // execute the query
+        let queryResult = self.hs.executeQueries(res.queries, res.queries.length, res.options);
+        
+        let resultArray = new Array();
+        let container = queryResult.root;
+        
+        try {
+            container.containerOpen = true;
+            
+            for (let i = 0; i < container.childCount; i ++) {
+                let node = container.getChild(i);
+                resultArray.push(node);
+            }
+        } finally {
+            container.containerOpen = false;
+        }
+        
+        return resultArray;
+    };
+    
+ this.getQueries = function(aDomainArray, numberOfDays, maxResults, searchTerms) {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
@@ -58,37 +81,15 @@ com.sppad.booky.History = new function() {
                 query.beginTime = 0;
             }
 
-            if(endTime) {
-                query.endTimeReference = query.TIME_RELATIVE_EPOCH;
-                query.endTime = endTime;
-            } else {
-                query.endTimeReference = query.TIME_RELATIVE_NOW;
-                query.endTime = 0; // now
-            }
+            query.endTimeReference = query.TIME_RELATIVE_NOW;
+            query.endTime = 0; // now
 
             query.domain = aDomainArray[i];
             
             queries.push(query);
         }
         
-        // execute the query
-        let queryResult = self.hs.executeQueries(queries, queries.length, options);
-        
-        let resultArray = new Array();
-        let container = queryResult.root;
-        
-        try {
-            container.containerOpen = true;
-            
-            for (let i = 0; i < container.childCount; i ++) {
-                let node = container.getChild(i);
-                resultArray.push(node);
-            }
-        } finally {
-            container.containerOpen = false;
-        }
-        
-        return resultArray;
+        return { 'queries' : queries, 'options': options };
     };
     
     this.removePagesByUris = function(aUriArray, length) {

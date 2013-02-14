@@ -23,6 +23,8 @@
 <!ENTITY com_sppad_booky_remove.accesskey "D">
 <!ENTITY com_sppad_booky_manage.label "Manage">
 <!ENTITY com_sppad_booky_manage.accesskey "M">
+<!ENTITY com_sppad_booky_bookmark.label "Bookmark">
+<!ENTITY com_sppad_booky_bookmark.accesskey "B">
 <!ENTITY com_sppad_booky_launcher_empty.label "No bookmarks">
 
 <!ENTITY com_sppad_booky_tabsView.label "Tabs">

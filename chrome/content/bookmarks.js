@@ -273,6 +273,18 @@ com.sppad.booky.Bookmarks = new function() {
     	    return self._bs.insertBookmark(folder, uri, self._bs.DEFAULT_INDEX, "");
     	},
     	
+	   /**
+         * Adds the specified uri to the specified bookmark folder.
+         * 
+         * @param uri
+         *            The uri to add a bookmark for.
+         * @return The bookmark id of the added bookmark.
+         */
+        addBookmarkToFolder : function(aUriString, aFolderId) {
+            let uri = Services.io.newURI(aUriString, null, null);
+            return self._bs.insertBookmark(aFolderId, uri, self._bs.DEFAULT_INDEX, "");
+        },
+    	
         /**
          * Removes a bookmark (or any other item, such as a folder).
          * 

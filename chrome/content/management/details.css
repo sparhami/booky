@@ -14,12 +14,6 @@
 
 #top {
 	margin-bottom: 0.6em;
-	height: 1.5em;
-}
-
-#launcher_icon {
-	width: 1.5em;
-	height: 1.5em;
 }
 
 #titleBox {
@@ -28,22 +22,15 @@
 
 #searchBox {
 	-moz-box-flex: 1;
-	height: 1em;
 }
 
 #middle {
 	-moz-box-flex: 20;
 }
 
-#tabs {
-	-moz-box-flex: 8;
-}
-
+#tabs,
+#history,
 #bookmarks {
-	-moz-box-flex: 8;
-}
-
-#history {
 	-moz-box-flex: 8;
 }
 
@@ -77,8 +64,8 @@
 
 #titleBox[focused],
 #searchBox[focused] {
-	border-color: rgb(155, 191, 255) !important;
-	box-shadow: 0 0 1px 0px rgb(155, 191, 255);
+	border-color: rgb(110, 167, 255) !important;
+	box-shadow: 0 0 1px 0px rgb(122, 167, 255);
 }
 
 #searchBox {
@@ -95,60 +82,17 @@
 	margin-left: 0.4em !important;
 }
 
-listitem {
-	padding: .2em;
+treechildren::-moz-tree-row {
+	font-size: 120%;
+}
+
+treechildren::-moz-tree-image {
+	margin-right: .4em;
+	margin-left: -.4em;
 }
 
 #history_content .listitem-iconic image {
 	padding-left: .4em;
-}
-
-.listend,
-.listdivider {
-	outline: none;
-	background-color: transparent !important;
-	pointer-events: none;
-}
-
-.listdivider label {
-	padding-left: 0em;
-}
-
-.listdivider image {
-	background-color: rgb(192, 192, 192);
-	-moz-box-ordinal-group: 16384;
-	-moz-box-flex: 16384;
-	min-width: 1px;
-	height: 1px;
-	margin-left: .6em;
-}
-
-.listend {
-	margin-top: .4em;
-	font-style: italic;
-	text-align: center;
-	-moz-box-ordinal-group: 1;
-}
-
-.listend image {
-	display: none;
-}
-
-.tabPreview[selected] {
-	background-color: transparent;
-}
-
-.tabPreview  {
-	outline: none;
-	margin-bottom: 6px;
-}
-
-.tabPreview canvas {
-	border: 4px solid transparent;
-}
-
-.tabPreview[selected] canvas {
-	border: 4px solid blue;
 }
 
 .detail_domain_icon {
@@ -204,7 +148,7 @@ listitem {
 }
 
 .detail_button:hover {
-	background: radial-gradient(circle at center, rgba(155, 191, 255, 0.9) 0%, rgba(203, 235, 255, 0.4) 60%, rgba(255, 255, 255, 0) 100%);
+	background: radial-gradient(circle at center, rgba(155, 191, 255, 0.9) 0%, rgba(203, 235, 255, 0.4) 60%, rgba(255, 255, 255, .1) 100%);
 }
 
 #sidepanel {
@@ -232,8 +176,8 @@ listitem {
 }
 
 #sidepanel button:not([disabled="true"]):hover:not(:active) {
-	box-shadow: 0 0 2px 1px rgb(155, 191, 255);
-	border-color: rgb(155, 191, 255) !important;
+	box-shadow: 0 0 1px 1px rgb(110, 167, 255);
+	border-color: rgb(110, 167, 255) !important;
 }
 
 #sidepanel button:not([disabled="true"]):active {

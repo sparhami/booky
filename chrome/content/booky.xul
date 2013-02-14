@@ -27,7 +27,7 @@
 	<window id="main-window">
 		<stringbundleset id="stringbundleset">
 			<stringbundle id="com_sppad_booky_tabstrings" src="chrome://browser/locale/tabbrowser.properties" />
-			<stringbundle id="com_sppad_booky_addonstrings" src="chrome://booky/locale/booky.properties"/>
+			<stringbundle id="com_sppad_booky_addonstrings" src="chrome://booky/locale/booky.properties" />
 		</stringbundleset>
 	</window>
 
@@ -65,10 +65,12 @@
 				<box style="display: none">
 					<menu id="com_sppad_booky_launcher_overflow_item_template" class="menulauncher menu-iconic"
 						ondragstart="js.dragstart(event);" ondragend="js.dragend(event);">
-						<menupopup class="launcherMenu" onpopupshowing="if(this == event.target) js.overflowMenuShowing(event);">
-							
-							<menuitem class="showWhenEmpty hideWhenNotEmpty" label="&com_sppad_booky_launcher_empty.label;" disabled="true" />
-							
+						<menupopup class="launcherMenu"
+							onpopupshowing="if(this == event.target) js.overflowMenuShowing(event);">
+
+							<menuitem class="showWhenEmpty hideWhenNotEmpty" label="&com_sppad_booky_launcher_empty.label;"
+								disabled="true" />
+
 							<menu class="launcher_menu_switchTo" label="&com_sppad_booky_switchTo.label;"
 								accesskey="&com_sppad_booky_switchTo.accesskey;">
 								<menupopup class="launcher_menupopup_switchTo" onpopupshowing="js.tabsPopupShowing(event);" />
@@ -86,10 +88,9 @@
 
 							<menu class="launcher_menu_history" label="&com_sppad_booky_history.label;"
 								accesskey="&com_sppad_booky_history.accesskey;">
-								<menupopup class="launcher_menupopup_history" onpopupshowing="js.historyPopupShowing(event);">
-								</menupopup>
+								<menupopup class="launcher_menupopup_history" onpopupshowing="js.historyPopupShowing(event);" />
 							</menu>
-							
+
 							<menuseparator />
 
 							<menuitem class="launcher_menu_reload" label="&com_sppad_booky_reload.label;"
@@ -98,7 +99,7 @@
 								accesskey="&com_sppad_booky_close.accesskey;" oncommand="js.close();" />
 							<menuitem class="launcher_menu_manage showWhenEmpty" label="&com_sppad_booky_manage.label;"
 								accesskey="&com_sppad_booky_manage.accesskey;" oncommand="js.manage();" />
-								
+
 						</menupopup>
 					</menu>
 

@@ -519,6 +519,7 @@ com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
         let menuitem = document.getElementById('com_sppad_booky_noHistoryMenuItem').cloneNode(false);
         node.appendChild(menuitem);
     }
+    
 }
 
 /**
