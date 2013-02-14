@@ -55,7 +55,7 @@ com.sppad.booky.TabsView = new function() {
             item.setAttribute('label', tab.label);
             item.setAttribute('image', tab.getAttribute('image'));
             
-            item.addEventListener('dblclick', self.onAction.bind(self, i), true);
+            item.addEventListener('dblclick', self.action.bind(self, i), true);
             
             self.container.appendChild(item);
         }
@@ -79,7 +79,7 @@ com.sppad.booky.TabsView = new function() {
             let preview = com.sppad.booky.Utils.drawWindow(tab, width, height);
             item.appendChild(preview);
             
-            item.addEventListener('dblclick', self.onAction.bind(self, i), true);
+            item.addEventListener('dblclick', self.action.bind(self, i), true);
             
             self.container.appendChild(item);
         }
@@ -97,7 +97,7 @@ com.sppad.booky.TabsView = new function() {
         self.container.selectedIndex = -1;
     };
     
-    this.onAction = function(aIndex) {
+    this.action = function(aIndex) {
         if(aIndex == undefined && self.container.selectedCount != 1)
             return;
             
@@ -106,7 +106,7 @@ com.sppad.booky.TabsView = new function() {
         gBrowser.selectedTab = tab;
     };
     
-    this.onDelete = function() {
+    this.remove = function() {
         
         let count = self.container.selectedItems.length;
         for(let i=0; i<count; i++) {
@@ -116,7 +116,7 @@ com.sppad.booky.TabsView = new function() {
         
     };
     
-    this.onOpen = function() {
+    this.open = function() {
         
         let count = self.container.selectedItems.length;
         for(let i=0; i<count; i++) {
@@ -130,10 +130,10 @@ com.sppad.booky.TabsView = new function() {
         
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
-                self.onAction();
+                self.action();
                 break;
             case KeyEvent.DOM_VK_DELETE:
-                self.onDelete();
+                self.remove();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
                 self.blur();

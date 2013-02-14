@@ -280,9 +280,9 @@ com.sppad.booky.Bookmarks = new function() {
          *            The uri to add a bookmark for.
          * @return The bookmark id of the added bookmark.
          */
-        addBookmarkToFolder : function(aUriString, aFolderId) {
+        addBookmarkToFolder : function(aUriString, aFolderId, aTitle) {
             let uri = Services.io.newURI(aUriString, null, null);
-            return self._bs.insertBookmark(aFolderId, uri, self._bs.DEFAULT_INDEX, "");
+            return self._bs.insertBookmark(aFolderId, uri, self._bs.DEFAULT_INDEX, aTitle);
         },
     	
         /**

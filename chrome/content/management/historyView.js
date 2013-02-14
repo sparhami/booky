@@ -8,7 +8,7 @@ com.sppad.booky = com.sppad.booky || {};
 com.sppad.booky.HistoryView = new function() {
     
     var self = this;
-    
+
     this.setup = function(aWindow, aLauncher) {
         self.window = aWindow;
         self.document = aWindow.document;
@@ -22,18 +22,17 @@ com.sppad.booky.HistoryView = new function() {
         self.container = self.document.getElementById('history_view');
         self.container.addEventListener('blur', self.blur, false);
         self.container.addEventListener('keyup', self.keyup, false);
-        self.container.addEventListener('dblclick', self.onAction, false);
+        self.container.addEventListener('dblclick', self.onOpen, false);
         
-        self.document.getElementById('history_clear').addEventListener('command', self.onDeleteAll, false);
+        self.document.getElementById('history_clear').addEventListener('command', self.removeAll, false);
     };
     
     this.cleanup = function() {
         self.container.removeEventListener('blur', self.blur);
         self.container.removeEventListener('keyup', self.keyup);
-        self.container.removeEventListener('dblclick', self.onAction);
+        self.container.removeEventListener('dblclick', self.onOpen);
         
-        self.document.getElementById('history_clear').removeEventListener('command', self.onDeleteAll);
-   
+        self.document.getElementById('history_clear').removeEventListener('command', self.removeAll);
     };
     
     this.loadItems = function(searchTerms) {
@@ -54,7 +53,7 @@ com.sppad.booky.HistoryView = new function() {
         self.container.view.selection.clearSelection();
     };
     
-    this.onAction = function() {
+    this.open = function() {
         if(self.container.view.selection.count != 1)
             return;
 
@@ -62,23 +61,15 @@ com.sppad.booky.HistoryView = new function() {
         gBrowser.selectedTab = gBrowser.loadOneTab(items[0].uri);
     };
     
-    this.onOpen = function() {
-        self.onAction();
-    };
-    
-    this.onDelete = function() {
-        let items = self.getSelectedItems();
-        let uris = items.map(function(item) { return item.uri; });
+    this.remove = function() {
+        let uris = self.getSelectedItems().map(function(item) { return item.uri; });
         
         com.sppad.booky.History.removePagesByUris(uris, uris.length);
     };
     
-    this.onBookmark = function() {
-        let items = self.getSelectedItems();
-        let uris = items.map(function(item) { return item.uri; });
-        
-        uris.forEach(function(uri) {
-            com.sppad.booky.Bookmarks.addBookmarkToFolder(uri, self.launcher.id);
+    this.bookmark = function() {
+        self.getSelectedItems().forEach(function(item) {
+            com.sppad.booky.Bookmarks.addBookmarkToFolder(item.uri, self.launcher.id, item.title);
         });
     };
     
@@ -100,24 +91,19 @@ com.sppad.booky.HistoryView = new function() {
         return items;
     };
     
-    this.onDeleteAll = function() {
+    this.removeAll = function() {
         if(!self.window.confirm(self.strings.getString("booky.historyClearConfirmation")))
             return;
         
         let hosts = self.launcher.getDomains();
         com.sppad.booky.History.removePagesByHosts(hosts);
-        
-        self.loadItems();
     };
     
     this.keyup = function(aEvent) {
         
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
-                self.onAction();
-                break;
-            case KeyEvent.DOM_VK_DELETE:
-                self.onDelete();
+                self.open();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
                 self.blur();

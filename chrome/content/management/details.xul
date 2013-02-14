@@ -18,26 +18,26 @@
 	</stringbundleset>
 
 	<popupset>
-		<menupopup id="tabs_context" onpopupshowing="js.popupShowing()">
-			<menuitem id="tabs_context_open" oncommand="js.onOpen()"
+		<menupopup id="tabs_context" onpopupshowing="js.popupShowing();">
+			<menuitem id="tabs_context_open" oncommand="js.open();"
 				label="&com_sppad_booky_switchTo.label;" />
-			<menuitem id="tabs_context_remove" oncommand="js.onDelete()"
+			<menuitem id="tabs_context_remove" oncommand="js.remove();"
 				label="&com_sppad_booky_close.label;" />
 		</menupopup>
 
-		<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing()">
-			<menuitem id="bookmarks_context_open" oncommand="js.onOpen()"
+		<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing();">
+			<menuitem id="bookmarks_context_open" oncommand="js.open();"
 				label="&com_sppad_booky_open.label;" />
-			<menuitem id="bookmarks_context_remove" oncommand="js.onDelete()"
+			<menuitem id="bookmarks_context_remove" oncommand="js.remove();"
 				label="&com_sppad_booky_remove.label;" />
 		</menupopup>
 
-		<menupopup id="history_context" onpopupshowing="js.popupShowing()">
-			<menuitem id="history_context_open" oncommand="js.onOpen()"
+		<menupopup id="history_context" onpopupshowing="js.popupShowing();">
+			<menuitem id="history_context_open" oncommand="js.open();"
 				label="&com_sppad_booky_open.label;" />
-			<menuitem id="history_context_remove" oncommand="js.onDelete()"
+			<menuitem id="history_context_remove" oncommand="js.remove();"
 				label="&com_sppad_booky_remove.label;" />
-			<menuitem id="history_context_bookmark" oncommand="js.onBookmark()"
+			<menuitem id="history_context_bookmark" oncommand="js.bookmark();"
 				label="&com_sppad_booky_bookmark.label;" />
 		</menupopup>
 	</popupset>
@@ -79,8 +79,13 @@
 						</hbox>
 						<hbox class="detail_separator" />
 
-						<listbox id="bookmarks_content" class="plain textList" context="bookmarks_context"
-							seltype="multiple" />
+						<tree type="places" id="bookmarks_view" flex="1" class="plain textList"
+							context="bookmarks_context">
+							<treecols style="height: 0px; overflow: hidden">
+								<treecol id="title" flex="1" primary="true" />
+							</treecols>
+							<treechildren flex="1" />
+						</tree>
 					</vbox>
 					<vbox id="history" class="dataView">
 						<hbox id="history_header" class="detail_header">

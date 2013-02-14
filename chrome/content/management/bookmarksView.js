@@ -8,168 +8,79 @@ com.sppad.booky = com.sppad.booky || {};
 com.sppad.booky.BookmarksView = new function() {
     
     var self = this;
-    
+    self._bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
+    self._historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
+ 
     this.setup = function(aWindow, aLauncher) {
         self.window = aWindow;
         self.document = aWindow.document;
         self.launcher = aLauncher;
         
-        self.container = self.document.getElementById('bookmarks_content');
-        self.container.addEventListener('blur', self.blur, false);
-        self.container.addEventListener('keyup', self.keyup, false);
-        self.container.addEventListener('dragstart', self.dragstart, true);
-        self.container.addEventListener('dragover', self.dragoverEmpty, true);
-        self.container.addEventListener('drop', self.drop, true);
-        
         self.context = self.document.getElementById('bookmarks_context');
         self.context.js = self;
         
-        self.launcher.addListener(self.bookmarkEvent, com.sppad.booky.Launcher.BOOKMARKS_CHANGED);
+        self.container = self.document.getElementById('bookmarks_view');
+        self.container.addEventListener('blur', self.blur, false);
+        self.container.addEventListener('keyup', self.keyup, false);
+        self.container.addEventListener('dblclick', self.open, false);
     };
     
     this.cleanup = function() {
-        self.launcher.removeListener(self.bookmarkEvent, com.sppad.booky.Launcher.BOOKMARKS_CHANGED);
-    };
-    
-    this.bookmarkEvent = function() {
-        self.loadItems();
+        self.container.removeEventListener('blur', self.blur);
+        self.container.removeEventListener('keyup', self.keyup);
+        self.container.removeEventListener('dblclick', self.open);
     };
     
     this.loadItems = function() {
+      
+        let options = self._historyService.getNewQueryOptions();
+        let query = self._historyService.getNewQuery();
+        query.setFolders([ self.launcher.id ], 1);
         
-        while(self.container.hasChildNodes())
-            self.container.removeChild(self.container.lastChild);
-        
-        let bookmarks = com.sppad.booky.Bookmarks.getBookmarks(self.launcher.id);
-        for(let i=0; i<bookmarks.length; i++) {
-            let bookmark = bookmarks[i];
-            
-            let item = self.document.createElement('listitem');
-            item.bookmark = bookmark;
-            item.setAttribute('class', 'listitem-iconic');
-            item.setAttribute('label', bookmark.title || bookmark.uri);
-            item.setAttribute('image', bookmark.icon);
-            item.setAttribute('tooltiptext', bookmark.uri);
-            
-            item.addEventListener('dragover', self.dragover, true);
-            item.addEventListener('dblclick', self.onAction.bind(self, i), false);
-            
-            self.container.appendChild(item);
-        }
-    };
-    
-    this.openUri = function(aUri) {
-        gBrowser.selectedTab = gBrowser.loadOneTab(aUri);
+        let tree = self.document.getElementById('bookmarks_view');
+
+        tree.load([ query ], options);
     };
     
     this.blur = function() {
-        self.container.selectedIndex = -1;
+        self.container.view.selection.clearSelection();
     };
     
+    this.open = function() {
+        self.getSelectedItems().forEach(function(item) {
+            gBrowser.selectedTab = gBrowser.loadOneTab(item.uri);
+        });
+    };
+    
+    this.remove = function() {
+        self.getSelectedItems().forEach(function(item) { 
+            self._bs.removeItem(item.itemId);
+        });
+    };
+    
+    this.getSelectedItems = function() {
+        let items = [];
 
-    this.dragstart = function(aEvent) {
-        let dt = aEvent.dataTransfer;
-        let items = self.container.childNodes;
-        let selectedItems = self.container.selectedItems;
+        let tree = self.container;
+        let start = {};
+        let end = {};
+        let numRanges = tree.view.selection.getRangeCount();
         
-        let itemIds = selectedItems.map(function(item) { return item.bookmark.itemId }).join('\n');
-        dt.setData('text/com-sppad-booky-itemIds', itemIds);
-        
-        self.dragValid = false;
-        
-        /*
-         * XXX - total hack - Can't add multiple elements, so normally can only
-         * have one showing as the drag image. Too lazy to actually implement
-         * drawing selected items on canvas. Instead, hide everything but the
-         * selected items, cause the preview to be generated, then unhide them.
-         */
-        for(let i=0; i<items.length; i++)
-            !items[i].selected && (items[i].style.visibility = 'hidden');
-        
-        dt.addElement(self.container);
-        
-        window.setTimeout(function() {
-            for(let i=0; i<items.length; i++)
-                items[i].style.visibility = '';
-        }, 1);
-    };
-    
-    this.dragover = function(aEvent) {
-        self.handleDrag(aEvent, aEvent.target);
-    };
-    
-    this.dragoverEmpty = function(aEvent) {
-        self.handleDrag(aEvent, null);
-    };
-    
-    this.handleDrag = function(aEvent, aTarget) {
-        if(!aEvent.dataTransfer.getData('text/com-sppad-booky-itemIds'))
-            return;
-        
-        self.dragValid = true;
-        self.dragTarget = aTarget;
-        aEvent.preventDefault();
-    };
-    
-    this.drop = function(aEvent) {
-        if(!self.dragValid)
-            return;
-        
-        let dt = aEvent.dataTransfer;
-        let data = dt.getData('text/com-sppad-booky-itemIds');
-        
-        if(!data)
-            return;
-        
-        let prevItemId = self.dragTarget ? self.dragTarget.bookmark.itemId : null;
-        let itemIds = data.split("\n");
-        
-        if(prevItemId)
-            itemIds.reverse();
-            
-        for(let i=0; i<itemIds.length; i++)
-            com.sppad.booky.Bookmarks.moveBefore(prevItemId, itemIds[i], self.launcher.id);
-        
-        aEvent.preventDefault();
-    };
-    
-    this.onAction = function(aIndex) {
-        if(aIndex == undefined && self.container.selectedCount != 1)
-            return;
-            
-        let index = aIndex || self.container.selectedIndex;
-        let uri = self.container.getItemAtIndex(index).bookmark.uri;
-        gBrowser.selectedTab = gBrowser.loadOneTab(uri);
-    };
-    
-    this.onDelete = function() {
-        
-        let count = self.container.selectedItems.length;
-        for(let i=0; i<count; i++) {
-            let itemId = self.container.selectedItems[i].bookmark.itemId;
-            com.sppad.booky.Bookmarks.removeBookmark(itemId);
-        }
-           
-    };
-    
-    this.onOpen = function() {
-        
-        let count = self.container.selectedItems.length;
-        for(let i=0; i<count; i++) {
-            let uri = self.container.selectedItems[i].bookmark.uri;
-            self.openUri(uri);
+        for (let t = 0; t < numRanges; t++){
+            tree.view.selection.getRangeAt(t, start, end);
+            for (let v = start.value; v <= end.value; v++) {
+                items.push(tree.view.nodeForTreeIndex(v));
+            }
         }
         
+        return items;
     };
     
     this.keyup = function(aEvent) {
         
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
-                self.onAction();
-                break;
-            case KeyEvent.DOM_VK_DELETE:
-                self.onDelete();
+                self.open();
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
                 self.blur();
@@ -182,9 +93,9 @@ com.sppad.booky.BookmarksView = new function() {
     
     this.popupShowing = function() {
         let removeItem = self.document.getElementById('bookmarks_context_remove');
-        removeItem.setAttribute('disabled', self.container.selectedCount == 0);
+        removeItem.setAttribute('disabled', self.container.view.selection.count == 0);
         
         let openItem = self.document.getElementById('bookmarks_context_open');
-        openItem.setAttribute('disabled', self.container.selectedCount == 0);
+        openItem.setAttribute('disabled', self.container.view.selection.count == 0);
     };
 };
