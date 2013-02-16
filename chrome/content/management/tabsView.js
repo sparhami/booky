@@ -8,6 +8,8 @@ com.sppad.booky = com.sppad.booky || {};
 com.sppad.booky.TabsView = new function() {
     
     var self = this;
+    
+    /** The events to listen to the launcher for */
     self.tabEvents = [ com.sppad.booky.Launcher.TABS_ADDED,
                        com.sppad.booky.Launcher.TABS_MOVED,
                        com.sppad.booky.Launcher.TABS_REMOVED ];
@@ -32,15 +34,17 @@ com.sppad.booky.TabsView = new function() {
         self.launcher.removeListener(self.tabEvent, self.tabEvents);
     };
     
+    /**
+     * Handles a tab event by adjusting the tabs shown in the view.
+     */
     this.tabEvent = function(aEvent) {
         self.loadItems();
     };
 
+    /**
+     * Loads the items into the view. Creates a list item for each tab.
+     */
     this.loadItems = function() {
-        self.loadTextItems();
-    };
-    
-    this.loadTextItems = function() {
         while(self.container.hasChildNodes())
             self.container.removeChild(self.container.lastChild);
         
@@ -55,57 +59,34 @@ com.sppad.booky.TabsView = new function() {
             item.setAttribute('label', tab.label);
             item.setAttribute('image', tab.getAttribute('image'));
             
-            item.addEventListener('dblclick', self.action.bind(self, i), true);
+            item.addEventListener('dblclick', self.action, true);
             
             self.container.appendChild(item);
         }
     };
     
-    this.loadPreviewItems = function() {
-        while(self.container.hasChildNodes())
-            self.container.removeChild(self.container.lastChild);
-        
-        let width = self.container.boxObject.width - 20;
-        let height = (width * window.screen.height) / window.screen.width;
-        
-        let tabs = self.launcher.tabs;
-        for(let i=0; i<tabs.length; i++) {
-            let tab = tabs[i];
-            
-            let item = self.document.createElement('richlistitem');
-            item.setAttribute('class', 'tabPreview');
-            item.tab = tab;
-
-            let preview = com.sppad.booky.Utils.drawWindow(tab, width, height);
-            item.appendChild(preview);
-            
-            item.addEventListener('dblclick', self.action.bind(self, i), true);
-            
-            self.container.appendChild(item);
-        }
-    };
-    
-    this.openTab = function(aTab) {
-        gBrowser.selectedTab = aTab;
-    };
-    
-    this.closeTab = function(aTab) {
-        gBrowser.removeTab(aTab);
-    };
-    
+    /**
+     * Handle loss of focus by clearing the selected items. Occurs through
+     * escape key or by clicking off the view.
+     */
     this.blur = function() {
         self.container.selectedIndex = -1;
     };
     
-    this.action = function(aIndex) {
-        if(aIndex == undefined && self.container.selectedCount != 1)
+    /**
+     * Handles commands and double-clicks by switching to the selected tab.
+     */
+    this.action = function() {
+        if(self.container.selectedCount != 1)
             return;
             
-        let index = aIndex || self.container.selectedIndex;
-        let tab = self.container.getItemAtIndex(index).tab;
+        let tab = self.container.getItemAtIndex(self.container.selectedIndex).tab;
         gBrowser.selectedTab = tab;
     };
     
+    /**
+     * Closes all selected items tabs.
+     */
     this.remove = function() {
         
         let count = self.container.selectedItems.length;

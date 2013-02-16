@@ -35,6 +35,10 @@ com.sppad.booky.HistoryView = new function() {
         self.document.getElementById('history_clear').removeEventListener('command', self.removeAll);
     };
     
+    /**
+     * Loads the items into the view by performing a history query for the
+     * launcher's domains.
+     */
     this.loadItems = function(searchTerms) {
         let numberOfDays = -1;
         let maxResults = null;
@@ -49,10 +53,19 @@ com.sppad.booky.HistoryView = new function() {
         tree.load(res.queries, res.options);
     };
     
+    /**
+     * Handle loss of focus by clearing the selected items. Occurs through
+     * escape key or by clicking off the view.
+     */
     this.blur = function() {
         self.container.view.selection.clearSelection();
     };
     
+    /**
+     * Opens the currently selected item in a new tab. Only one is allowed
+     * currently because a user may accidentally open a large number of history
+     * items at once.
+     */
     this.open = function() {
         if(self.container.view.selection.count != 1)
             return;
@@ -61,18 +74,33 @@ com.sppad.booky.HistoryView = new function() {
         gBrowser.selectedTab = gBrowser.loadOneTab(items[0].uri);
     };
     
+    /**
+     * Removes all selected items from the browser history. The view
+     * automatically updates to remove the items. Note that the <tree> node
+     * handles the delete key, so this is just for the context menu.
+     */
     this.remove = function() {
         let uris = self.getSelectedItems().map(function(item) { return item.uri; });
         
         com.sppad.booky.History.removePagesByUris(uris, uris.length);
     };
     
+    /**
+     * Bookmarks all selected items in the view. Dragging/dropping into
+     * bookmarks view is handled by the browser, so this is for the context menu
+     * only.
+     */
     this.bookmark = function() {
         self.getSelectedItems().forEach(function(item) {
             com.sppad.booky.Bookmarks.addBookmarkToFolder(item.uri, self.launcher.id, item.title);
         });
     };
     
+    /**
+     * Get the items currently selected in the view.
+     * 
+     * @return An array containing the currently selected items.
+     */
     this.getSelectedItems = function() {
         let items = [];
 
@@ -91,6 +119,10 @@ com.sppad.booky.HistoryView = new function() {
         return items;
     };
     
+    /**
+     * Removes all history items for the launcher. Creates a confirmation dialog
+     * (in page) before clearing.
+     */
     this.removeAll = function() {
         if(!self.window.confirm(self.strings.getString("booky.historyClearConfirmation")))
             return;

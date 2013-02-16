@@ -31,6 +31,10 @@ com.sppad.booky.BookmarksView = new function() {
         self.container.removeEventListener('dblclick', self.open);
     };
     
+    /**
+     * Loads the items into the view by performing a bookmarks query for the
+     * launcher's folder id.
+     */
     this.loadItems = function() {
       
         let options = self._historyService.getNewQueryOptions();
@@ -42,22 +46,39 @@ com.sppad.booky.BookmarksView = new function() {
         tree.load([ query ], options);
     };
     
+    /**
+     * Handle loss of focus by clearing the selected items. Occurs through
+     * escape key or by clicking off the view.
+     */
     this.blur = function() {
         self.container.view.selection.clearSelection();
     };
     
+    /**
+     * Opens all selected items in new tabs.
+     */
     this.open = function() {
         self.getSelectedItems().forEach(function(item) {
             gBrowser.selectedTab = gBrowser.loadOneTab(item.uri);
         });
     };
     
+    /**
+     * Removes all selected items from the bookmarks. The view automatically
+     * updates to remove the items. Note that the <tree> node handles the delete
+     * key, so this is just for the context menu.
+     */
     this.remove = function() {
         self.getSelectedItems().forEach(function(item) { 
             self._bs.removeItem(item.itemId);
         });
     };
     
+    /**
+     * Get the items currently selected in the view.
+     * 
+     * @return An array containing the currently selected items.
+     */
     this.getSelectedItems = function() {
         let items = [];
 

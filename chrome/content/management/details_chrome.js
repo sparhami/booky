@@ -34,7 +34,7 @@ com.sppad.booky.Details = new function() {
     
     this.tabselect = function(aEvent) {
         if(aEvent.target == self.tab)
-            self.setupPage();
+            document.getElementById('main-window').setAttribute('disablechrome', "true");
     };
     
     this.setupPage = function() {
