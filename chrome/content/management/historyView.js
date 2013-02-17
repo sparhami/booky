@@ -22,7 +22,7 @@ com.sppad.booky.HistoryView = new function() {
         self.container = self.document.getElementById('history_view');
         self.container.addEventListener('blur', self.blur, false);
         self.container.addEventListener('keyup', self.keyup, false);
-        self.container.addEventListener('dblclick', self.onOpen, false);
+        self.container.addEventListener('dblclick', self.open, false);
         
         self.document.getElementById('history_clear').addEventListener('command', self.removeAll, false);
     };
@@ -30,7 +30,7 @@ com.sppad.booky.HistoryView = new function() {
     this.cleanup = function() {
         self.container.removeEventListener('blur', self.blur);
         self.container.removeEventListener('keyup', self.keyup);
-        self.container.removeEventListener('dblclick', self.onOpen);
+        self.container.removeEventListener('dblclick', self.open);
         
         self.document.getElementById('history_clear').removeEventListener('command', self.removeAll);
     };
