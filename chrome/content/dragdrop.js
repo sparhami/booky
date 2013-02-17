@@ -63,7 +63,6 @@ com.sppad.booky.DragDrop = new function() {
      * @return An array of strings representing the URIs to drop.
      */
     self._getUris = function(event) {
-        
         let dt = event.dataTransfer;
         let mozUrl = dt.getData('text/x-moz-url');
         let uriList = dt.getData('text/uri-list');
@@ -72,21 +71,13 @@ com.sppad.booky.DragDrop = new function() {
         let uris = [];
         
         if(uriList) {
-            com.sppad.booky.Utils.dump("uriList " + uriList + "\n");
-            let parts = uriList.split('\n');
-            for(let i=0; i<parts.length; i++)
-                if(parts[i].indexOf('#') != 0)
-                    uris.push(parts[i]);
+            uris = uriList.split('\n').filter(function(uri) {
+                return uri.indexOf('#') != 0;
+            });
         } else if(internal) {
-            com.sppad.booky.Utils.dump("internal " + internal + "\n");
-            let parts = internal.split('\n');
-            for(let i=0; i<parts.length; i++)
-                uris.push(parts[i]);
+            uris = internal.split('\n');
         } else if(plain) {
-            com.sppad.booky.Utils.dump("plain " + plain + "\n");
-            let parts = plain.split('\n');
-            for(let i=0; i<parts.length; i++)
-                uris.push(parts[i]);
+            uris = plain.split('\n');
         }
         
         return uris;

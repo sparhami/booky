@@ -57,8 +57,8 @@ com.sppad.collections.Map = function() {
     };
     
     this.toString = function() {
-        
         let result = "[ ";
+        
         for(let i=0; i<self.keys.length; i++) {
             result += self.keys[i] + " -> " + self.values[i] + ", \n";
         }

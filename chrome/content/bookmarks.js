@@ -315,7 +315,6 @@ com.sppad.booky.Bookmarks = new function() {
                     nodes.push(folder.getChild(i));
                 
                 for (let i = 0; i < nodes.length; i ++) {
-                    
                     let node = nodes[i];
                     let obj = { 'itemId' : node.itemId,
                                 'uri' : node.uri,

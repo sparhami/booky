@@ -23,9 +23,8 @@ com.sppad.booky.Groups = new function() {
      * @return The id for the launcher for aTab
      */
     this.getPrimaryIdFromTab = function(aTab) {
-        let currentUri = gBrowser.getBrowserForTab(aTab).currentURI;
-
         try {
+            let currentUri = gBrowser.getBrowserForTab(aTab).currentURI;
             return this.getPrimaryIdFromUri(currentUri);
         } catch (err) {
             return aTab.label;
@@ -111,10 +110,8 @@ com.sppad.booky.Groups = new function() {
          */
         moveToCorrectFolder: function(aItemId, aUriString) {
             let primaryId = self.getPrimaryIdFromUriString(aUriString);
-            let folderId = self.groupIdMap.get(primaryId);
-            
-            if(!folderId)
-                folderId = com.sppad.booky.Bookmarks.createFolder("");
+            let folderId = self.groupIdMap.get(primaryId)
+                        || com.sppad.booky.Bookmarks.createFolder("");
             
             com.sppad.booky.Bookmarks.moveAfter(null, aItemId, folderId);
         },
@@ -178,34 +175,23 @@ com.sppad.booky.Groups = new function() {
             // same host from the old launcher to the new one.
             let movingLaunchers = (prevFolderId != undefined) && (parentId != prevFolderId);
             if(movingLaunchers) {
-                let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
-                let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(prevFolderId);
-                
-                // Old launcher should no longer track the tabs
-                for(let i=0; i<sameDomainTabs.length; i++)
-                    previousLauncher.removeTab(sameDomainTabs[i]);
-                
                 // Grab all the bookmarks with the same domain and move them
-                for(let i=0; i<otherbookmarks.length; i++) {
-                    let bookmark = otherbookmarks[i];
-                    let domain = self.getPrimaryIdFromUriString(bookmark.uri);
-                    
-                    // Need to update the bookmarkInfo object for this bookmark
-                    // since the parent folder has changed
-                    if(domain == primaryId) {
-                        self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
-                        com.sppad.booky.Bookmarks.moveAfter(null, bookmark.itemId, parentId);
-                    }
-               }
+                let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(prevFolderId);
+                otherbookmarks.filter(function(bookmark) {
+                    return primaryId == self.getPrimaryIdFromUriString(bookmark.uri);
+                }).forEach(function(bookmark) {
+                    self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
+                    com.sppad.booky.Bookmarks.moveAfter(null, bookmark.itemId, parentId);
+                });
                 
+                let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
+                previousLauncher.removeTabArray(sameDomainTabs);
                 previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(prevFolderId));
             }
             
-            // Add the tabs to the launcher if it is either new or the domain is
-            // changing to a new launcher
+            // Tabs not in the launcher yet, so add them
             if(!prevFolderId || movingLaunchers)
-                for(let i=0; i<sameDomainTabs.length; i++)
-                    launcher.addTab(sameDomainTabs[i]);
+                launcher.addTabArray(sameDomainTabs);
             
             com.sppad.booky.Resizer.onResize();
         },
