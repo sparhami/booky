@@ -1,3 +1,73 @@
+@import url("chrome://booky-platform/skin/management/details.css");
+
+#details {
+	-moz-box-flex: 1;
+}
+
+#content {
+	-moz-box-flex: 9;
+}
+
+#main {
+	-moz-box-flex: 10;
+}
+
+#searchBox {
+	-moz-box-flex: 1;
+}
+
+#middle {
+	-moz-box-flex: 20;
+}
+
+#tabs,
+#history,
+#bookmarks {
+	-moz-box-flex: 8;
+}
+
+#top {
+	margin-bottom: 0.6em;
+}
+
+#titleBox {
+	width: 10em;
+}
+
+.dataView {
+	width: 0;
+}
+
+#titleBox,
+.dataView:not(:last-child) {
+	margin-right: .8em !important;
+}
+
+#titleBox,
+#searchBox {
+	border-width: 2px !important;
+	padding: 3px 6px 3px 4px !important;
+}
+
+.textList {
+	-moz-box-flex: 1;
+
+	margin: .4em !important;
+}
+
+treechildren::-moz-tree-row {
+	font-size: 120%;
+}
+
+listitem {
+	padding: .1em 0em .1em .4em;
+}
+
+treechildren::-moz-tree-image {
+	margin-right: .4em;
+	margin-left: -.4em;
+}
+
 .dataView {
 	background-color: rgba(255, 255, 255, 0.5);
 	border-width: 1px !important;
@@ -31,7 +101,22 @@
 	background-color: transparent;
 }
 
+.detail_header {
+	font-size: 150%;
+	padding: .4em .6em 0em .6em;
+}
+
+.detail_header label {
+	margin-top: -2px;
+}
+
+.detail_header_text {
+	margin-left: .4em;
+}
+
 .detail_separator {
+	margin: .4em .6em 0em .6em;
+
 	border-width: 1px 0px 0px 0px;
 	border-style: solid;
 	border-color: rgb(160, 160, 160);
@@ -40,6 +125,11 @@
 .detail_image,
 .detail_button,
 .detail_button image {
+	min-width: 24px;
+	min-height: 24px;
+	max-width: 24px;
+	max-height: 24px;
+
 	background-color: transparent;
 }
 
@@ -47,13 +137,27 @@
 	background: radial-gradient(circle at center, rgba(155, 191, 255, 0.9) 0%, rgba(203, 235, 255, 0.4) 60%, rgba(255, 255, 255, .1) 100%);
 }
 
+
+
+#sidepanel {
+	margin-right: 1.6em;
+}
+
 #sidepanel button {
+	margin-bottom: .6em !important;
+
+	min-width: 48px;
+	min-height: 48px;
+	max-width: 48px;
+	max-height: 48px;
+
 	border-radius: 2px !important;
 	border-style: solid !important;
 	border-color: rgb(160, 160, 160) !important;
 	border-width: 1px !important;
 		
 	background-color: rgba(255, 255, 255, 0.5);
+	background-image: none;
 }
 
 #sidepanel button[disabled="true"] {
@@ -68,3 +172,34 @@
 #sidepanel button:not([disabled="true"]):active {
 	background-color: rgba(120, 120, 120, 0.4);
 }
+
+/** Button icons are implemented in Linux, but not Windows, so use custom icons for 
+ * all platforms.
+ */
+#sidepanel button .button-icon {
+	min-width: 48px;
+	min-height: 48px;
+	max-width: 48px;
+	max-height: 48px;
+}
+ 
+#sidepanel button[icon="refresh"] .button-icon {
+	list-style-image: url("chrome://booky/skin/images/reload.svg") !important;
+}
+
+#sidepanel button[icon="refresh"][disabled="true"] .button-icon {
+	list-style-image: url("chrome://booky/skin/images/reload-disabled.svg") !important;
+}
+
+#sidepanel button[icon="close"] .button-icon {
+	list-style-image: url("chrome://booky/skin/images/close.svg") !important;
+}
+
+#sidepanel button[icon="close"][disabled="true"] .button-icon {
+	list-style-image: url("chrome://booky/skin/images/close-disabled.svg") !important;
+}
+
+#sidepanel button[icon="remove"] .button-icon {
+	list-style-image: url("chrome://booky/skin/images/remove.svg") !important;
+}
+

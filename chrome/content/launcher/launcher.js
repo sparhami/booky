@@ -297,6 +297,7 @@ com.sppad.booky.Launcher = function(aID) {
         }
         
         self._selectedIndex = Math.min(self._selectedIndex, this.tabs.length - 1);
+        self._selectedIndex = Math.max(self._selectedIndex, 0);
         
         this.updateAttributes();
         this.evaluateTabIndexIndicator();
