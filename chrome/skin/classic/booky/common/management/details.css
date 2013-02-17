@@ -63,6 +63,11 @@ listitem {
 	padding: .1em 0em .1em .4em;
 }
 
+listitem image {
+	width: 16px;
+	height: 16px;
+}
+
 treechildren::-moz-tree-image {
 	margin-right: .4em;
 	margin-left: -.4em;
