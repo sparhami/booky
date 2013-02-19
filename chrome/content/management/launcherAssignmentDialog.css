@@ -1,0 +1,26 @@
+#launcherPickerBackground {
+	background-color: rgba(0, 0, 0, .7);
+}
+
+#launcherPicker {
+	border-color: rgb(120, 120, 120);
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 4px;
+	
+	height: 3em;
+	background-color: rgba(255, 255, 255, 1);
+}
+
+#launcherPicker image {
+	width: 16px;
+	height: 16px;
+}
+
+#launcherPicker button {
+	background-color: transparent;
+}
+
+#launcherPicker button:hover {
+	background-color: rgba(0, 0, 0, .1);
+}

@@ -12,55 +12,59 @@ com.sppad.collections.Map = function() {
     
     var self = this;
     
-    self.keys = new Array();
-    self.values = new Array();
+    self._keys = new Array();
+    self._values = new Array();
     
     this.containsKey = function(key) {
-        return com.sppad.booky.Utils.getIndexInArray(self.keys, key) >= 0;
+        return com.sppad.booky.Utils.getIndexInArray(self._keys, key) >= 0;
     };
     
     this.get = function(key, defaultValue) {
-        let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
+        let index = com.sppad.booky.Utils.getIndexInArray(self._keys, key);
         
-        return index >= 0 ? self.values[index] : defaultValue;
+        return index >= 0 ? self._values[index] : defaultValue;
     };
     
     this.put = function(key, value) {
-        let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
+        let index = com.sppad.booky.Utils.getIndexInArray(self._keys, key);
         
         if(index >= 0) {
-            let old = self.values[index];
-            self.values[index] = value;
+            let old = self._values[index];
+            self._values[index] = value;
             
             return old;
         } else {
-            self.keys.push(key);
-            self.values.push(value);
+            self._keys.push(key);
+            self._values.push(value);
             
             return null;
         }
     };
     
     this.remove = function(key) {
-        let index = com.sppad.booky.Utils.getIndexInArray(self.keys, key);
+        let index = com.sppad.booky.Utils.getIndexInArray(self._keys, key);
 
         if(index >= 0) {
-            self.keys.splice(index, 1);
-            return self.values.splice(index, 1)[0];
+            self._keys.splice(index, 1);
+            return self._values.splice(index, 1)[0];
         } else {
             return null;
         }
     };
     
+    this.values = function() {
+        return [].concat(self._values);
+    };
+    
     this.size = function() {
-        return this.keys.length;
+        return this._keys.length;
     };
     
     this.toString = function() {
         let result = "[ ";
         
-        for(let i=0; i<self.keys.length; i++) {
-            result += self.keys[i] + " -> " + self.values[i] + ", \n";
+        for(let i=0; i<self._keys.length; i++) {
+            result += self._keys[i] + " -> " + self._values[i] + ", \n";
         }
         
         result += "]";

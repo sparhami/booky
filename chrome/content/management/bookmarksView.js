@@ -36,14 +36,15 @@ com.sppad.booky.BookmarksView = new function() {
      * launcher's folder id.
      */
     this.loadItems = function() {
-      
-        let options = self._historyService.getNewQueryOptions();
-        let query = self._historyService.getNewQuery();
-        query.setFolders([ self.launcher.id ], 1);
-        
-        let tree = self.document.getElementById('bookmarks_view');
-
-        tree.load([ query ], options);
+        window.setTimeout(function() {
+            let options = self._historyService.getNewQueryOptions();
+            let query = self._historyService.getNewQuery();
+            query.setFolders([ self.launcher.id ], 1);
+            
+            let tree = self.document.getElementById('bookmarks_view');
+    
+            tree.load([ query ], options);
+        }, 1);
     };
     
     /**
@@ -72,6 +73,17 @@ com.sppad.booky.BookmarksView = new function() {
         self.getSelectedItems().forEach(function(item) { 
             self._bs.removeItem(item.itemId);
         });
+    };
+    
+    this.assign = function() {
+        
+        let items = self.getSelectedItems();
+        com.sppad.booky.LauncherAssignmentDialog.open(self.window, function(aLauncher) {
+            items.forEach(function(item) {
+                com.sppad.booky.Bookmarks.moveBefore(null, item.itemId, aLauncher.id);
+            });
+        });
+        self.container.blur();
     };
     
     /**
@@ -118,5 +130,8 @@ com.sppad.booky.BookmarksView = new function() {
         
         let openItem = self.document.getElementById('bookmarks_context_open');
         openItem.setAttribute('disabled', self.container.view.selection.count == 0);
+        
+        let assignItem = self.document.getElementById('bookmarks_context_assign');
+        assignItem.setAttribute('disabled', self.container.view.selection.count == 0);
     };
 };

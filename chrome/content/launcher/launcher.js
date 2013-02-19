@@ -166,7 +166,12 @@ com.sppad.booky.Launcher = function(aID) {
      *            The URI for the image to set as the launcher icon
      */
     this.setImage = function(anImage) {
-        this.setAttribute('image', anImage || 'chrome://mozapps/skin/places/defaultFavicon.png');
+        this.image = anImage || 'chrome://mozapps/skin/places/defaultFavicon.png';
+        this.setAttribute('image', this.image);
+    };
+    
+    this.getImage = function() {
+        return this.image;
     };
     
     this.setTitle = function(aTitle) {
@@ -178,6 +183,7 @@ com.sppad.booky.Launcher = function(aID) {
             label = (domains.length == 1) ? domains[0] : "(no title)";
         }
         
+        this.label = label;
         this.setAttribute('label', label);
     };
     
@@ -312,6 +318,7 @@ com.sppad.booky.Launcher = function(aID) {
         this.bookmarksUpdateTime = Date.now();
         this.bookmarks = aBookmarkArray;
         
+        this.setTitle(this.title);
         this.setImage(aBookmarkArray.length > 0 ? aBookmarkArray[0].icon : null);
         this.setAttribute('empty', this.bookmarks.length == 0);
         
@@ -665,6 +672,10 @@ com.sppad.booky.Launcher.createLauncher = function(aID) {
 
 com.sppad.booky.Launcher.hasLauncher = function(aID) {
     return this.launcherMap.get(aID) != null;
+};
+
+com.sppad.booky.Launcher.getLaunchers = function() {
+    return this.launcherMap.values();
 };
 
 com.sppad.booky.Launcher.showIndexIndicatorEvent;

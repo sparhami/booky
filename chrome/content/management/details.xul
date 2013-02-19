@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?xml-stylesheet href="chrome://global/skin/"?>
-<?xml-stylesheet href="details.css"?>
-
 <?xml-stylesheet href="chrome://browser/content/places/places.css" ?>
 <?xul-overlay href="chrome://browser/content/places/placesOverlay.xul" ?>
+
+<?xml-stylesheet href="chrome://booky/content/bindings.css"?>
+<?xml-stylesheet href="details.css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://booky/locale/booky.dtd">
 
@@ -30,6 +31,8 @@
 				label="&com_sppad_booky_open.label;" />
 			<menuitem id="bookmarks_context_remove" oncommand="js.remove();"
 				label="&com_sppad_booky_remove.label;" />
+			<menuitem id="bookmarks_context_assign" oncommand="js.assign();"
+				label="&com_sppad_booky_assign.label;" />
 		</menupopup>
 
 		<menupopup id="history_context" onpopupshowing="js.popupShowing();">
@@ -42,72 +45,83 @@
 		</menupopup>
 	</popupset>
 
-	<hbox id="details">
-		<vbox id="sidepanel">
-			<button id="reloadButton" icon="refresh" class="plain"
-				tooltiptext="&com_sppad_booky_reload.label;" />
-			<button id="closeButton" icon="close" class="plain"
-				tooltiptext="&com_sppad_booky_close.label;" />
-			<button id="removeButton" icon="remove" class="plain"
-				tooltiptext="&com_sppad_booky_remove.label;" />
-		</vbox>
-		<hbox id="content">
-			<vbox id="main">
-
-				<hbox id="top">
-					<textbox id="titleBox" class="plain" placeholder="&com_sppad_booky_noTitle.label;" />
-					<textbox id="searchBox" type="search" class="plain"
-						placeholder="&com_sppad_booky_searchBox.label;" />
-				</hbox>
-
-				<hbox id="middle">
-					<vbox id="tabs" class="dataView">
-						<hbox id="tabs_header" class="detail_header">
-							<label class="detail_header_text" flex="1"
-								value="&com_sppad_booky_tabsView.label;" />
-						</hbox>
-						<hbox class="detail_separator" />
-
-						<listbox id="tabs_content" class="plain textList" context="tabs_context"
-							seltype="multiple" />
-					</vbox>
-					<vbox id="bookmarks" class="dataView">
-						<hbox id="bookmarks_header" class="detail_header">
-							<image class="detail_image" src="chrome://booky/skin/images/Rocket000_emblem-star.svg" />
-							<label class="detail_header_text" flex="1"
-								value="&com_sppad_booky_bookmarksView.label;" />
-						</hbox>
-						<hbox class="detail_separator" />
-
-						<tree type="places" id="bookmarks_view" flex="1" class="plain textList"
-							context="bookmarks_context">
-							<treecols style="height: 0px; overflow: hidden">
-								<treecol id="title" flex="1" primary="true" />
-							</treecols>
-							<treechildren flex="1" />
-						</tree>
-					</vbox>
-					<vbox id="history" class="dataView">
-						<hbox id="history_header" class="detail_header">
-							<image class="detail_image" src="chrome://booky/skin/images/Calendar_file.svg" />
-							<label class="detail_header_text" flex="1"
-								value="&com_sppad_booky_historyView.label;" />
-							<button id="history_clear" class="detail_button plain"
-								image="chrome://booky/skin/images/edit-clear.svg" />
-						</hbox>
-						<hbox class="detail_separator" />
-
-						<tree type="places" id="history_view" flex="1" class="plain textList"
-							context="history_context">
-							<treecols style="height: 0px; overflow: hidden">
-								<treecol id="title" flex="1" primary="true" />
-							</treecols>
-							<treechildren flex="1" />
-						</tree>
-					</vbox>
-				</hbox>
-
+	<stack flex="1">
+		<hbox id="details">
+			<vbox id="sidepanel">
+				<button id="reloadButton" icon="refresh" class="plain"
+					tooltiptext="&com_sppad_booky_reload.label;" />
+				<button id="closeButton" icon="close" class="plain"
+					tooltiptext="&com_sppad_booky_close.label;" />
+				<button id="removeButton" icon="remove" class="plain"
+					tooltiptext="&com_sppad_booky_remove.label;" />
 			</vbox>
+			<hbox id="content">
+				<vbox id="main">
+
+					<hbox id="top">
+						<textbox id="titleBox" class="plain" placeholder="&com_sppad_booky_noTitle.label;" />
+						<textbox id="searchBox" type="search" class="plain"
+							placeholder="&com_sppad_booky_searchBox.label;" />
+					</hbox>
+
+					<hbox id="middle">
+						<vbox id="tabs" class="dataView">
+							<hbox id="tabs_header" class="detail_header">
+								<label class="detail_header_text" flex="1"
+									value="&com_sppad_booky_tabsView.label;" />
+							</hbox>
+							<hbox class="detail_separator" />
+
+							<listbox id="tabs_content" class="plain textList" context="tabs_context"
+								seltype="multiple" />
+						</vbox>
+						<vbox id="bookmarks" class="dataView">
+							<hbox id="bookmarks_header" class="detail_header">
+								<image class="detail_image"
+									src="chrome://booky/skin/images/Rocket000_emblem-star.svg" />
+								<label class="detail_header_text" flex="1"
+									value="&com_sppad_booky_bookmarksView.label;" />
+							</hbox>
+							<hbox class="detail_separator" />
+
+							<tree type="places" id="bookmarks_view" flex="1" class="plain textList"
+								context="bookmarks_context">
+								<treecols style="height: 0px; overflow: hidden">
+									<treecol id="title" flex="1" primary="true" />
+								</treecols>
+								<treechildren flex="1" />
+							</tree>
+						</vbox>
+						<vbox id="history" class="dataView">
+							<hbox id="history_header" class="detail_header">
+								<image class="detail_image" src="chrome://booky/skin/images/Calendar_file.svg" />
+								<label class="detail_header_text" flex="1"
+									value="&com_sppad_booky_historyView.label;" />
+								<button id="history_clear" class="detail_button plain"
+									image="chrome://booky/skin/images/edit-clear.svg" />
+							</hbox>
+							<hbox class="detail_separator" />
+
+							<tree type="places" id="history_view" flex="1" class="plain textList"
+								context="history_context">
+								<treecols style="height: 0px; overflow: hidden">
+									<treecol id="title" flex="1" primary="true" />
+								</treecols>
+								<treechildren flex="1" />
+							</tree>
+						</vbox>
+					</hbox>
+				</vbox>
+			</hbox>
 		</hbox>
-	</hbox>
+		<vbox id="launcherPickerBackground" hidden="true" flex="0">
+			<box flex="1" />
+			<hbox>
+				<box flex="1" />
+				<arrowscrollbox id="launcherPicker" orient="horizontal" />
+				<box flex="1" />
+			</hbox>
+			<box flex="1" />
+		</vbox>
+	</stack>
 </window>

@@ -40,17 +40,19 @@ com.sppad.booky.HistoryView = new function() {
      * launcher's domains.
      */
     this.loadItems = function(searchTerms) {
-        let numberOfDays = -1;
-        let maxResults = null;
-       
-        let domains = self.launcher.getDomains();
-        if(domains.length == 0)
-            return;
-        
-        let tree = self.document.getElementById('history_view');
-        let res = com.sppad.booky.History.getQueries(domains, numberOfDays, maxResults, searchTerms);
-
-        tree.load(res.queries, res.options);
+        window.setTimeout(function() {
+            let numberOfDays = -1;
+            let maxResults = null;
+           
+            let domains = self.launcher.getDomains();
+            if(domains.length == 0)
+                return;
+            
+            let tree = self.document.getElementById('history_view');
+            let res = com.sppad.booky.History.getQueries(domains, numberOfDays, maxResults, searchTerms);
+    
+            tree.load(res.queries, res.options);
+        }, 1);
     };
     
     /**

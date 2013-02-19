@@ -45,24 +45,26 @@ com.sppad.booky.TabsView = new function() {
      * Loads the items into the view. Creates a list item for each tab.
      */
     this.loadItems = function() {
-        while(self.container.hasChildNodes())
-            self.container.removeChild(self.container.lastChild);
-        
-        let tabs = self.launcher.tabs;
-        for(let i=0; i<tabs.length; i++) {
-            let tab = tabs[i];
+        window.setTimeout(function() {
+            while(self.container.hasChildNodes())
+                self.container.removeChild(self.container.lastChild);
             
-            let item = self.document.createElement('listitem');
-            item.tab = tab;
-            item.setAttribute('class', 'listitem-iconic');
-            item.setAttribute('crop', 'right');
-            item.setAttribute('label', tab.label);
-            item.setAttribute('image', tab.getAttribute('image'));
-            
-            item.addEventListener('dblclick', self.action, true);
-            
-            self.container.appendChild(item);
-        }
+            let tabs = self.launcher.tabs;
+            for(let i=0; i<tabs.length; i++) {
+                let tab = tabs[i];
+                
+                let item = self.document.createElement('listitem');
+                item.tab = tab;
+                item.setAttribute('class', 'listitem-iconic');
+                item.setAttribute('crop', 'right');
+                item.setAttribute('label', tab.label);
+                item.setAttribute('image', tab.getAttribute('image'));
+                
+                item.addEventListener('dblclick', self.action, true);
+                
+                self.container.appendChild(item);
+            }
+        }, 1);
     };
     
     /**

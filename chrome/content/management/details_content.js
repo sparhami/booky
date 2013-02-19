@@ -1,4 +1,4 @@
-sendEvent = function(aType, aData) {
+var sendEvent = function(aType, aData) {
     let elem = document.getElementById('detailsContentWindow');
     elem.data = aData;
     

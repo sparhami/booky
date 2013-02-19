@@ -14,6 +14,7 @@
 	<script type="application/x-javascript" src="history.js" />
 	<script type="application/x-javascript" src="tabevents.js" />
 	<script type="application/x-javascript" src="launcher/launcher.js" />
+	<script type="application/x-javascript" src="management/launcherAssignmentDialog.js" />
 	<script type="application/x-javascript" src="management/details_chrome.js" />
 	<script type="application/x-javascript" src="management/tabsView.js" />
 	<script type="application/x-javascript" src="management/historyView.js" />
@@ -115,5 +116,24 @@
 			<label id="com_sppad_scrollProgress_label" />
 		</hbox>
 	</hbox>
+
+	<popupset>
+		<panel id="com_sppad_booky_launcherAssignmentDialog" class="plain"
+			hidden="true">
+			<hbox flex="1">
+				<vbox flex="1">
+					<hbox flex="1">
+						<listbox id="com_sppad_booky_launchersListBox" class="plain"
+							selType="single" flex="1" />
+					</hbox>
+					<hbox>
+						<hbox flex="1" />
+						<button id="com_sppad_booky_launcherAssignmentDialog_cancel" label="Cancel" />
+						<button id="com_sppad_booky_launcherAssignmentDialog_accept" label="Accept" />
+					</hbox>
+				</vbox>
+			</hbox>
+		</panel>
+	</popupset>
 
 </overlay>

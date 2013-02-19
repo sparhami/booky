@@ -21,6 +21,8 @@
 <!ENTITY com_sppad_booky_close.accesskey "C">
 <!ENTITY com_sppad_booky_remove.label "Delete">
 <!ENTITY com_sppad_booky_remove.accesskey "D">
+<!ENTITY com_sppad_booky_assign.label "Assign">
+<!ENTITY com_sppad_booky_assign.accesskey "A">
 <!ENTITY com_sppad_booky_manage.label "Manage">
 <!ENTITY com_sppad_booky_manage.accesskey "M">
 <!ENTITY com_sppad_booky_bookmark.label "Bookmark">
