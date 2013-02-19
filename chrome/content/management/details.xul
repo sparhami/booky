@@ -117,9 +117,9 @@
 		<vbox id="launcherPickerBackground" hidden="true" flex="0">
 			<box flex="1" />
 			<hbox>
-				<box flex="1" />
-				<arrowscrollbox id="launcherPicker" orient="horizontal" />
-				<box flex="1" />
+				<box flex="2147483647" />
+				<arrowscrollbox id="launcherPicker" orient="horizontal" flex="1"/>
+				<box flex="2147483647" />
 			</hbox>
 			<box flex="1" />
 		</vbox>
