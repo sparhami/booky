@@ -152,12 +152,6 @@ com.sppad.booky.Groups = new function() {
                     'primaryId' : primaryId,
             };
 
-            // Update how many bookmark URIs we are tracking that correspond to
-            // this site. Needed so that we can know when to remove the mapping
-            // between URI and group id.
-            let count = self.primaryIdCounts.get(primaryId, 0) + 1;
-            self.primaryIdCounts.put(primaryId, count);
-            
             self.groupIdMap.put(primaryId, parentId);
             self.bookmarkInfoMap.put(itemId, bookmarkInfo);
 
@@ -187,6 +181,12 @@ com.sppad.booky.Groups = new function() {
                 let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
                 previousLauncher.removeTabArray(sameDomainTabs);
                 previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(prevFolderId));
+            } else {
+                // Update how many bookmark URIs we are tracking that correspond to
+                // this site. Needed so that we can know when to remove the mapping
+                // between URI and group id.
+                let count = self.primaryIdCounts.get(primaryId, 0) + 1;
+                self.primaryIdCounts.put(primaryId, count);
             }
             
             // Tabs not in the launcher yet, so add them
