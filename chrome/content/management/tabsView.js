@@ -5,21 +5,20 @@ if (typeof com == "undefined") {
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
-com.sppad.booky.TabsView = new function() {
+com.sppad.booky.TabsView = function(aWindow, aLauncher) {
     
-    var self = this;
+    let self = this;
     
     /** The events to listen to the launcher for */
     self.tabEvents = [ com.sppad.booky.Launcher.TABS_ADDED,
                        com.sppad.booky.Launcher.TABS_MOVED,
                        com.sppad.booky.Launcher.TABS_REMOVED ];
     
+    self.window = aWindow;
+    self.document = aWindow.document;
+    self.launcher = aLauncher;
     
-    this.setup = function(aWindow, aLauncher) {
-        self.window = aWindow;
-        self.document = aWindow.document;
-        self.launcher = aLauncher;
-        
+    this.setup = function() {
         self.container = self.document.getElementById('tabs_content');
         self.container.addEventListener('blur', self.blur, false);
         self.container.addEventListener('keyup', self.keyup, false);
@@ -28,6 +27,7 @@ com.sppad.booky.TabsView = new function() {
         self.context.js = self;
         
         self.launcher.addListener(self.tabEvent, self.tabEvents);
+        self.loadItems();
     };
     
     this.cleanup = function() {
@@ -134,4 +134,7 @@ com.sppad.booky.TabsView = new function() {
         let openItem = self.document.getElementById('tabs_context_open');
         openItem.setAttribute('disabled', self.container.selectedCount != 1);
     };
+    
+    
+    this.setup();
 };

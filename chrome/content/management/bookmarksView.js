@@ -5,16 +5,19 @@ if (typeof com == "undefined") {
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
-com.sppad.booky.BookmarksView = new function() {
-    
-    var self = this;
+com.sppad.booky.BookmarksView = function(aWindow, aLauncher) {
+   
+    let self = this;
+
     self._bs = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
     self._historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"].getService(Components.interfaces.nsINavHistoryService);
  
-    this.setup = function(aWindow, aLauncher) {
-        self.window = aWindow;
-        self.document = aWindow.document;
-        self.launcher = aLauncher;
+    self.window = aWindow;
+    self.document = aWindow.document;
+    self.launcher = aLauncher;
+    
+    this.setup = function() {
+        self.strings = self.document.getElementById("com_sppad_booky_addonstrings");
         
         self.context = self.document.getElementById('bookmarks_context');
         self.context.js = self;
@@ -23,6 +26,8 @@ com.sppad.booky.BookmarksView = new function() {
         self.container.addEventListener('blur', self.blur, false);
         self.container.addEventListener('keyup', self.keyup, false);
         self.container.addEventListener('dblclick', self.open, false);
+    
+        self.loadItems();
     };
     
     this.cleanup = function() {
@@ -78,10 +83,15 @@ com.sppad.booky.BookmarksView = new function() {
     this.assign = function() {
         
         let items = self.getSelectedItems();
-        com.sppad.booky.LauncherAssignmentDialog.open(self.window, function(aLauncher) {
+        new com.sppad.booky.LauncherAssignmentDialog(self.window, self.launcher, function(aLauncher) {
             items.forEach(function(item) {
                 com.sppad.booky.Bookmarks.moveBefore(null, item.itemId, aLauncher.id);
             });
+            
+            if(self.container.view.rowCount == 0 && self.window.confirm(self.strings.getString('booky.removeEmptyLauncher'))) {
+                com.sppad.booky.Bookmarks.removeBookmark(self.launcher.id);
+                self.window.close();
+            }
         });
         self.container.blur();
     };
@@ -134,4 +144,6 @@ com.sppad.booky.BookmarksView = new function() {
         let assignItem = self.document.getElementById('bookmarks_context_assign');
         assignItem.setAttribute('disabled', self.container.view.selection.count == 0);
     };
+    
+    this.setup();
 };

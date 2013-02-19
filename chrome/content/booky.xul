@@ -116,24 +116,4 @@
 			<label id="com_sppad_scrollProgress_label" />
 		</hbox>
 	</hbox>
-
-	<popupset>
-		<panel id="com_sppad_booky_launcherAssignmentDialog" class="plain"
-			hidden="true">
-			<hbox flex="1">
-				<vbox flex="1">
-					<hbox flex="1">
-						<listbox id="com_sppad_booky_launchersListBox" class="plain"
-							selType="single" flex="1" />
-					</hbox>
-					<hbox>
-						<hbox flex="1" />
-						<button id="com_sppad_booky_launcherAssignmentDialog_cancel" label="Cancel" />
-						<button id="com_sppad_booky_launcherAssignmentDialog_accept" label="Accept" />
-					</hbox>
-				</vbox>
-			</hbox>
-		</panel>
-	</popupset>
-
 </overlay>

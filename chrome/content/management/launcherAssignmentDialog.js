@@ -5,14 +5,15 @@ if (typeof com == "undefined") {
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
-com.sppad.booky.LauncherAssignmentDialog = new function() {
-    var self = this;
+com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallback) {
+   
+    let self = this;
 
-    this.open = function(aWindow, aCallback) {
+    self.window = aWindow;
+    self.callback = aCallback;
+    self.launcher = aLauncher;
 
-        self.window = aWindow;
-        self.callback = aCallback;
-
+    this.setup = function() {
         let background = aWindow.document.getElementById('launcherPickerBackground');
         let picker = aWindow.document.getElementById('launcherPicker');
         let launchers = com.sppad.booky.Launcher.getLaunchers();
@@ -22,22 +23,25 @@ com.sppad.booky.LauncherAssignmentDialog = new function() {
         
         self.window.addEventListener('keydown', self.keyup, false);
         
-         while(picker.firstChild)
-             picker.removeChild(picker.firstChild);
+        while(picker.firstChild)
+            picker.removeChild(picker.firstChild);
                 
-         for(let i=0; i<launchers.length; i++) {
-             let launcher = launchers[i];
+        for(let i=0; i<launchers.length; i++) {
+            let launcher = launchers[i];
                         
-             let item = document.createElement('button');
-             item.launcher = launcher;
-             item.setAttribute('class', 'plain');
-             item.setAttribute('type', 'radio');
-             item.setAttribute('tooltiptext', launcher.label);
-             item.setAttribute('image', launcher.image);
-             item.addEventListener('command', function() { self.pick(launcher); } );
+            if(launcher === self.launcher)
+                continue;
+            
+            let item = document.createElement('button');
+            item.launcher = launcher;
+            item.setAttribute('class', 'plain');
+            item.setAttribute('type', 'radio');
+            item.setAttribute('tooltiptext', launcher.label);
+            item.setAttribute('image', launcher.image);
+            item.addEventListener('command', function() { self.pick(launcher); } );
                         
-             picker.appendChild(item);
-         }
+            picker.appendChild(item);
+        }
     };
 
     this.close = function() {
@@ -67,4 +71,6 @@ com.sppad.booky.LauncherAssignmentDialog = new function() {
         aEvent.preventDefault();
         aEvent.stopPropagation();
     };
+    
+    this.setup();
 }

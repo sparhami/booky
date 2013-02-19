@@ -7,7 +7,7 @@ com.sppad.booky = com.sppad.booky || {};
 
 com.sppad.booky.Details = new function() {
     
-    var self = this;
+    let self = this;
     self.tab = null;
     
     this.showDetailsPage = function(aLauncher) {
@@ -17,10 +17,12 @@ com.sppad.booky.Details = new function() {
     this.openDetailsTab = function(aLauncherId) {
         let uri = "chrome://booky/content/management/details.xul?launcherId=" + aLauncherId;
         
-        if(self.isTabOpen(self.tab))
-            gBrowser.removeTab(self.tab);
-           
+        let prevTab = self.tab;
         self.tab = gBrowser.loadOneTab(uri, { 'inBackground' : false } );
+        
+        if(self.isTabOpen(prevTab))
+            gBrowser.removeTab(prevTab);
+           
     };
     
     this.isTabOpen = function(aTab) {
@@ -32,31 +34,39 @@ com.sppad.booky.Details = new function() {
         return false;
     }
     
-    this.tabselect = function(aEvent) {
-        if(aEvent.target == self.tab)
-            document.getElementById('main-window').setAttribute('disablechrome', "true");
-    };
-    
-    this.setupPage = function() {
-        // Hide chrome (e.g. nav bar)
-        document.getElementById('main-window').setAttribute('disablechrome', "true");
-        
-        com.sppad.booky.TabsView.loadItems();
-        com.sppad.booky.HistoryView.loadItems();
-        com.sppad.booky.BookmarksView.loadItems();
-        
-        self.updateTabCount();
-    };
-    
     this.pageLoaded = function(aEvent) {
         let contentWindow = aEvent.target.data.window;
         let contentDocument = contentWindow.document;
         if(!contentDocument.location.href.startsWith('chrome://booky/content/management/details.xul'))
             return;
         
-        self.strings = contentDocument.getElementById("com_sppad_booky_addonstrings");
-        self.contentWindow = contentWindow;
-        self.params = self.getQueryParams(contentDocument.location);
+        new com.sppad.booky.DetailsPage(contentWindow);
+    };
+    
+    this.tabselect = function(aEvent) {
+        if(aEvent.target == self.tab)
+            document.getElementById('main-window').setAttribute('disablechrome', "true");
+    };
+    
+    this.setup = function() {
+        document.addEventListener("com_sppad_booky_details_page_load", self.pageLoaded, false, true);
+        document.addEventListener("com_sppad_booky_details_page_beforeunload", self.pageUnloaded, false, true);
+        gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
+    };
+    
+};
+
+com.sppad.booky.DetailsPage = function(aContentWindow) {
+    
+    let self = this;
+    self.contentWindow = aContentWindow;
+    self.contentDocument = self.contentWindow.document;
+    
+    this.setup = function() {
+        self.contentWindow.addEventListener('unload', self.cleanup.bind(self), false);
+        
+        self.strings = self.contentDocument.getElementById("com_sppad_booky_addonstrings");
+        self.params = self.getQueryParams(self.contentDocument.location);
         
         self.launcherId = self.params['launcherId'];
         self.launcher = com.sppad.booky.Launcher.getLauncher(self.launcherId);
@@ -65,38 +75,29 @@ com.sppad.booky.Details = new function() {
             return;
         }
         
-        com.sppad.booky.TabsView.setup(contentWindow, self.launcher);
-        com.sppad.booky.HistoryView.setup(contentWindow, self.launcher);
-        com.sppad.booky.BookmarksView.setup(contentWindow, self.launcher);
-        
-        gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
-        gBrowser.tabContainer.addEventListener("TabClose", self.tabEvent, false);
-        gBrowser.tabContainer.addEventListener("TabOpen", self.tabEvent, false);
+        self.tabsView = new com.sppad.booky.TabsView(self.contentWindow, self.launcher);
+        self.historyView = new com.sppad.booky.HistoryView(self.contentWindow, self.launcher);
+        self.bookmarksView = new com.sppad.booky.BookmarksView(self.contentWindow, self.launcher);
 
         ['searchBox' , 'titleBox', 'reloadButton', 'closeButton', 'removeButton'].forEach(function(id) {
-            self[id] = contentDocument.getElementById(id);
+            self[id] = self.contentDocument.getElementById(id);
             self[id].addEventListener('command', self, false);
         });
         
         self.titleBox.addEventListener('input', self, false);
         self.titleBox.setAttribute('value', self.launcher.title);
         
-        self.setupPage();
+        document.getElementById('main-window').setAttribute('disablechrome', "true");
+        
+        self.updateTabCount();
     };
     
-    this.pageUnloaded = function(aEvent) {
-        let contentWindow = aEvent.target.data.window;
-        let contentDocument = contentWindow.document;
-        if(!contentDocument.location.href.startsWith('chrome://booky/content/management/details.xul'))
-            return;
+    this.cleanup = function() {
+        self.contentWindow.removeEventListener('unload', self.cleanup);
         
-        com.sppad.booky.TabsView.cleanup();
-        com.sppad.booky.HistoryView.cleanup();
-        com.sppad.booky.BookmarksView.cleanup();
-        
-        gBrowser.tabContainer.removeEventListener("TabSelect", self.tabselect);
-        gBrowser.tabContainer.removeEventListener("TabClose", self.tabEvent);
-        gBrowser.tabContainer.removeEventListener("TabOpen", self.tabEvent);
+        self.tabsView.cleanup();
+        self.historyView.cleanup();
+        self.bookmarksView.cleanup();
     };
     
     this.updateTabCount = function() {
@@ -105,18 +106,13 @@ com.sppad.booky.Details = new function() {
         });
     };
     
-    this.tabEvent = function(aEvent) {
-        self.updateTabCount();
-        com.sppad.booky.TabsView.loadItems();
-    };
-    
     this.handleEvent = function(aEvent) {
         let id = aEvent.target.id;
         let value = aEvent.target.value;
         
         switch(id) {
             case 'searchBox':
-                com.sppad.booky.HistoryView.loadItems(value);
+                self.historyView.loadItems(value);
                 break;
             case 'titleBox':
                 com.sppad.booky.Bookmarks.setTitle(self.launcher.id, value);
@@ -132,15 +128,14 @@ com.sppad.booky.Details = new function() {
                 break;
             case 'removeButton':
                 if(self.contentWindow.confirm(self.strings.getString("booky.removeConfirmation"))) {
-                    self.launcher.remove();
-                    gBrowser.removeTab(self.tab);
+                    com.sppad.booky.Bookmarks.removeBookmark(self.launcher.id);
+                    self.contentWindow.close();
                 }
        
                 break;
         }
     };
 
-    
     /**
      * Gets the query parameters for a location.
      * 
@@ -160,13 +155,8 @@ com.sppad.booky.Details = new function() {
         return params;
     };
     
-    this.setup = function() {
-        document.addEventListener("com_sppad_booky_details_page_load", self.pageLoaded, false, true);
-        document.addEventListener("com_sppad_booky_details_page_beforeunload", self.pageUnloaded, false, true);
-        gBrowser.tabContainer.addEventListener("TabSelect", self.tabselect, false);
-    };
-    
-};
+    this.setup();
+}
 
 window.addEventListener("load", function() {
     com.sppad.booky.Details.setup();

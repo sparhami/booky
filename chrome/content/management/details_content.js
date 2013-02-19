@@ -1,17 +1,9 @@
-var sendEvent = function(aType, aData) {
+window.addEventListener('load', function() {
     let elem = document.getElementById('detailsContentWindow');
-    elem.data = aData;
+    elem.data = { 'window': window };
     
     let evt = document.createEvent("Events");
-    evt.initEvent(aType, true, false);
+    evt.initEvent('com_sppad_booky_details_page_load', true, false);
     
     elem.dispatchEvent(evt);
-};
-
-window.addEventListener('load', function() {
-    sendEvent('com_sppad_booky_details_page_load', { 'window': window });
-});
-
-window.addEventListener('beforeunload', function() {
-    sendEvent('com_sppad_booky_details_page_beforeunload', { 'window': window });
 });

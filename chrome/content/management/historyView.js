@@ -5,15 +5,15 @@ if (typeof com == "undefined") {
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
-com.sppad.booky.HistoryView = new function() {
-    
-    var self = this;
+com.sppad.booky.HistoryView = function(aWindow, aLauncher) {
+  
+    let self = this;
 
-    this.setup = function(aWindow, aLauncher) {
-        self.window = aWindow;
-        self.document = aWindow.document;
-        self.launcher = aLauncher;
-        
+    self.window = aWindow;
+    self.document = aWindow.document;
+    self.launcher = aLauncher;
+    
+    this.setup = function() {
         self.strings = self.document.getElementById("com_sppad_booky_addonstrings");
         
         self.context = self.document.getElementById('history_context');
@@ -25,8 +25,9 @@ com.sppad.booky.HistoryView = new function() {
         self.container.addEventListener('dblclick', self.open, false);
         
         self.document.getElementById('history_clear').addEventListener('command', self.removeAll, false);
+        self.loadItems();
     };
-    
+
     this.cleanup = function() {
         self.container.removeEventListener('blur', self.blur);
         self.container.removeEventListener('keyup', self.keyup);
@@ -126,7 +127,7 @@ com.sppad.booky.HistoryView = new function() {
      * (in page) before clearing.
      */
     this.removeAll = function() {
-        if(!self.window.confirm(self.strings.getString("booky.historyClearConfirmation")))
+        if(!self.window.confirm(self.strings.getString('booky.historyClearConfirmation')))
             return;
         
         let hosts = self.launcher.getDomains();
@@ -158,4 +159,6 @@ com.sppad.booky.HistoryView = new function() {
         let bookmarkItem = self.document.getElementById('history_context_bookmark');
         bookmarkItem.setAttribute('disabled', self.container.view.selection.count == 0);
     };
+    
+    this.setup();
 };
