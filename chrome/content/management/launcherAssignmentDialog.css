@@ -2,7 +2,7 @@
 	background-color: rgba(0, 0, 0, .7);
 }
 
-#launcherPicker {
+.launcherPickerBox {
 	border-color: rgb(120, 120, 120);
 	border-width: 1px;
 	border-style: solid;
@@ -12,15 +12,30 @@
 	background-color: rgba(255, 255, 255, 1);
 }
 
-#launcherPicker image {
+.launcherPickerBox image {
 	width: 16px;
 	height: 16px;
 }
 
-#launcherPicker button {
+.launcherPickerBox button {
 	background-color: transparent;
 }
 
-#launcherPicker button:hover {
+.launcherPickerBox button:hover {
 	background-color: rgba(0, 0, 0, .1);
+}
+
+#launcherPickerControl {
+	margin-top: 1.5em;
+}
+
+#launcherPickerControl button image {
+	display: none;
+}
+
+#launcherPickerControl .separator {
+	margin-top: 20%;
+	margin-bottom: 20%;
+	width: 1px;
+	background-color: rgb(180, 180, 180);
 }

@@ -16,9 +16,13 @@
 <!ENTITY com_sppad_booky_reload.label "Reload">
 <!ENTITY com_sppad_booky_reload.accesskey "R">
 <!ENTITY com_sppad_booky_open.label "Open">
-<!ENTITY com_sppad_booky_open.accesskey "O	">
+<!ENTITY com_sppad_booky_open.accesskey "O">
 <!ENTITY com_sppad_booky_close.label "Close">
 <!ENTITY com_sppad_booky_close.accesskey "C">
+<!ENTITY com_sppad_booky_cancel.label "Cancel">
+<!ENTITY com_sppad_booky_cancel.accesskey "C">
+<!ENTITY com_sppad_booky_new.label "New">
+<!ENTITY com_sppad_booky_new.accesskey "N">
 <!ENTITY com_sppad_booky_remove.label "Delete">
 <!ENTITY com_sppad_booky_remove.accesskey "D">
 <!ENTITY com_sppad_booky_assign.label "Assign">

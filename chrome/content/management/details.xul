@@ -118,7 +118,16 @@
 			<box flex="1" />
 			<hbox>
 				<box flex="2147483647" />
-				<arrowscrollbox id="launcherPicker" orient="horizontal" flex="1"/>
+				<arrowscrollbox id="launcherPicker" class="launcherPickerBox" orient="horizontal" flex="1" />
+				<box flex="2147483647" />
+			</hbox>
+			<hbox>
+				<box flex="2147483647" />
+				<hbox id="launcherPickerControl" class="launcherPickerBox">
+					<button id="launcherPicker_cancel" label="&com_sppad_booky_cancel.label;" accesskey="&com_sppad_booky_cancel.accesskey;" class="plain" flex="1" />
+					<box class="separator" />
+					<button id="launcherPicker_new" label="&com_sppad_booky_new.label;" accesskey="&com_sppad_booky_new.accesskey;" class="plain" flex="1" />
+				</hbox>
 				<box flex="2147483647" />
 			</hbox>
 			<box flex="1" />

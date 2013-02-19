@@ -12,16 +12,15 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
     self.window = aWindow;
     self.callback = aCallback;
     self.launcher = aLauncher;
-
+    self.newButton = aWindow.document.getElementById('launcherPicker_new');
+    self.closeButton = aWindow.document.getElementById('launcherPicker_cancel');
+    
     this.setup = function() {
         let background = aWindow.document.getElementById('launcherPickerBackground');
         let picker = aWindow.document.getElementById('launcherPicker');
         let launchers = com.sppad.booky.Launcher.getLaunchers();
         
         background.setAttribute('hidden', false);
-        picker.focus();
-        
-        self.window.addEventListener('keydown', self.keyup, false);
         
         while(picker.firstChild)
             picker.removeChild(picker.firstChild);
@@ -42,21 +41,35 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
                         
             picker.appendChild(item);
         }
+        
+        self.newButton.addEventListener('command', self.newLauncher, false);
+        self.closeButton.addEventListener('command', self.close, false);
+        self.window.addEventListener('keypress', self.keypress, false);        
     };
 
     this.close = function() {
         let background = self.window.document.getElementById('launcherPickerBackground');
         background.setAttribute('hidden', true);
-
-        self.window.removeEventListener('keydown', self.keyup);
+        
+        self.newButton.removeEventListener('command', self.newLauncher);
+        self.closeButton.removeEventListener('command', self.close);
+        self.window.removeEventListener('keypress', self.keypress);
     };
 
     this.pick = function(aLauncher) {
         self.callback.call(undefined, aLauncher);
         self.close();
     };
+    
+    this.newLauncher = function() {
+        let newItemId = com.sppad.booky.Bookmarks.createFolder();
+        let newLauncher = com.sppad.booky.Launcher.getLauncher(newItemId);
+        
+        self.pick(newLauncher);
+    };
 
-    this.keyup = function(aEvent) {
+    this.keypress = function(aEvent) {
+        
         switch (aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
                 self.close();
@@ -69,7 +82,6 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
         }
         
         aEvent.preventDefault();
-        aEvent.stopPropagation();
     };
     
     this.setup();
