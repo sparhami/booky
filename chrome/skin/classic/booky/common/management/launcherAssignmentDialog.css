@@ -11,7 +11,7 @@
 	margin-left: 16px;
 	margin-right: 16px;
 	
-	background-color: rgba(255, 255, 255, 1);
+	background-color: rgb(245, 244, 242);
 }
 
 .launcherPickerBox image {
@@ -20,12 +20,25 @@
 }
 
 .launcherPickerBox button {
-	background-color: transparent;
+	background-color: rgb(245, 244, 242);
 }
 
 .launcherPickerBox button:hover {
-	background-color: rgba(0, 0, 0, .1);
+	background-color: rgb(230, 230, 230);
 }
+
+.launcherPickerBox button:active {
+	background-color: rgb(170, 170, 170);
+}
+
+#launcherPicker button[selected]:not(:active) {
+	background-color: rgb(155, 188, 221);
+}
+
+#launcherPicker button[selected]:hover:not(:active) {
+	background-color: rgb(135, 168, 201);
+}
+
 
 #launcherPicker button {
 	height: 2.5em;

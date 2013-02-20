@@ -15,6 +15,8 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
     self.newButton = aWindow.document.getElementById('launcherPicker_new');
     self.closeButton = aWindow.document.getElementById('launcherPicker_cancel');
     
+    self.selectedItem = null;
+    
     this.setup = function() {
         let background = aWindow.document.getElementById('launcherPickerBackground');
         let picker = aWindow.document.getElementById('launcherPicker');
@@ -39,6 +41,16 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
             item.addEventListener('command', function() { self.pick(launcher); } );
                         
             picker.appendChild(item);
+        }
+        
+        if(launchers.length <= 1) {
+            // nothing to pick from
+            picker.setAttribute('collapsed', 'true');
+        } else {
+            // set default selected item to center item
+            let childNodes = picker.childNodes;
+            let centerIndex = Math.floor(childNodes.length / 2);
+            self.select(childNodes[centerIndex]);
         }
         
         self.newButton.addEventListener('command', self.newLauncher, false);
@@ -66,15 +78,38 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
         
         self.pick(newLauncher);
     };
+    
+    this.select = function(aItem) {
+        if(!aItem)
+            return;
+            
+        if(self.selectedItem)
+            self.selectedItem.removeAttribute('selected');
+        
+        self.selectedItem = aItem;
+        self.selectedItem.setAttribute('selected', 'true');
+        
+        let picker = aWindow.document.getElementById('launcherPicker');
+        picker.ensureElementIsVisible(self.selectedItem);
+    };
 
     this.keypress = function(aEvent) {
         
         switch (aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
-                self.close();
+                if(self.selectedItem)
+                    self.pick(self.selectedItem.launcher);
                 break;
             case KeyEvent.DOM_VK_ESCAPE:
                 self.close();
+                break;
+            case KeyEvent.DOM_VK_RIGHT:
+                if(self.selectedItem)
+                    self.select(self.selectedItem.nextSibling);
+                break;
+            case KeyEvent.DOM_VK_LEFT:
+                if(self.selectedItem)
+                    self.select(self.selectedItem.previousSibling);
                 break;
             default:
                 break;
