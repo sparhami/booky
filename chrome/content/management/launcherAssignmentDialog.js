@@ -34,7 +34,6 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
             let item = document.createElement('button');
             item.launcher = launcher;
             item.setAttribute('class', 'plain');
-            item.setAttribute('type', 'radio');
             item.setAttribute('tooltiptext', launcher.label);
             item.setAttribute('image', launcher.image);
             item.addEventListener('command', function() { self.pick(launcher); } );

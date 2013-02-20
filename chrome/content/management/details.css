@@ -1,13 +1,3 @@
 @import url("chrome://global/skin/inContentUI.css");
 
 @import url("chrome://booky/skin/management/details.css");
-
-@import url("launcherAssignmentDialog.css");
-
-window {
-	padding: 0px !important;
-}
-
-#details {
-	padding: 18px;
-}

@@ -1,6 +1,13 @@
 @import url("chrome://booky-platform/skin/management/details.css");
 
+@import url("launcherAssignmentDialog.css");
+
+window {
+	padding: 0px !important;
+}
+
 #details {
+	padding: 18px;
 	-moz-box-flex: 1;
 }
 
