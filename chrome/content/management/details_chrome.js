@@ -84,6 +84,8 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
             self[id].addEventListener('command', self, false);
         });
         
+        self.launcher.addListener(self.tabEvent, self.tabEvents);
+        
         self.titleBox.addEventListener('input', self, false);
         self.titleBox.setAttribute('value', self.launcher.title);
         
@@ -95,6 +97,8 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
     this.cleanup = function() {
         self.contentWindow.removeEventListener('unload', self.cleanup);
         
+        self.launcher.removeListener(self.tabEvent, self.tabEvents);
+        
         self.tabsView.cleanup();
         self.historyView.cleanup();
         self.bookmarksView.cleanup();
@@ -104,6 +108,10 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
         ['reloadButton', 'closeButton'].forEach(function(id) {
             self[id].setAttribute('disabled', self.launcher.tabs.length === 0);
         });
+    };
+    
+    this.tabEvent = function(aEvent) {
+        self.updateTabCount();
     };
     
     this.handleEvent = function(aEvent) {
