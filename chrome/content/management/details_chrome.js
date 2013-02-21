@@ -6,25 +6,47 @@ com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
 com.sppad.booky.Details = new function() {
+
+    const CHROME_URI = 'chrome://booky/content/management/details.xul';
     
     let self = this;
     self.tab = null;
     
+    /**
+     * Shows the details page for a Launcher.
+     * 
+     * @param aLauncher
+     *            The Launcher to show the details page for
+     */
     this.showDetailsPage = function(aLauncher) {
         self.openDetailsTab(aLauncher.id);
     };
     
+    /**
+     * Opens the details page in a tab for a Launcher
+     * 
+     * @param aLauncherId
+     *            The id of a Launcher to open a tab for
+     */
     this.openDetailsTab = function(aLauncherId) {
-        let uri = "chrome://booky/content/management/details.xul?launcherId=" + aLauncherId;
+        let uri = CHROME_URI +"?launcherId=" + aLauncherId;
         
         let prevTab = self.tab;
         self.tab = gBrowser.loadOneTab(uri, { 'inBackground' : false } );
         
+        // If there is an existing tab, close it
         if(self.isTabOpen(prevTab))
             gBrowser.removeTab(prevTab);
            
     };
     
+    /**
+     * Checks if the given tab is open in the current window.
+     * 
+     * @param aTab
+     *            The tab to check for
+     * @return True if the tab is open, false otherwise
+     */
     this.isTabOpen = function(aTab) {
         let tabs = gBrowser.tabs;
         for(let i=0; i<tabs.length; i++)
@@ -37,14 +59,23 @@ com.sppad.booky.Details = new function() {
     this.pageLoaded = function(aEvent) {
         let contentWindow = aEvent.target.data.window;
         let contentDocument = contentWindow.document;
-        if(!contentDocument.location.href.startsWith('chrome://booky/content/management/details.xul'))
+        if(!contentDocument.location.href.startsWith(CHROME_URI))
             return;
         
         new com.sppad.booky.DetailsPage(contentWindow);
     };
     
+    /**
+     * Handles a tab select event, setting disablechrome if the tab is a details
+     * page.
+     * 
+     * @param aEvent
+     */
     this.tabselect = function(aEvent) {
-        if(aEvent.target == self.tab)
+        let tab = aEvent.target;
+        let uri = gBrowser.getBrowserForTab(tab).currentURI.asciiSpec;
+        
+        if(uri.startsWith(CHROME_URI))
             document.getElementById('main-window').setAttribute('disablechrome', "true");
     };
     
@@ -75,10 +106,12 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
             return;
         }
         
+        // Setup views
         self.tabsView = new com.sppad.booky.TabsView(self.contentWindow, self.launcher);
         self.historyView = new com.sppad.booky.HistoryView(self.contentWindow, self.launcher);
         self.bookmarksView = new com.sppad.booky.BookmarksView(self.contentWindow, self.launcher);
 
+        // Register listeners and save a reference
         ['searchBox' , 'titleBox', 'reloadButton', 'closeButton', 'removeButton'].forEach(function(id) {
             self[id] = self.contentDocument.getElementById(id);
             self[id].addEventListener('command', self, false);
@@ -89,6 +122,7 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
         self.titleBox.addEventListener('input', self, false);
         self.titleBox.setAttribute('value', self.launcher.title);
         
+        // Hide chrome (nav-bar, bookmarks, anything else?)
         document.getElementById('main-window').setAttribute('disablechrome', "true");
         
         self.updateTabCount();
@@ -104,16 +138,25 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
         self.bookmarksView.cleanup();
     };
     
+    /**
+     * Updates the page according to the number of tabs in the launcher.
+     * Disables close and reload buttons if there are no tabs open.
+     */
     this.updateTabCount = function() {
         ['reloadButton', 'closeButton'].forEach(function(id) {
             self[id].setAttribute('disabled', self.launcher.tabs.length === 0);
         });
     };
-    
+
+    /**
+     * Handles a tab event for the corresponding Launcher.
+     * 
+     * @param aEvent
+     */
     this.tabEvent = function(aEvent) {
         self.updateTabCount();
     };
-    
+
     this.handleEvent = function(aEvent) {
         let id = aEvent.target.id;
         let value = aEvent.target.value;

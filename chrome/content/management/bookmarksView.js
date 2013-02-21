@@ -80,6 +80,10 @@ com.sppad.booky.BookmarksView = function(aWindow, aLauncher) {
         });
     };
     
+    /**
+     * Handles assignment option from context menu. Opens a dialog allowing the
+     * user to select a launcher to assign the currently selected bookmarks to.
+     */
     this.assign = function() {
         
         let items = self.getSelectedItems();
@@ -88,6 +92,8 @@ com.sppad.booky.BookmarksView = function(aWindow, aLauncher) {
                 com.sppad.booky.Bookmarks.moveBefore(null, item.itemId, aLauncher.id);
             });
             
+            // If the move resulted in no more items, ask if they want to remove
+            // the empty Launcher
             if(self.container.view.rowCount == 0 && self.window.confirm(self.strings.getString('booky.removeEmptyLauncher'))) {
                 com.sppad.booky.Bookmarks.removeBookmark(self.launcher.id);
                 self.window.close();
@@ -120,7 +126,6 @@ com.sppad.booky.BookmarksView = function(aWindow, aLauncher) {
     };
     
     this.keyup = function(aEvent) {
-        
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
                 self.open();
@@ -131,10 +136,9 @@ com.sppad.booky.BookmarksView = function(aWindow, aLauncher) {
             default:
                 break;
         }
-        
     };
     
-    this.popupShowing = function() {
+    this.contextShowing = function() {
         let removeItem = self.document.getElementById('bookmarks_context_remove');
         removeItem.setAttribute('disabled', self.container.view.selection.count == 0);
         

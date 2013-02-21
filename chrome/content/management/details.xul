@@ -19,14 +19,14 @@
 	</stringbundleset>
 
 	<popupset>
-		<menupopup id="tabs_context" onpopupshowing="js.popupShowing();">
+		<menupopup id="tabs_context" onpopupshowing="js.contextShowing();">
 			<menuitem id="tabs_context_open" oncommand="js.open();"
 				label="&com_sppad_booky_switchTo.label;" />
 			<menuitem id="tabs_context_remove" oncommand="js.remove();"
 				label="&com_sppad_booky_close.label;" />
 		</menupopup>
 
-		<menupopup id="bookmarks_context" onpopupshowing="js.popupShowing();">
+		<menupopup id="bookmarks_context" onpopupshowing="js.contextShowing();">
 			<menuitem id="bookmarks_context_open" oncommand="js.open();"
 				label="&com_sppad_booky_open.label;" />
 			<menuitem id="bookmarks_context_remove" oncommand="js.remove();"
@@ -35,7 +35,7 @@
 				label="&com_sppad_booky_assign.label;" />
 		</menupopup>
 
-		<menupopup id="history_context" onpopupshowing="js.popupShowing();">
+		<menupopup id="history_context" onpopupshowing="js.contextShowing();">
 			<menuitem id="history_context_open" oncommand="js.open();"
 				label="&com_sppad_booky_open.label;" />
 			<menuitem id="history_context_remove" oncommand="js.remove();"
@@ -117,16 +117,21 @@
 		<vbox id="launcherPickerBackground" hidden="true" flex="0">
 			<box flex="1" />
 			<hbox>
+				<!-- Need to set flex on arrow scrollbox for it to limit it to the available 
+					screen size, so spacers need a large flex value. -->
 				<box flex="2147483647" />
-				<arrowscrollbox id="launcherPicker" class="launcherPickerBox" orient="horizontal" flex="1" />
+				<arrowscrollbox id="launcherPicker" class="launcherPickerBox"
+					orient="horizontal" flex="1" />
 				<box flex="2147483647" />
 			</hbox>
 			<hbox>
 				<box flex="2147483647" />
 				<hbox id="launcherPickerControl" class="launcherPickerBox">
-					<button id="launcherPicker_cancel" label="&com_sppad_booky_cancel.label;" accesskey="&com_sppad_booky_cancel.accesskey;" class="plain" flex="1" />
+					<button id="launcherPicker_cancel" label="&com_sppad_booky_cancel.label;"
+						accesskey="&com_sppad_booky_cancel.accesskey;" class="plain" flex="1" />
 					<box class="separator" />
-					<button id="launcherPicker_new" label="&com_sppad_booky_new.label;" accesskey="&com_sppad_booky_new.accesskey;" class="plain" flex="1" />
+					<button id="launcherPicker_new" label="&com_sppad_booky_new.label;"
+						accesskey="&com_sppad_booky_new.accesskey;" class="plain" flex="1" />
 				</hbox>
 				<box flex="2147483647" />
 			</hbox>

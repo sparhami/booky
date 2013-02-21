@@ -110,7 +110,6 @@ com.sppad.booky.TabsView = function(aWindow, aLauncher) {
     };
     
     this.keyup = function(aEvent) {
-        
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
                 self.action();
@@ -124,10 +123,9 @@ com.sppad.booky.TabsView = function(aWindow, aLauncher) {
             default:
                 break;
         }
-        
     };
     
-    this.popupShowing = function() {
+    this.contextShowing = function() {
         let removeItem = self.document.getElementById('tabs_context_remove');
         removeItem.setAttribute('disabled', self.container.selectedCount == 0);
         

@@ -21,10 +21,10 @@ com.sppad.booky.History = new function() {
         .getService(Components.interfaces.nsIBrowserHistory);
     
     /**
-     * Queries history for an array of domains, returning the history results.
+     * Queries history for an array of hosts, returning the history results.
      * 
-     * @param aDomainArray
-     *            An array of domains to get history results for,
+     * @param aHostArray
+     *            An array of hosts to get history results for,
      * @param numberOfDays
      *            How many days in the past to search. Any value not greater
      *            than or equal to 0 will query all history.
@@ -32,17 +32,12 @@ com.sppad.booky.History = new function() {
      *            The maximum number of results to return.
      * @param searchTerms
      *            The terms to search for.
-     * @param endTime
-     *            Where to stop for the most recent result. If not specified,
-     *            everything up until the moment the query is executed is
-     *            considered.
      * 
      * @return An array of results, sorted by time.
      */
-    this.queryHistoryArray = function(aDomainArray, numberOfDays, maxResults, searchTerms) {
+    this.queryHistoryArray = function(aHostArray, numberOfDays, maxResults, searchTerms) {
         
-        let options = res = self.getQueries(aDomainArray, numberOfDays, maxResults, searchTerms) ;
-        // execute the query
+        let res = self.getQueries(aHostArray, numberOfDays, maxResults, searchTerms) ;
         let queryResult = self.hs.executeQueries(res.queries, res.queries.length, res.options);
         
         let resultArray = new Array();
@@ -51,10 +46,9 @@ com.sppad.booky.History = new function() {
         try {
             container.containerOpen = true;
             
-            for (let i = 0; i < container.childCount; i ++) {
-                let node = container.getChild(i);
-                resultArray.push(node);
-            }
+            for (let i = 0; i < container.childCount; i ++)
+                resultArray.push(container.getChild(i));
+            
         } finally {
             container.containerOpen = false;
         }
@@ -62,29 +56,48 @@ com.sppad.booky.History = new function() {
         return resultArray;
     };
     
- this.getQueries = function(aDomainArray, numberOfDays, maxResults, searchTerms) {
+    /**
+     * Gets the queries and options representing a history search for several
+     * hosts.
+     *
+     * @param aHostArray
+     *            An array of hosts to get history results for,
+     * @param numberOfDays
+     *            How many days in the past to search. Any value not greater
+     *            than or equal to 0 will query all history.
+     * @param maxResults
+     *            The maximum number of results to return.
+     * @param searchTerms
+     *            The terms to search for.
+     *            
+     * @return { 'queries': an Array of queries, 'options': the options for the queries }
+     */
+    this.getQueries = function(aHostArray, numberOfDays, maxResults, searchTerms) {
         
         let options = self.hs.getNewQueryOptions();
         options.maxResults = maxResults;
         options.sortingMode = options.SORT_BY_DATE_DESCENDING;
         
+        // Generate array of queries, one for each host
         let queries = new Array();
-        for(let i=0; i<aDomainArray.length; i++) {
+        for(let i=0; i<aHostArray.length; i++) {
             let query = self.hs.getNewQuery();
             query.searchTerms = searchTerms;
             
             if(numberOfDays >= 0) {
+                // Search relative to now, numberOfDays in the past
                 query.beginTimeReference = query.TIME_RELATIVE_NOW;
                 query.beginTime = -1 * numberOfDays * DAY_IN_MICROSECONDS;
             } else {
+                // Search from the beginning
                 query.beginTimeReference = query.TIME_RELATIVE_EPOCH;
                 query.beginTime = 0;
             }
 
             query.endTimeReference = query.TIME_RELATIVE_NOW;
-            query.endTime = 0; // now
+            query.endTime = 0;
 
-            query.domain = aDomainArray[i];
+            query.domain = aHostArray[i];
             
             queries.push(query);
         }
@@ -92,10 +105,25 @@ com.sppad.booky.History = new function() {
         return { 'queries' : queries, 'options': options };
     };
     
+    /**
+     * Removes pages from the browser history.
+     * 
+     * @param aUriArray
+     *            An array of URI strings to remove
+     * @param length
+     *            The length of aUriArray
+     * 
+     */
     this.removePagesByUris = function(aUriArray, length) {
         self.bh.removePages(aUriArray, length);
     };
     
+    /**
+     * Removes pages from the browser history based on hosts.
+     * 
+     * @param aHostArray
+     *            An array of host strings to remove
+     */
     this.removePagesByHosts = function(aHostArray) {       
         let length = aHostArray.length;
         for(let i=0; i<length; i++)

@@ -5,6 +5,18 @@ if (typeof com == "undefined") {
 com.sppad = com.sppad || {};
 com.sppad.booky = com.sppad.booky || {};
 
+/**
+ * Handles the dialog for picking a launcher to assign to. A callback is
+ * registered and fired when an item is picked. If the dialog is cancelled, the
+ * callback is not called.
+ * 
+ * @param aWindow
+ *            The window containing the dialog
+ * @param aLauncher
+ *            A launcher to not display
+ * @param aCallback
+ *            A function with one argument, a Launcher
+ */
 com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallback) {
    
     let self = this;
@@ -17,6 +29,10 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
     
     self.selectedItem = null;
     
+    /**
+     * Initializes the dialog, loading buttons for each Launcher, registering
+     * listeners and showing the dialog.
+     */
     this.setup = function() {
         let background = aWindow.document.getElementById('launcherPickerBackground');
         let picker = aWindow.document.getElementById('launcherPicker');
@@ -27,6 +43,7 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
         while(picker.firstChild)
             picker.removeChild(picker.firstChild);
                 
+        // Add an item for each launcher (other than self.launcher)
         for(let i=0; i<launchers.length; i++) {
             let launcher = launchers[i];
                         
@@ -58,6 +75,9 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
         self.window.addEventListener('keypress', self.keypress, false);        
     };
 
+    /**
+     * Closes the dialog, unregistering listeners and hiding the dialog.
+     */
     this.close = function() {
         let background = self.window.document.getElementById('launcherPickerBackground');
         background.setAttribute('hidden', true);
@@ -67,11 +87,21 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
         self.window.removeEventListener('keypress', self.keypress);
     };
 
+    /**
+     * Selects a Launcher, calling the callback and closing the dialog.
+     * 
+     * @param aLauncher
+     *            The launcher that has been selected.
+     */
     this.pick = function(aLauncher) {
         self.callback.call(undefined, aLauncher);
         self.close();
     };
     
+    /**
+     * Selects a new launcher as the launcher, creating it and choosing it as
+     * the selected launcher.
+     */
     this.newLauncher = function() {
         let newItemId = com.sppad.booky.Bookmarks.createFolder();
         let newLauncher = com.sppad.booky.Launcher.getLauncher(newItemId);
@@ -79,6 +109,10 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
         self.pick(newLauncher);
     };
     
+    /**
+     * Sets an item as selected, applying the selected style. If the user hits
+     * return, the selected item is picked.
+     */
     this.select = function(aItem) {
         if(!aItem)
             return;
@@ -94,7 +128,6 @@ com.sppad.booky.LauncherAssignmentDialog = function(aWindow, aLauncher, aCallbac
     };
 
     this.keypress = function(aEvent) {
-        
         switch (aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
                 if(self.selectedItem)

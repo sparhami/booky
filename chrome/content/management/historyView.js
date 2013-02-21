@@ -38,19 +38,19 @@ com.sppad.booky.HistoryView = function(aWindow, aLauncher) {
     
     /**
      * Loads the items into the view by performing a history query for the
-     * launcher's domains.
+     * launcher's hosts.
      */
     this.loadItems = function(searchTerms) {
         window.setTimeout(function() {
             let numberOfDays = -1;
             let maxResults = null;
            
-            let domains = self.launcher.getDomains();
-            if(domains.length == 0)
+            let hosts = self.launcher.getHosts();
+            if(hosts.length == 0)
                 return;
             
             let tree = self.document.getElementById('history_view');
-            let res = com.sppad.booky.History.getQueries(domains, numberOfDays, maxResults, searchTerms);
+            let res = com.sppad.booky.History.getQueries(hosts, numberOfDays, maxResults, searchTerms);
     
             tree.load(res.queries, res.options);
         }, 1);
@@ -130,12 +130,11 @@ com.sppad.booky.HistoryView = function(aWindow, aLauncher) {
         if(!self.window.confirm(self.strings.getString('booky.historyClearConfirmation')))
             return;
         
-        let hosts = self.launcher.getDomains();
+        let hosts = self.launcher.getHosts();
         com.sppad.booky.History.removePagesByHosts(hosts);
     };
     
     this.keyup = function(aEvent) {
-        
         switch(aEvent.keyCode) {
             case KeyEvent.DOM_VK_RETURN:
                 self.open();
@@ -146,10 +145,9 @@ com.sppad.booky.HistoryView = function(aWindow, aLauncher) {
             default:
                 break;
         }
-        
     };
     
-    this.popupShowing = function() {
+    this.contextShowing = function() {
         let removeItem = self.document.getElementById('history_context_remove');
         removeItem.setAttribute('disabled', self.container.view.selection.count == 0);
         

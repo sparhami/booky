@@ -179,8 +179,8 @@ com.sppad.booky.Launcher = function(aID) {
         
         let label = aTitle;
         if(!label) {
-            let domains = this.getDomains();
-            label = (domains.length == 1) ? domains[0] : "(no title)";
+            let hosts = this.getHosts();
+            label = (hosts.length == 1) ? hosts[0] : "(no title)";
         }
         
         this.label = label;
@@ -192,15 +192,15 @@ com.sppad.booky.Launcher = function(aID) {
      * 
      * @return An array of the hostnames associated with this launcher.
      */
-    this.getDomains = function() {
-        let domainsSet = new Set();
+    this.getHosts = function() {
+        let hostsSet = new Set();
         for(let i=0; i<this.bookmarks.length; i++) {
             let uriString = this.bookmarks[i].uri;
             let host = com.sppad.booky.Groups.getHostFromUriString(uriString);
-            domainsSet.add(host);
+            hostsSet.add(host);
         }
 
-        return [v for (v of domainsSet)];
+        return [v for (v of hostsSet)];
     };
     
     /**
@@ -417,8 +417,8 @@ com.sppad.booky.Launcher.prototype.mouseenter = function() {
     while(tooltipBox.firstChild)
         tooltipBox.removeChild(tooltipBox.firstChild);
     
-    // If the title is blank/null/undefined, use the domains in the launcher
-    let labelTexts = this.title ? [ this.title ] : this.getDomains();
+    // If the title is blank/null/undefined, use the hosts in the launcher
+    let labelTexts = this.title ? [ this.title ] : this.getHosts();
     if(labelTexts.length == 0)
         labelTexts = [ '( empty group )' ];
     
@@ -505,11 +505,11 @@ com.sppad.booky.Launcher.prototype.historyPopupShowing = function(event) {
     let numberOfDays = com.sppad.booky.CurrentPrefs['historyMenuDays'];
     let maxResults = com.sppad.booky.CurrentPrefs['historyMenuItems'];
    
-    let domains = this.getDomains();
-    if(domains.length == 0)
+    let hosts = this.getHosts();
+    if(hosts.length == 0)
         return;
     
-    let results = com.sppad.booky.History.queryHistoryArray(domains, numberOfDays, maxResults);
+    let results = com.sppad.booky.History.queryHistoryArray(hosts, numberOfDays, maxResults);
     
     for(let i=0; i<results.length; i++) {
         let result = results[i];

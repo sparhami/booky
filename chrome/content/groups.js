@@ -158,18 +158,18 @@ com.sppad.booky.Groups = new function() {
             let launcher = com.sppad.booky.Launcher.getLauncher(parentId);
             launcher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(parentId));
              
-            // Get all tabs in the same domain
+            // Get all tabs in the same host
             let tabs = gBrowser.tabs;
-            let sameDomainTabs = new Array();
+            let sameHostTabs = new Array();
             for(let i=0; i<tabs.length; i++)
                 if(primaryId == self.getPrimaryIdFromTab(tabs[i]))
-                    sameDomainTabs.push(tabs[i]);
+                    sameHostTabs.push(tabs[i]);
 
             // Handle moving betweem two launchers. Moves all bookmarks with the
             // same host from the old launcher to the new one.
             let movingLaunchers = (prevFolderId != undefined) && (parentId != prevFolderId);
             if(movingLaunchers) {
-                // Grab all the bookmarks with the same domain and move them
+                // Grab all the bookmarks with the same host and move them
                 let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(prevFolderId);
                 otherbookmarks.filter(function(bookmark) {
                     return primaryId == self.getPrimaryIdFromUriString(bookmark.uri);
@@ -179,7 +179,7 @@ com.sppad.booky.Groups = new function() {
                 });
                 
                 let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
-                previousLauncher.removeTabArray(sameDomainTabs);
+                previousLauncher.removeTabArray(sameHostTabs);
                 previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(prevFolderId));
             } else {
                 // Update how many bookmark URIs we are tracking that correspond to
@@ -191,7 +191,7 @@ com.sppad.booky.Groups = new function() {
             
             // Tabs not in the launcher yet, so add them
             if(!prevFolderId || movingLaunchers)
-                launcher.addTabArray(sameDomainTabs);
+                launcher.addTabArray(sameHostTabs);
             
             com.sppad.booky.Resizer.onResize();
         },
