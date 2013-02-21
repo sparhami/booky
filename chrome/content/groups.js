@@ -171,20 +171,23 @@ com.sppad.booky.Groups = new function() {
             if(movingLaunchers) {
                 // Grab all the bookmarks with the same host and move them
                 let otherbookmarks = com.sppad.booky.Bookmarks.getBookmarks(prevFolderId);
-                otherbookmarks.filter(function(bookmark) {
-                    return primaryId == self.getPrimaryIdFromUriString(bookmark.uri);
-                }).forEach(function(bookmark) {
-                    self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
-                    com.sppad.booky.Bookmarks.moveAfter(null, bookmark.itemId, parentId);
+                otherbookmarks.forEach(function(bookmark) {
+                    if(primaryId == self.getPrimaryIdFromUriString(bookmark.uri)) {
+                        self.bookmarkInfoMap.put(bookmark.itemId, bookmarkInfo);
+                        com.sppad.booky.Bookmarks.moveAfter(null, bookmark.itemId, parentId);
+                    }
+              
                 });
                 
                 let previousLauncher = com.sppad.booky.Launcher.getLauncher(prevFolderId);
                 previousLauncher.removeTabArray(sameHostTabs);
                 previousLauncher.setBookmarks(com.sppad.booky.Bookmarks.getBookmarks(prevFolderId));
             } else {
-                // Update how many bookmark URIs we are tracking that correspond to
-                // this site. Needed so that we can know when to remove the mapping
-                // between URI and group id.
+                /*
+                 * Update how many bookmark URIs we are tracking that correspond
+                 * to this site. Needed so that we can know when to remove the
+                 * mapping between URI and group id.
+                 */
                 let count = self.primaryIdCounts.get(primaryId, 0) + 1;
                 self.primaryIdCounts.put(primaryId, count);
             }

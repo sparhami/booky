@@ -30,6 +30,10 @@ com.sppad.booky.Resizer = new function() {
     // Tracks timeout event for resize
     self._resizeEventId = null;
 
+    /**
+     * Handles a resize of the window and anything that else that would change
+     * the overflow state of the launchers.
+     */
     self._doResize = function() {
         
         let windowSize = window.innerWidth;
@@ -67,7 +71,7 @@ com.sppad.booky.Resizer = new function() {
              * Need to set offset from Javascript because sharing the same
              * ordinal using CSS does not leave the items in the right order. Do
              * this before doing overflow checks because it may be done doing
-             * width, so they need to be in the right order.
+             * width, so they need to be in the right order before hand.
              */
             if((hideLaunchersWithoutTabs || groupOpenTabs) && open) {
                 ordinalOffset = 0;
@@ -160,7 +164,7 @@ com.sppad.booky.Resizer = new function() {
         onResize : function() {
             window.clearTimeout(self._resizeEventId);
 
-            // Resize at most once every 100 ms
+            // Resize at most once every RESIZE_PERIOD ms
             let timeSinceResize = Date.now() - self._lastResizeTime;
             if (timeSinceResize > RESIZE_PERIOD)
                 self._doResize();
@@ -185,7 +189,6 @@ com.sppad.booky.Resizer = new function() {
         },
         
         setup : function() {
-            
             self._launchers = window.document.getElementById('com_sppad_booky_launchers');
             self._overflowDecorator = window.document.getElementById('com_sppad_booky_launchers_overflow_decorator');
             self._overflowToolbarButton = window.document.getElementById('com_sppad_booky_launchers_overflow_button');

@@ -59,6 +59,7 @@ com.sppad.booky.Details = new function() {
     this.pageLoaded = function(aEvent) {
         let contentWindow = aEvent.target.data.window;
         let contentDocument = contentWindow.document;
+        
         if(!contentDocument.location.href.startsWith(CHROME_URI))
             return;
         
@@ -68,8 +69,6 @@ com.sppad.booky.Details = new function() {
     /**
      * Handles a tab select event, setting disablechrome if the tab is a details
      * page.
-     * 
-     * @param aEvent
      */
     this.tabselect = function(aEvent) {
         let tab = aEvent.target;
@@ -148,11 +147,6 @@ com.sppad.booky.DetailsPage = function(aContentWindow) {
         });
     };
 
-    /**
-     * Handles a tab event for the corresponding Launcher.
-     * 
-     * @param aEvent
-     */
     this.tabEvent = function(aEvent) {
         self.updateTabCount();
     };

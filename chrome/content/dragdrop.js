@@ -36,16 +36,15 @@ com.sppad.booky.DragDrop = new function() {
     /**
      * Checks if the given drag event has something that can be dropped.
      * 
-     * @param event
-     *            A drag event containing a dataTransfer object
+     * @param aDataTransfer
+     *            A dataTransfer object
      */
-    self._canDrop = function(event) {
-        let dt = event.dataTransfer;
-        let launcher = dt.getData('text/com-sppad-booky-launcherId');
-        let mozUrl = dt.getData('text/x-moz-url');
-        let uriList = dt.getData('text/uri-list');
-        let plain = dt.getData('text/plain');
-        let internal = dt.getData('text/x-moz-text-internal');
+    self._canDrop = function(aDataTransfer) {
+        let launcher = aDataTransfer.getData('text/com-sppad-booky-launcherId');
+        let mozUrl = aDataTransfer.getData('text/x-moz-url');
+        let uriList = aDataTransfer.getData('text/uri-list');
+        let plain = aDataTransfer.getData('text/plain');
+        let internal = aDataTransfer.getData('text/x-moz-text-internal');
         
         if(launcher || mozUrl || uriList || plain || internal)
             return true;
@@ -57,17 +56,16 @@ com.sppad.booky.DragDrop = new function() {
      * Gets the URIs from a drop event. Used to drop all the things that need to
      * be dropped.
      * 
-     * @param event
-     *            A drag event containing a dataTransfer object
+     * @param aDataTransfer
+     *            A dataTransfer object
      * 
      * @return An array of strings representing the URIs to drop.
      */
-    self._getUris = function(event) {
-        let dt = event.dataTransfer;
-        let mozUrl = dt.getData('text/x-moz-url');
-        let uriList = dt.getData('text/uri-list');
-        let plain = dt.getData('text/plain');
-        let internal = dt.getData('text/x-moz-text-internal');
+    self._getUris = function(aDataTransfer) {
+        let mozUrl = aDataTransfer.getData('text/x-moz-url');
+        let uriList = aDataTransfer.getData('text/uri-list');
+        let plain = aDataTransfer.getData('text/plain');
+        let internal = aDataTransfer.getData('text/x-moz-text-internal');
         let uris = [];
         
         if(uriList) {
@@ -124,12 +122,9 @@ com.sppad.booky.DragDrop = new function() {
          * tab drop location indicator. This code checks to see if the mouse is
          * either before or past the midway point of a given tab and positions
          * the indicator before or after, respectively.
-         * 
-         * @param event
-         *            A drag event
          */
         dragoverLaunchers : function(event) {
-            if(!self._canDrop(event))
+            if(!self._canDrop(event.dataTransfer))
                 return;
             
             event.preventDefault();
@@ -170,15 +165,12 @@ com.sppad.booky.DragDrop = new function() {
          * tab drop location indicator. This code checks to see if the mouse is
          * either before or past the midway point of a given tab and positions
          * the indicator before or after, respectively.
-         * 
-         * @param event
-         *            A drag event
          */
         dragoverMenuLaunchers : function(event) {
             if(self.overflowMenuCloseEventId)
                 window.clearTimeout(self.overflowMenuCloseEventId);
 
-            if(!self._canDrop(event))
+            if(!self._canDrop(event.dataTransfer))
                 return;
             
             event.preventDefault();
@@ -218,9 +210,6 @@ com.sppad.booky.DragDrop = new function() {
         /**
          * Handles the mouse leaving the overflow menu during a drag event. Sets
          * a timeout to close the menu if they leave for too long.
-         * 
-         * @param event
-         *            A drag event
          */
         dragexitMenuLaunchers : function(event) {
             window.clearTimeout(self.overflowMenuCloseEventId);
@@ -233,15 +222,12 @@ com.sppad.booky.DragDrop = new function() {
         /**
          * Handles the mouse hovering over the overflow menu button during a
          * drag event. Opens the overflow menu.
-         * 
-         * @param event
-         *            A drag event
          */
         dragoverMenuButton : function(event) {
             if(self.overflowMenuCloseEventId)
                 window.clearTimeout(self.overflowMenuCloseEventId);
             
-            if(!self._canDrop(event))
+            if(!self._canDrop(event.dataTransfer))
                 return;
             
             if(self._overflowButton.open)
@@ -253,9 +239,6 @@ com.sppad.booky.DragDrop = new function() {
         
         /**
          * Used for dragging over the hint area when there are no launchers.
-         * 
-         * @param event
-         *            A drag event
          */
         dragoverNoLaunchers : function(event) {
             event.preventDefault();
@@ -266,9 +249,6 @@ com.sppad.booky.DragDrop = new function() {
          * Handles a drop event, if it is valid. Goes through all the URIs from
          * the drop event and adds bookmarks if needed. The bookmarks for the
          * new or existing launcher are then moved to the correct location.
-         * 
-         * @param event
-         *            A drop event
          */
         drop : function(event) {
             if(!self._insertValid) {
@@ -280,7 +260,7 @@ com.sppad.booky.DragDrop = new function() {
             self._toolbarIndicator.collapsed = true;
             
             let launcherId = event.dataTransfer.getData('text/com-sppad-booky-launcherId');
-            let uris = self._getUris(event);
+            let uris = self._getUris(event.dataTransfer);
             
             /*
              * This timeout is for handling drops of tabs. It seems that without
