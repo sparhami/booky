@@ -167,17 +167,25 @@ com.sppad.booky.Bookmarks = new function() {
             }
         },
         
+        /**
+         * Moves a bookmark after another bookmark, or to the start if no
+         * previous bookmark is specified.
+         */
         moveAfter: function(priorBookmarkId, bookmarkId, aFolderId) {
     	    aFolderId = aFolderId || self._getQuicklaunchFolderId();
     	    
-            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : self._bs.DEFAULT_INDEX;
+            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) + 1 : 0;
             self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
     	},
     	
-        moveBefore: function(priorBookmarkId, bookmarkId, aFolderId) {
+    	/**
+         * Moves a bookmark before another bookmark, or to the end if no
+         * previous bookmark is specified.
+         */
+        moveBefore: function(nextBookmarkId, bookmarkId, aFolderId) {
             aFolderId = aFolderId || self._getQuicklaunchFolderId();
             
-            targetIndex = priorBookmarkId ? self._bs.getItemIndex(priorBookmarkId) : self._bs.DEFAULT_INDEX;
+            targetIndex = nextBookmarkId ? self._bs.getItemIndex(nextBookmarkId) : self._bs.DEFAULT_INDEX;
             self._bs.moveItem(bookmarkId, aFolderId, targetIndex); 
         },
     	
