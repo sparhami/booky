@@ -14,7 +14,8 @@
 
 	<script src="config.js" type="application/javascript" />
 
-	<prefpane id="com_sppad_booky_GeneralPrefPane" label="&preference.prefpane.general.label;">
+	<prefpane id="com_sppad_booky_GeneralPrefPane" label="&preference.prefpane.general.label;"
+		image="chrome://booky/skin/images/gear.svg">
 		<preferences>
 			<preference id="extensions.booky.overflowMode" name="extensions.booky.overflowMode"
 				type="string" />
@@ -66,7 +67,8 @@
 		</groupbox>
 	</prefpane>
 
-	<prefpane id="com_sppad_booky_HistoryPrefPane" label="&preference.prefpane.history.label;">
+	<prefpane id="com_sppad_booky_HistoryPrefPane" label="&preference.prefpane.history.label;"
+		image="chrome://booky/skin/images/scroll.svg" >
 		<preferences>
 			<preference id="extensions.booky.historyMenuItems" name="extensions.booky.historyMenuItems"
 				type="int" />
@@ -90,7 +92,8 @@
 	</prefpane>
 
 
-	<prefpane id="com_sppad_booky_StylePrefPane" label="&preference.prefpane.style.label;">
+	<prefpane id="com_sppad_booky_StylePrefPane" label="&preference.prefpane.style.label;"
+		image="chrome://booky/skin/images/sunglasses.svg" >
 		<preferences>
 			<preference id="extensions.booky.grayoutInactiveIcons" name="extensions.booky.grayoutInactiveIcons"
 				type="bool" />
