@@ -1,9 +1,9 @@
 <!ENTITY com.sppad.booky.ToolbarButton.label "Booky">
-<!ENTITY com.sppad.booky.ToolbarButton.tooltiptext "BookyToolbarItem">
+<!ENTITY com.sppad.booky.ToolbarButton.tooltiptext "Booky Toolbar Item">
 <!ENTITY com_sppad_booky_noLaunchersArea.label "Drag Here">
 <!ENTITY com_sppad_booky_noLaunchersTooltip.label "Drag a tab or bookmark here to get started">
-
 <!ENTITY com_sppad_booky_noHistoryMenuItem.label "No recent history found">
+<!ENTITY com_sppad_booky_clearHistory.tooltiptext "Clear All History">
 
 <!ENTITY com_sppad_booky_switchTo.label "Switch To">
 <!ENTITY com_sppad_booky_switchTo.accesskey "T">

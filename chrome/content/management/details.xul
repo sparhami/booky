@@ -98,7 +98,7 @@
 								<label class="detail_header_text" flex="1"
 									value="&com_sppad_booky_historyView.label;" />
 								<button id="history_clear" class="detail_button plain"
-									image="chrome://booky/skin/images/edit-clear.svg" />
+									image="chrome://booky/skin/images/edit-clear.svg" tooltiptext="&com_sppad_booky_clearHistory.tooltiptext;" />
 							</hbox>
 							<hbox class="detail_separator" />
 
