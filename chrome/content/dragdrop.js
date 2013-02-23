@@ -43,10 +43,9 @@ com.sppad.booky.DragDrop = new function() {
         let launcher = aDataTransfer.getData('text/com-sppad-booky-launcherId');
         let mozUrl = aDataTransfer.getData('text/x-moz-url');
         let uriList = aDataTransfer.getData('text/uri-list');
-        let plain = aDataTransfer.getData('text/plain');
         let internal = aDataTransfer.getData('text/x-moz-text-internal');
         
-        if(launcher || mozUrl || uriList || plain || internal)
+        if(launcher || mozUrl || uriList || internal)
             return true;
         else
             return false;
@@ -64,7 +63,6 @@ com.sppad.booky.DragDrop = new function() {
     self._getUris = function(aDataTransfer) {
         let mozUrl = aDataTransfer.getData('text/x-moz-url');
         let uriList = aDataTransfer.getData('text/uri-list');
-        let plain = aDataTransfer.getData('text/plain');
         let internal = aDataTransfer.getData('text/x-moz-text-internal');
         let uris = [];
         
@@ -74,8 +72,10 @@ com.sppad.booky.DragDrop = new function() {
             });
         } else if(internal) {
             uris = internal.split('\n');
-        } else if(plain) {
-            uris = plain.split('\n');
+        } else if(mozUrl) {
+            uris = mozUrl.split('\n').filter(function(uri, index) {
+                return !(index % 2);
+            });
         }
         
         return uris;
