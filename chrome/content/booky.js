@@ -87,13 +87,15 @@ com.sppad.booky.Booky = new function() {
                   com.sppad.booky.Utils.enableDebug(value);
                   break;
               case "hideTabStrategy":
-              case "grayoutInactiveIcons":
               case "styleTabs":
                   this.applyAttribute('TabsToolbar', name, value);
                   break;
               case "hideLauncherStrategy":
-                  this.applyAttribute('TabsToolbar', name, value);
+                  document.getElementById('com_sppad_booky_launchers').setAttribute(name, value);
                   com.sppad.booky.Resizer.onResize();
+                  break;
+              case "grayoutInactiveIcons":
+                  document.getElementById('com_sppad_booky_launchers').setAttribute(name, value);
                   break;
               default:
                   break;
