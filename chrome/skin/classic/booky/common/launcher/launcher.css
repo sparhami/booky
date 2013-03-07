@@ -20,7 +20,7 @@ launcher[titlechanged="true"] .launcher-countindicators {
 }
 
 #com_sppad_booky_launchers[grayoutInactiveIcons="true"] launcher[hasSingle="false"]:not(:hover) .launcher-icon,
-#com_sppad_booky_launchers[grayoutInactiveIcons="true"] .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
+#com_sppad_booky_launchers_overflow_menu[grayoutInactiveIcons="true"] .menulauncher[hasSingle="false"]:not([_moz-menuactive="true"]) image {
 	filter: url("chrome://booky/skin/filters.svg#grayscale");
 	opacity: .55;
 }

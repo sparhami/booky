@@ -96,6 +96,7 @@ com.sppad.booky.Booky = new function() {
                   break;
               case "grayoutInactiveIcons":
                   document.getElementById('com_sppad_booky_launchers').setAttribute(name, value);
+                  document.getElementById('com_sppad_booky_launchers_overflow_menu').setAttribute(name, value);
                   break;
               default:
                   break;
