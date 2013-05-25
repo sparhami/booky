@@ -693,7 +693,7 @@ com.sppad.booky.Launcher.showIndexIndicator = function(value) {
      */
     let navbar = document.getElementById('navigator-toolbox');
     let yOffset = navbar.boxObject.y + navbar.boxObject.height;
-    indicatorWrapper.style.top = yOffset + "px";
+    indicatorWrapper.style.marginTop = yOffset + "px";
     
     /*
      * Want to make sure that the css rule for attribute removal (setting
